@@ -3,85 +3,103 @@ const heroSrc = encodeURI("/ChatGPT Image Sep 1, 2026, 09_45_43 PM.png");
 const warehouseSrc = "/stockpilot-warehouse.png";
 const technologySrc = "/stockpilot-technology.jpg";
 
-const capabilities = [
+const panels = [
 	{
-		title: "Item master & costing",
-		body: "Full item records — codes, brands, weighted-average costing, and price control — maintained in one place.",
+		index: "01",
+		title: "Inventory Intelligence",
+		src: heroSrc,
+		width: 1024,
+		height: 576,
+		alt: "StockPilot ERP — inventory intelligence dashboard on a monitor in a professional workspace",
+		body: "One system of record for 50,000+ active line items — item master, costing, branch balances, and availability surfaced the moment a counter or workshop asks. Not a generic ledger: inventory intelligence shaped around how automotive parts actually move.",
 	},
 	{
-		title: "Multi-branch stock",
-		body: "Live on-hand balances across Matang Jaya, Samarahan, and 13 Miles with shelf location tracking per branch.",
+		index: "02",
+		title: "Warehouse Control",
+		src: warehouseSrc,
+		width: 1024,
+		height: 572,
+		alt: "StockPilot Warehouse Control on a monitor in an organised warehouse with barcode scanner and shelf locations",
+		body: "Matang Jaya, Samarahan, and every shelf address connected in one view. Pickers see stock movements, bin locations, and low-stock signals on the floor — not on a spreadsheet emailed from HQ.",
 	},
 	{
-		title: "Warehouse operations",
-		body: "Stock adjustments, movement history, incoming/outgoing visibility, and order recording built into daily workflow.",
+		index: "03",
+		title: "Built for Automotive Parts",
+		src: technologySrc,
+		width: 512,
+		height: 317,
+		alt: "Close-up of StockPilot interface showing part numbers, brands, models, locations, quantities, and stock search",
+		body: "Part numbers, brands, models, locations, quantities, fitment, and stock movement — fields generic ERP software never gets right. StockPilot was written around automotive SKU logic, not adapted from retail or manufacturing templates.",
 	},
-	{
-		title: "Built by us, for us",
-		body: "Developed in-house by Tiong Hock's own team — shaped around how we pick, stock, and fulfil for workshops.",
-	},
+];
+
+const complexity = [
+	{ label: "Active catalog", value: "50,000+", detail: "line items managed in StockPilot" },
+	{ label: "Branches", value: "2", detail: "Matang Jaya HQ & Kota Samarahan Automart" },
+	{ label: "Coverage", value: "OEM & genuine", detail: "suspension, brakes, electrical & fast movers" },
+	{ label: "Support", value: "Engineering-first", detail: "fitment checks & technical counter backup" },
 ];
 ---
 
 <section id="stockpilot" class="stockpilot-section scroll-mt-24" aria-labelledby="stockpilot-heading">
-	<h2 id="stockpilot-heading" class="sr-only">StockPilot ERP — in-house inventory platform</h2>
+	<div class="stockpilot-intro">
+		<div class="th-container stockpilot-intro__inner">
+			<p class="th-tech-badge stockpilot-intro__eyebrow">Internal systems · Major capability</p>
+			<h2 id="stockpilot-heading" class="stockpilot-intro__title">StockPilot</h2>
+			<p class="stockpilot-intro__tagline">The intelligence behind Tiong Hock's inventory.</p>
+			<p class="stockpilot-intro__lede">
+				Two branches. Tens of thousands of active SKUs. OEM and genuine lines across suspension, brakes, electrical, and
+				more — plus logistics and technical support on the counter. StockPilot is how we hold that complexity together:
+				shelf by shelf, branch by branch, enquiry by enquiry.
+			</p>
 
-	<figure class="stockpilot-hero">
-		<img
-			src={heroSrc}
-			width={1024}
-			height={576}
-			alt="StockPilot ERP — the intelligence behind Tiong Hock's inventory. Built in-house for automotive parts with inventory intelligence, fitment accuracy, warehouse control, and fulfilment excellence."
-			class="stockpilot-hero__img"
-			loading="eager"
-			decoding="async"
-		/>
-	</figure>
-
-	<div class="th-container stockpilot-duo">
-		<figure class="stockpilot-panel">
-			<img
-				src={warehouseSrc}
-				width={1024}
-				height={572}
-				alt="StockPilot Warehouse Control dashboard on a monitor in a warehouse — barcode scanner, stock movements, and shelf locations"
-				class="stockpilot-panel__img"
-				loading="lazy"
-				decoding="async"
-			/>
-			<figcaption class="stockpilot-panel__caption">
-				Live inventory where it matters — shelf addresses, branch stock, and fulfilment on the warehouse floor.
-			</figcaption>
-		</figure>
-
-		<figure class="stockpilot-panel">
-			<img
-				src={technologySrc}
-				width={512}
-				height={317}
-				alt="Close-up of StockPilot enterprise user interface with inventory search and navigation"
-				class="stockpilot-panel__img"
-				loading="lazy"
-				decoding="async"
-			/>
-			<figcaption class="stockpilot-panel__caption">
-				Purpose-built screens for stock search, item master, and multi-branch control — enterprise-grade, in-house.
-			</figcaption>
-		</figure>
-	</div>
-
-	<div class="stockpilot-details">
-		<div class="th-container">
-			<ul class="stockpilot-capabilities">
+			<ul class="stockpilot-complexity" aria-label="What StockPilot connects">
 				{
-					capabilities.map((item) => (
-						<li class="stockpilot-capability">
-							<h3 class="stockpilot-capability__title">{item.title}</h3>
-							<p class="stockpilot-capability__body">{item.body}</p>
+					complexity.map((item) => (
+						<li class="stockpilot-complexity__item">
+							<p class="stockpilot-complexity__value">{item.value}</p>
+							<p class="stockpilot-complexity__label">{item.label}</p>
+							<p class="stockpilot-complexity__detail">{item.detail}</p>
 						</li>
 					))
 				}
 			</ul>
+		</div>
+	</div>
+
+	<div class="th-container stockpilot-story">
+		{
+			panels.map((panel) => (
+				<article class="stockpilot-chapter">
+					<p class="stockpilot-chapter__index">
+						<span>{panel.index}</span> — {panel.title}
+					</p>
+					<figure class="stockpilot-chapter__figure">
+						<img
+							src={panel.src}
+							width={panel.width}
+							height={panel.height}
+							alt={panel.alt}
+							class="stockpilot-chapter__img"
+							loading={panel.index === "01" ? "eager" : "lazy"}
+							decoding="async"
+						/>
+					</figure>
+					<p class="stockpilot-chapter__body">{panel.body}</p>
+				</article>
+			))
+		}
+	</div>
+
+	<div class="stockpilot-closer">
+		<div class="th-container">
+			<p class="stockpilot-closer__statement">
+				Built in-house. Built for automotive parts. Built for the way we operate.
+			</p>
+			<p class="stockpilot-closer__support">
+				Not off-the-shelf ERP — the platform that lets a workshop in Samarahan and a fleet manager in Matang Jaya trust
+				the same stock figure, the same shelf address, and the same fitment answer.
+			</p>
 		</div>
 	</div>
 </section>
@@ -92,88 +110,159 @@ const capabilities = [
 		background: rgb(248 250 252);
 	}
 
-	.stockpilot-hero {
-		margin: 0;
-		background: rgb(15 17 20);
+	.stockpilot-intro {
+		background:
+			radial-gradient(ellipse 70% 50% at 100% 0%, rgb(59 130 246 / 0.06) 0%, transparent 55%),
+			linear-gradient(180deg, rgb(15 17 20) 0%, rgb(22 25 30) 100%);
+		padding-block: clamp(3rem, 8vw, 5rem);
+		color: rgb(248 250 252);
 	}
 
-	.stockpilot-hero__img {
-		display: block;
-		width: 100%;
-		height: auto;
+	.stockpilot-intro__eyebrow {
+		border-color: rgb(255 255 255 / 0.12);
+		background: rgb(255 255 255 / 0.06);
+		color: rgb(134 239 172);
 	}
 
-	.stockpilot-duo {
+	.stockpilot-intro__title {
+		margin-top: 1rem;
+		font-size: clamp(2.25rem, 6vw, 3.5rem);
+		font-weight: 700;
+		line-height: 1.02;
+		letter-spacing: -0.02em;
+		text-transform: uppercase;
+	}
+
+	.stockpilot-intro__tagline {
+		margin-top: 0.75rem;
+		max-width: 36rem;
+		font-size: clamp(1.0625rem, 2.4vw, 1.375rem);
+		font-weight: 500;
+		line-height: 1.45;
+		color: rgb(201 162 39);
+	}
+
+	.stockpilot-intro__lede {
+		margin-top: 1.25rem;
+		max-width: 42rem;
+		font-size: 1rem;
+		line-height: 1.7;
+		color: rgb(203 213 225);
+	}
+
+	.stockpilot-complexity {
 		display: grid;
-		gap: 1.25rem;
-		padding-block: clamp(1.5rem, 4vw, 2.5rem);
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: 1rem;
+		margin-top: 2.5rem;
+		padding-top: 2rem;
+		border-top: 1px solid rgb(255 255 255 / 0.08);
+		list-style: none;
+		padding-left: 0;
 	}
 
 	@media (min-width: 768px) {
-		.stockpilot-duo {
-			grid-template-columns: repeat(2, minmax(0, 1fr));
-			gap: 1.5rem;
+		.stockpilot-complexity {
+			grid-template-columns: repeat(4, minmax(0, 1fr));
+			gap: 1.25rem;
 		}
 	}
 
-	.stockpilot-panel {
-		margin: 0;
+	.stockpilot-complexity__item {
+		padding: 1rem 1.125rem;
+		border-radius: 0.75rem;
+		border: 1px solid rgb(255 255 255 / 0.08);
+		background: rgb(255 255 255 / 0.04);
 	}
 
-	.stockpilot-panel__img {
-		display: block;
-		width: 100%;
-		height: auto;
+	.stockpilot-complexity__value {
+		font-size: 1.125rem;
+		font-weight: 700;
+		line-height: 1.2;
+		color: white;
+	}
+
+	.stockpilot-complexity__label {
+		margin-top: 0.35rem;
+		font-family: var(--font-mono);
+		font-size: 0.625rem;
+		font-weight: 600;
+		letter-spacing: 0.16em;
+		text-transform: uppercase;
+		color: rgb(148 163 184);
+	}
+
+	.stockpilot-complexity__detail {
+		margin-top: 0.5rem;
+		font-size: 0.8125rem;
+		line-height: 1.45;
+		color: rgb(148 163 184);
+	}
+
+	.stockpilot-story {
+		display: grid;
+		gap: clamp(2.5rem, 6vw, 4rem);
+		padding-block: clamp(2.5rem, 6vw, 4rem);
+	}
+
+	.stockpilot-chapter__index {
+		font-family: var(--font-mono);
+		font-size: 0.6875rem;
+		font-weight: 600;
+		letter-spacing: 0.2em;
+		text-transform: uppercase;
+		color: var(--color-brand-green);
+	}
+
+	.stockpilot-chapter__index span {
+		color: rgb(100 116 139);
+	}
+
+	.stockpilot-chapter__figure {
+		margin: 1rem 0 0;
+		overflow: hidden;
 		border-radius: 0.875rem;
 		border: 1px solid rgb(226 232 240);
 		box-shadow:
 			0 1px 2px rgb(15 23 42 / 0.04),
-			0 16px 40px rgb(15 23 42 / 0.08);
+			0 20px 48px rgb(15 23 42 / 0.08);
+		background: rgb(15 17 20);
 	}
 
-	.stockpilot-panel__caption {
-		margin-top: 0.875rem;
-		padding-inline: 0.125rem;
-		font-size: 0.8125rem;
-		line-height: 1.55;
-		color: rgb(100 116 139);
+	.stockpilot-chapter__img {
+		display: block;
+		width: 100%;
+		height: auto;
 	}
 
-	.stockpilot-details {
+	.stockpilot-chapter__body {
+		margin-top: 1.125rem;
+		max-width: 48rem;
+		font-size: 1rem;
+		line-height: 1.7;
+		color: rgb(71 85 105);
+	}
+
+	.stockpilot-closer {
 		border-top: 1px solid rgb(226 232 240);
 		background: white;
 		padding-block: clamp(2.5rem, 6vw, 4rem);
 	}
 
-	.stockpilot-capabilities {
-		display: grid;
-		gap: 1rem;
-	}
-
-	@media (min-width: 640px) {
-		.stockpilot-capabilities {
-			grid-template-columns: repeat(2, minmax(0, 1fr));
-			gap: 1.25rem;
-		}
-	}
-
-	.stockpilot-capability {
-		border-radius: 0.875rem;
-		border: 1px solid rgb(226 232 240);
-		background: rgb(248 250 252 / 0.8);
-		padding: 1.125rem 1.25rem;
-	}
-
-	.stockpilot-capability__title {
-		font-size: 0.875rem;
+	.stockpilot-closer__statement {
+		max-width: 44rem;
+		font-size: clamp(1.375rem, 3.5vw, 2rem);
 		font-weight: 700;
+		line-height: 1.25;
+		letter-spacing: -0.015em;
 		color: rgb(15 23 42);
 	}
 
-	.stockpilot-capability__body {
-		margin-top: 0.5rem;
-		font-size: 0.875rem;
-		line-height: 1.6;
+	.stockpilot-closer__support {
+		margin-top: 1.25rem;
+		max-width: 42rem;
+		font-size: 1rem;
+		line-height: 1.7;
 		color: rgb(100 116 139);
 	}
 </style>
