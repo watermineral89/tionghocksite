@@ -8,10 +8,11 @@ const leaders = [
 		role: "Director of Operations & Logistics",
 		badge: "OPS · LOG",
 		photo: "/DIRECTOR GARY.jpg",
+		qualification: "10+ years aerospace operations & logistics",
 		vision: "Aerospace-grade precision applied to every line of automotive inventory we move.",
 		strength: "Core infrastructure, warehouse discipline, and logistics that scale without breaking.",
 		detail:
-			"The senior director overseeing the company's core infrastructure. Integrates 10 years of Aerospace-grade precision into large-scale automotive parts distribution.",
+			"The senior director overseeing the company's core infrastructure. Integrates aerospace-grade precision into large-scale automotive parts distribution.",
 	},
 	{
 		name: "Rahim Chan",
@@ -19,10 +20,11 @@ const leaders = [
 		role: "Managing Director & Chief Visionary",
 		badge: "MD · VISION",
 		photo: "/DIRECTOR RAHIM.jpg",
+		qualification: "B.Eng (Hons) Civil Engineering — University of Nottingham",
 		vision: "Engineering logic driving multi-branch growth and long-term industry leadership.",
 		strength: "Strategic expansion, procurement foresight, and the blueprint for Tiong Hock's next chapter.",
 		detail:
-			"B.Eng (Hons) Civil Engineering, University of Nottingham. The lead architect of Tiong Hock's expansion. He combines engineering logic with the foresight to drive our multi-branch growth and long-term industry strategy.",
+			"The lead architect of Tiong Hock's expansion. He combines engineering logic with the foresight to drive our multi-branch growth and long-term industry strategy.",
 	},
 	{
 		name: "Vince Chan Chee Hou",
@@ -30,10 +32,11 @@ const leaders = [
 		role: "Technical Director & Systems Architect",
 		badge: "TECH · STOCKPILOT",
 		photo: "/DIRECTOR VINCE.jpg",
+		qualification: "B.Eng (Hons) Civil Engineering — Curtin University",
 		vision: "Digitizing the warehouse so fitment, stock, and fulfilment run on engineering certainty.",
 		strength: "StockPilot — our own in-house developed system powering inventory, picking, and fulfilment across every branch.",
 		detail:
-			"B.Eng (Hons) Civil Engineering, Curtin University. Lead architect and developer of StockPilot, Tiong Hock's internally built inventory and warehouse management platform.",
+			"Lead architect and developer of StockPilot, Tiong Hock's internally built inventory and warehouse management platform.",
 	},
 	{
 		name: "Ivan Yong",
@@ -41,10 +44,10 @@ const leaders = [
 		role: "Director of Sales & Mechanical Engineering",
 		badge: "SALES · MECH",
 		photo: "/DIRECTOR IVAN.jpg",
+		qualification: "B.Eng (1st Class Hons) Mechanical Engineering — UCSI University",
 		vision: "Workshop-grade technical support — parts identified correctly, failures understood deeply.",
 		strength: "Mechanical engineering rigour on the sales floor — failure analysis and fitment you can trust.",
-		detail:
-			"B.Eng (1st Class Hons) Mechanical Engineering, UCSI University. Expert in failure analysis and technical workshop support.",
+		detail: "Expert in failure analysis and technical workshop support.",
 	},
 ];
 ---
@@ -95,6 +98,10 @@ const leaders = [
 					</div>
 					<h3 class="mt-6 text-xl font-bold text-slate-900">{person.name}</h3>
 					<p class="mt-1 text-xs font-semibold uppercase tracking-wide text-brand-green sm:text-sm">{person.role}</p>
+					<div class="mt-5">
+						<p class="text-[0.65rem] font-bold uppercase tracking-[0.2em] text-slate-400">Qualification</p>
+						<p class="mt-1.5 text-left text-sm font-medium leading-relaxed text-slate-800">{person.qualification}</p>
+					</div>
 					<div class="mt-6 space-y-4">
 						<div>
 							<p class="text-[0.65rem] font-bold uppercase tracking-[0.2em] text-slate-400">Vision</p>
@@ -105,6 +112,7 @@ const leaders = [
 							<p class="mt-1.5 text-left text-sm leading-relaxed text-slate-600">{person.strength}</p>
 						</div>
 					</div>
+					<p class="mt-6 text-left text-sm leading-relaxed text-slate-500">{person.detail}</p>
 				</article>
 			))
 		}
@@ -193,6 +201,13 @@ const leaders = [
 										<p class="th-tech-badge relative -mt-1">{person.badge}</p>
 										<h3 class="mt-3 text-2xl font-bold leading-tight text-slate-900 lg:text-3xl">{person.name}</h3>
 										<p class="mt-2 text-sm font-semibold uppercase tracking-wide text-brand-green">{person.role}</p>
+
+										<div class="mt-5 max-w-2xl">
+											<p class="text-[0.65rem] font-bold uppercase tracking-[0.2em] text-slate-400">Qualification</p>
+											<p class="mt-2 text-left text-sm font-medium leading-relaxed text-slate-800 lg:text-base">
+												{person.qualification}
+											</p>
+										</div>
 
 										<div class="mt-6 grid gap-5 sm:grid-cols-2 lg:mt-7">
 											<div>
