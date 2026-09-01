@@ -6,7 +6,7 @@ import {
 	type PublicCatalog,
 } from "../lib/public-catalog";
 
-const WA_PHONE = "6082649433";
+const WA_PHONE = "60168860864";
 const API_PATH = "/api/public/search";
 const CATALOG_PATH = "/data/public-catalog.json";
 const DEBOUNCE_MS = 400;
