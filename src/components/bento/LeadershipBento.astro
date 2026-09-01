@@ -9,6 +9,8 @@ const leaders = [
 		badge: "OPS · LOG",
 		photo: "/DIRECTOR GARY.jpg",
 		qualification: "10+ years aerospace operations & logistics",
+		quote:
+			"Coming from aerospace, I don't do 'close enough.' A warehouse this size only works if every location and every count is exactly where it's supposed to be.",
 		vision: "Aerospace-grade precision applied to every line of automotive inventory we move.",
 		strength: "Core infrastructure, warehouse discipline, and logistics that scale without breaking.",
 		detail:
@@ -21,6 +23,8 @@ const leaders = [
 		badge: "MD · VISION",
 		photo: "/DIRECTOR RAHIM.jpg",
 		qualification: "B.Eng (Hons) Civil Engineering — University of Nottingham",
+		quote:
+			"Every branch we open has to make the next one easier, not harder. That's the only kind of growth worth chasing.",
 		vision: "Engineering logic driving multi-branch growth and long-term industry leadership.",
 		strength: "Strategic expansion, procurement foresight, and the blueprint for Tiong Hock's next chapter.",
 		detail:
@@ -33,6 +37,8 @@ const leaders = [
 		badge: "TECH · STOCKPILOT",
 		photo: "/DIRECTOR VINCE.jpg",
 		qualification: "B.Eng (Hons) Civil Engineering — Curtin University",
+		quote:
+			"I built StockPilot because I was tired of guessing where stock actually was. Now the whole team can see it — and so can I.",
 		vision: "Digitizing the warehouse so fitment, stock, and fulfilment run on engineering certainty.",
 		strength: "StockPilot — our own in-house developed system powering inventory, picking, and fulfilment across every branch.",
 		detail:
@@ -45,6 +51,8 @@ const leaders = [
 		badge: "SALES · MECH",
 		photo: "/DIRECTOR IVAN.jpg",
 		qualification: "B.Eng (1st Class Hons) Mechanical Engineering — UCSI University",
+		quote:
+			"Half my job is figuring out why a part failed before I even talk about the replacement. Get the diagnosis right and the sale takes care of itself.",
 		vision: "Workshop-grade technical support — parts identified correctly, failures understood deeply.",
 		strength: "Mechanical engineering rigour on the sales floor — failure analysis and fitment you can trust.",
 		detail: "Expert in failure analysis and technical workshop support.",
@@ -98,6 +106,9 @@ const leaders = [
 					</div>
 					<h3 class="mt-6 text-xl font-bold text-slate-900">{person.name}</h3>
 					<p class="mt-1 text-xs font-semibold uppercase tracking-wide text-brand-green sm:text-sm">{person.role}</p>
+					<blockquote class="leader-quote mt-5">
+						<p>{person.quote}</p>
+					</blockquote>
 					<div class="mt-5">
 						<p class="text-[0.65rem] font-bold uppercase tracking-[0.2em] text-slate-400">Qualification</p>
 						<p class="mt-1.5 text-left text-sm font-medium leading-relaxed text-slate-800">{person.qualification}</p>
@@ -202,6 +213,10 @@ const leaders = [
 										<h3 class="mt-3 text-2xl font-bold leading-tight text-slate-900 lg:text-3xl">{person.name}</h3>
 										<p class="mt-2 text-sm font-semibold uppercase tracking-wide text-brand-green">{person.role}</p>
 
+										<blockquote class="leader-quote mt-5 max-w-2xl">
+											<p>{person.quote}</p>
+										</blockquote>
+
 										<div class="mt-5 max-w-2xl">
 											<p class="text-[0.65rem] font-bold uppercase tracking-[0.2em] text-slate-400">Qualification</p>
 											<p class="mt-2 text-left text-sm font-medium leading-relaxed text-slate-800 lg:text-base">
@@ -248,6 +263,26 @@ const leaders = [
 		background: transparent;
 		-webkit-mask-image: linear-gradient(to bottom, #000 78%, transparent 100%);
 		mask-image: linear-gradient(to bottom, #000 78%, transparent 100%);
+	}
+
+	.leader-quote {
+		margin: 0;
+		border-left: 3px solid var(--color-brand-green);
+		padding-left: 1rem;
+	}
+
+	.leader-quote p {
+		font-size: 0.9375rem;
+		font-weight: 500;
+		font-style: italic;
+		line-height: 1.65;
+		color: rgb(30 41 59);
+	}
+
+	@media (min-width: 1024px) {
+		.leader-quote p {
+			font-size: 1.0625rem;
+		}
 	}
 
 	.leader-panel {
