@@ -1,0 +1,293 @@
+---
+
+---
+
+<style is:global>
+	@keyframes th-widget-romp {
+		0% {
+			transform: translate(0, 0) rotate(0deg) scale(1);
+		}
+		16% {
+			transform: translate(8vw, -4vh) rotate(-11deg) scale(1.1);
+		}
+		34% {
+			transform: translate(-6vw, 3vh) rotate(12deg) scale(1.06);
+		}
+		52% {
+			transform: translate(5vw, 2vh) rotate(-9deg) scale(1.12);
+		}
+		70% {
+			transform: translate(-4vw, -3vh) rotate(10deg) scale(1.04);
+		}
+		88% {
+			transform: translate(2vw, 1vh) rotate(-4deg) scale(1.02);
+		}
+		100% {
+			transform: translate(0, 0) rotate(0deg) scale(1);
+		}
+	}
+	.floating-widget-flyplay {
+		animation: th-widget-romp 2.6s cubic-bezier(0.34, 1.35, 0.64, 1) both;
+		pointer-events: none;
+		will-change: transform;
+	}
+	.floating-widget {
+		touch-action: none;
+		-webkit-touch-callout: none;
+		opacity: 0.88;
+		z-index: 40;
+	}
+</style>
+
+<div
+	id="floating-widget-ivan"
+	class="floating-widget fixed w-[88px] touch-none cursor-grab select-none sm:w-[120px]"
+	data-storage-key="th-float-ivan"
+	data-wa-phone="6082649433"
+	data-wa-text="Hello Tiong Hock — message from *ivanpleasecall* sticker on your site.\n\n"
+	title="Drag to move · Double-click: bounce · Right-click: WhatsApp (if you want)"
+>
+	<button
+		type="button"
+		class="floating-widget-close absolute -right-1 -top-1 z-10 flex h-6 w-6 items-center justify-center rounded-full bg-black/60 text-[10px] font-bold leading-none text-white backdrop-blur-sm transition hover:bg-black/80 sm:h-7 sm:w-7 sm:text-xs"
+		aria-label="Close"
+	>
+		×
+	</button>
+	<img
+		src="/ivanpleasecall.webp"
+		alt=""
+		width="150"
+		height="150"
+		class="pointer-events-none block h-auto w-full max-w-none rounded-none shadow-none"
+		draggable="false"
+		loading="lazy"
+		decoding="async"
+	/>
+</div>
+
+<div
+	id="floating-widget-hou"
+	class="floating-widget fixed w-[88px] touch-none cursor-grab select-none sm:w-[120px]"
+	data-storage-key="th-float-hou"
+	data-wa-phone="6082375775"
+	data-wa-text="Hello Tiong Hock AutoMart — message from *houbestapm* sticker on your site.\n\n"
+	title="Drag to move · Double-click: bounce · Right-click: WhatsApp (if you want)"
+>
+	<button
+		type="button"
+		class="floating-widget-close absolute -right-1 -top-1 z-10 flex h-6 w-6 items-center justify-center rounded-full bg-black/60 text-[10px] font-bold leading-none text-white backdrop-blur-sm transition hover:bg-black/80 sm:h-7 sm:w-7 sm:text-xs"
+		aria-label="Close"
+	>
+		×
+	</button>
+	<img
+		src="/houbestapm.webp"
+		alt=""
+		width="150"
+		height="150"
+		class="pointer-events-none block h-auto w-full max-w-none rounded-none shadow-none"
+		draggable="false"
+		loading="lazy"
+		decoding="async"
+	/>
+</div>
+
+<script is:inline>
+	(function () {
+		var PAD = 12;
+		var NAV_CLEARANCE = 72;
+
+		function clamp(n, min, max) {
+			return Math.min(Math.max(n, min), max);
+		}
+
+		function bottomPad() {
+			return Math.max(PAD, parseInt(getComputedStyle(document.documentElement).getPropertyValue("env(safe-area-inset-bottom)")) || 0);
+		}
+
+		function placeInitial(el, side) {
+			var w = el.offsetWidth;
+			var h = el.offsetHeight;
+			var b = bottomPad();
+			var top = window.innerHeight - h - b;
+			top = clamp(top, NAV_CLEARANCE, window.innerHeight - h - PAD);
+
+			el.style.top = top + "px";
+			el.style.bottom = "auto";
+
+			if (side === "left") {
+				el.style.left = PAD + "px";
+				el.style.right = "auto";
+			} else {
+				el.style.left = window.innerWidth - w - PAD + "px";
+				el.style.right = "auto";
+			}
+		}
+
+		function clampPosition(el) {
+			if (!el || !el.isConnected) return;
+			var w = el.offsetWidth;
+			var h = el.offsetHeight;
+			var l = parseFloat(el.style.left) || 0;
+			var t = parseFloat(el.style.top) || 0;
+			var minTop = NAV_CLEARANCE;
+			var maxTop = window.innerHeight - h - PAD;
+			var bottomZoneStart = window.innerHeight * 0.55;
+
+			l = clamp(l, 0, Math.max(0, window.innerWidth - w));
+			t = clamp(t, Math.max(minTop, bottomZoneStart), maxTop);
+			el.style.left = l + "px";
+			el.style.top = t + "px";
+		}
+
+		function openWhatsApp(el) {
+			var phone = el.getAttribute("data-wa-phone") || "6082649433";
+			var text = el.getAttribute("data-wa-text") || "Hello Tiong Hock\n\n";
+			var url = "https://wa.me/" + phone + "?text=" + encodeURIComponent(text);
+			window.open(url, "_blank", "noopener,noreferrer");
+		}
+
+		function playFly(el) {
+			el.classList.remove("floating-widget-flyplay");
+			el.style.transform = "";
+			void el.offsetWidth;
+			el.classList.add("floating-widget-flyplay");
+			function onEnd() {
+				el.removeEventListener("animationend", onEnd);
+				el.classList.remove("floating-widget-flyplay");
+				el.style.transform = "";
+			}
+			el.addEventListener("animationend", onEnd);
+		}
+
+		function attachDblClickFly(el) {
+			el.addEventListener("dblclick", function (e) {
+				if (e.target.closest && e.target.closest(".floating-widget-close")) return;
+				e.preventDefault();
+				e.stopPropagation();
+				playFly(el);
+			});
+		}
+
+		function attachSecondaryWhatsAppPrompt(el) {
+			el.addEventListener("contextmenu", function (e) {
+				if (e.target.closest && e.target.closest(".floating-widget-close")) return;
+				e.preventDefault();
+				if (window.confirm("Open WhatsApp in a new tab?")) {
+					openWhatsApp(el);
+				}
+			});
+		}
+
+		function attachDrag(el) {
+			var dragging = false;
+			var activePointerId = null;
+			var startX = 0;
+			var startY = 0;
+			var origLeft = 0;
+			var origTop = 0;
+
+			function cleanupDocumentListeners(onMove, onUp) {
+				document.removeEventListener("pointermove", onMove);
+				document.removeEventListener("pointerup", onUp);
+				document.removeEventListener("pointercancel", onUp);
+			}
+
+			el.addEventListener(
+				"pointerdown",
+				function (e) {
+					if (dragging) return;
+					if (e.pointerType === "mouse" && e.button !== 0) return;
+					if (e.target.closest && e.target.closest(".floating-widget-close")) return;
+					dragging = true;
+					activePointerId = e.pointerId;
+					var r = el.getBoundingClientRect();
+					origLeft = r.left;
+					origTop = r.top;
+					startX = e.clientX;
+					startY = e.clientY;
+					el.style.left = origLeft + "px";
+					el.style.top = origTop + "px";
+					el.style.right = "auto";
+					el.style.bottom = "auto";
+					el.classList.add("cursor-grabbing");
+					el.classList.remove("cursor-grab");
+					try {
+						el.setPointerCapture(e.pointerId);
+					} catch (_) {}
+
+					function onMove(e2) {
+						if (!dragging || e2.pointerId !== activePointerId) return;
+						if (e2.cancelable) e2.preventDefault();
+						var w = el.offsetWidth;
+						var h = el.offsetHeight;
+						var nl = origLeft + (e2.clientX - startX);
+						var nt = origTop + (e2.clientY - startY);
+						var minTop = Math.max(NAV_CLEARANCE, window.innerHeight * 0.55);
+						nl = clamp(nl, 0, Math.max(0, window.innerWidth - w));
+						nt = clamp(nt, minTop, Math.max(minTop, window.innerHeight - h - PAD));
+						el.style.left = nl + "px";
+						el.style.top = nt + "px";
+					}
+
+					function onUp(e2) {
+						if (!dragging || e2.pointerId !== activePointerId) return;
+						dragging = false;
+						activePointerId = null;
+						cleanupDocumentListeners(onMove, onUp);
+						el.classList.remove("cursor-grabbing");
+						el.classList.add("cursor-grab");
+						try {
+							if (el.hasPointerCapture && el.hasPointerCapture(e2.pointerId)) {
+								el.releasePointerCapture(e2.pointerId);
+							}
+						} catch (_) {}
+					}
+
+					document.addEventListener("pointermove", onMove, { passive: false });
+					document.addEventListener("pointerup", onUp);
+					document.addEventListener("pointercancel", onUp);
+				},
+				{ passive: true },
+			);
+		}
+
+		function initWidget(el, side) {
+			if (!el) return;
+			var key = el.getAttribute("data-storage-key");
+			if (key && sessionStorage.getItem(key) === "1") {
+				el.remove();
+				return;
+			}
+			placeInitial(el, side);
+			attachDrag(el);
+			attachDblClickFly(el);
+			attachSecondaryWhatsAppPrompt(el);
+		}
+
+		function init() {
+			initWidget(document.getElementById("floating-widget-ivan"), "left");
+			initWidget(document.getElementById("floating-widget-hou"), "right");
+
+			document.addEventListener("click", function (e) {
+				var btn = e.target.closest && e.target.closest(".floating-widget-close");
+				if (!btn) return;
+				var root = btn.closest(".floating-widget");
+				if (!root) return;
+				var key = root.getAttribute("data-storage-key");
+				if (key) sessionStorage.setItem(key, "1");
+				root.remove();
+			});
+
+			window.addEventListener("resize", function () {
+				document.querySelectorAll(".floating-widget").forEach(function (el, i) {
+					placeInitial(el, i === 0 ? "left" : "right");
+				});
+			});
+		}
+
+		if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);
+		else init();
+	})();
+</script>

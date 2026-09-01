@@ -1,0 +1,84 @@
+@import "tailwindcss";
+
+@theme {
+	--font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+	--font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+	--color-brand: #da251c;
+	--color-brand-green: #1a7d45;
+	--color-charcoal-950: #0f172a;
+	--color-charcoal-900: #1e293b;
+}
+
+@layer base {
+	html {
+		color-scheme: light;
+	}
+	body {
+		@apply bg-white text-slate-800 font-sans antialiased;
+	}
+	::selection {
+		background: color-mix(in oklab, var(--color-brand-green) 35%, transparent);
+	}
+}
+
+@layer utilities {
+	.text-justify {
+		text-align: justify;
+		text-justify: inter-word;
+		hyphens: auto;
+	}
+
+	.th-container {
+		width: 100%;
+		max-width: 1200px;
+		margin-inline: auto;
+		padding-inline: 1.5rem;
+	}
+
+	@media (min-width: 768px) {
+		.th-container {
+			padding-inline: 3rem;
+		}
+	}
+
+	.th-section {
+		@apply border-b border-slate-200 bg-white py-16 md:py-24;
+	}
+
+	.th-section-alt {
+		@apply border-b border-slate-200 bg-slate-50 py-16 md:py-24;
+	}
+
+	.th-tech-badge {
+		@apply inline-flex font-mono text-[0.625rem] font-semibold uppercase tracking-[0.18em] text-brand-green;
+		@apply rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-0.5 text-brand-green;
+	}
+
+	.th-cta-wa {
+		@apply inline-flex items-center justify-center rounded-full border border-brand bg-brand px-4 py-2.5 text-center font-mono text-[0.7rem] font-bold uppercase tracking-[0.12em] text-white transition hover:bg-[color-mix(in_oklab,var(--color-brand)_88%,black)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand;
+	}
+
+	.bento-grid {
+		display: grid;
+		gap: 1rem;
+	}
+
+	.magnetic-btn {
+		transition: transform 0.2s ease-out;
+	}
+
+	.magnetic-btn:active {
+		transform: scale(0.97);
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		[data-tilt],
+		[data-magnetic],
+		[data-animate],
+		[data-parallax] {
+			transform: none !important;
+			animation: none !important;
+			transition: none !important;
+		}
+	}
+}

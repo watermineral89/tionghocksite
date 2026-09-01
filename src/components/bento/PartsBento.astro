@@ -1,0 +1,91 @@
+---
+import BentoCard from "../ui/BentoCard.astro";
+import SectionHeader from "../ui/SectionHeader.astro";
+
+const wa = (message: string) => `https://wa.me/6082649433?text=${encodeURIComponent(message)}`;
+
+const categories = [
+	{
+		title: "Absorbers & Suspension",
+		badges: ["HEAVY DUTY", "OEM SPEC"],
+		refs: ["KYB-444134", "BSH-MTY-02R", "OEM-45201-S82"],
+		body: "Full range of shock absorbers, mounting, and bushings for heavy-duty and passenger use.",
+		waMsg:
+			"Hello Tiong Hock — I need a fitment check for *Absorbers & Suspension*.\n\nVehicle / chassis no.: \nPart refs on hand: ",
+		span: "md:col-span-2 md:row-span-2 lg:col-span-2 lg:row-span-2",
+		accent: true,
+	},
+	{
+		title: "Brake Systems",
+		badges: ["OEM SPEC", "PERFORMANCE"],
+		refs: ["BP-ADL-1949", "DIS-R280F", "BSH-MC-88"],
+		body: "High-performance brake pads, shoes, discs, and master cylinders.",
+		waMsg:
+			"Hello Tiong Hock — I need a fitment check for *Brake Systems*.\n\nVehicle / chassis no.: \nPart refs on hand: ",
+		span: "md:col-span-1 lg:col-span-2",
+		accent: false,
+	},
+	{
+		title: "Body & Exterior",
+		badges: ["OE FITMENT", "EXTERIOR"],
+		refs: ["LAM-HDL-81150", "BMP-FRT-521", "MIR-EG-DM2"],
+		body: "Headlamps, bumpers, mirrors, and cooling components for major OEM models.",
+		waMsg:
+			"Hello Tiong Hock — I need a fitment check for *Body & Exterior*.\n\nVehicle / chassis no.: \nPart refs on hand: ",
+		span: "md:col-span-1 lg:col-span-2",
+		accent: false,
+	},
+	{
+		title: "Electrical & Alternators",
+		badges: ["12V SYS", "RECOND OK"],
+		refs: ["ALT-12V-120A-RB", "STR-428000-9290", "BAT-MF-NS70"],
+		body: "New and reconditioned alternators, starters, and high-cycle batteries.",
+		waMsg:
+			"Hello Tiong Hock — I need a fitment check for *Electrical & Alternators*.\n\nVehicle / chassis no.: \nPart refs on hand: ",
+		span: "md:col-span-1 lg:col-span-2",
+		accent: false,
+	},
+	{
+		title: "Lubricants & Service",
+		badges: ["FLEET GRADE", "TROPICAL"],
+		refs: ["SVO-CI4-15W40-20L", "FLT-OFC-90915", "ADD-DP-LMT"],
+		body: "Engine oils, filters, and additives tuned for tropical fleet duty.",
+		waMsg:
+			"Hello Tiong Hock — I need a fitment check for *Lubricants & Service*.\n\nVehicle / chassis no.: \nPart refs on hand: ",
+		span: "md:col-span-2 lg:col-span-2",
+		accent: true,
+	},
+] as const;
+---
+
+<section id="parts-categories" class="scroll-mt-24 th-section">
+	<div class="th-container">
+		<SectionHeader
+			eyebrow="Technical catalog · Line index"
+			title="Spare part types"
+			meta="DOC-TH-KCH-REV 2026-01 · SHEET A-17"
+		/>
+
+		<div
+			class="mt-10 grid auto-rows-[minmax(180px,auto)] grid-cols-1 gap-4 md:grid-cols-4 lg:grid-cols-6"
+			data-animate="stagger-parent"
+		>
+			{
+				categories.map((c) => (
+					<BentoCard span={c.span} accent={c.accent} badges={[...c.badges]}>
+						<h3 class="text-sm font-bold uppercase tracking-[0.08em] text-slate-900 sm:text-base lg:text-lg">
+							{c.title}
+						</h3>
+						<div class="mt-3 rounded border border-slate-200 bg-slate-50 px-3 py-2 font-mono text-[10px] leading-relaxed text-slate-500 sm:text-[11px]">
+							<span class="text-brand-green">LINE REF</span> {c.refs.join(" · ")}
+						</div>
+						<p class="mt-4 flex-1 text-justify text-sm leading-relaxed text-slate-600">{c.body}</p>
+						<a href={wa(c.waMsg)} target="_blank" rel="noopener noreferrer" class="th-cta-wa mt-6 w-full">
+							Check Fitment via WhatsApp
+						</a>
+					</BentoCard>
+				))
+			}
+		</div>
+	</div>
+</section>

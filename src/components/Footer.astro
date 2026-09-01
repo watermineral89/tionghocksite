@@ -1,0 +1,67 @@
+---
+const year = new Date().getFullYear();
+
+const quickLinks = [
+	{ href: "/parts#parts-categories", label: "Parts Categories" },
+	{ href: "/about#about", label: "About Us" },
+	{ href: "/capabilities#capabilities", label: "Capabilities" },
+];
+---
+
+<footer class="border-t border-slate-200 bg-slate-50">
+	<div class="th-container py-12 md:py-14">
+		<div class="grid gap-10 sm:grid-cols-2 lg:grid-cols-3 lg:gap-12">
+			<div>
+				<div class="flex items-center gap-3">
+					<span class="flex h-10 w-10 shrink-0 items-center justify-center border border-slate-200 bg-white text-sm font-bold text-brand-green shadow-sm">
+						TH
+					</span>
+					<div>
+						<p class="text-sm font-semibold text-slate-900">TIONG HOCK AUTO PARTS (KCH) SDN BHD</p>
+						<p class="text-sm text-slate-500">Kuching · Sarawak</p>
+					</div>
+				</div>
+				<p class="mt-5 max-w-xs text-sm leading-relaxed text-slate-600">
+					Wholesale &amp; retail sale of motor vehicle spare parts &amp; accessories.
+				</p>
+			</div>
+
+			<div>
+				<h3 class="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">Direct contacts</h3>
+				<ul class="mt-4 space-y-2.5 text-sm text-slate-600">
+					<li>
+						<span class="text-slate-500">HQ</span>{" "}
+						<a class="text-slate-900 hover:underline" href="tel:+6082649433">082-649 433</a>
+					</li>
+					<li>
+						<span class="text-slate-500">Automart</span>{" "}
+						<a class="text-slate-900 hover:underline" href="tel:+6082375775">082-375 775</a>
+					</li>
+					<li>
+						<a class="text-slate-900 hover:underline" href="mailto:tionghockkch@gmail.com">tionghockkch@gmail.com</a>
+					</li>
+					<li class="text-slate-500">Fax (HQ): 082-649488</li>
+				</ul>
+			</div>
+
+			<div class="sm:col-span-2 lg:col-span-1">
+				<h3 class="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">Quick links</h3>
+				<ul class="mt-4 space-y-2.5 text-sm">
+					{
+						quickLinks.map((link) => (
+							<li>
+								<a class="text-slate-600 transition hover:text-brand-green" href={link.href}>
+									{link.label}
+								</a>
+							</li>
+						))
+					}
+				</ul>
+			</div>
+		</div>
+
+		<p class="mt-10 border-t border-slate-200 pt-6 text-center text-[11px] leading-relaxed text-slate-500 sm:text-xs">
+			© {year} TIONG HOCK AUTO PARTS (KCH) SDN BHD · Reg. No. 201301042376 (1072201-H) · TIN: C23031726100
+		</p>
+	</div>
+</footer>

@@ -1,0 +1,75 @@
+---
+import BentoCard from "./ui/BentoCard.astro";
+
+const links = [
+	{
+		href: "/parts",
+		eyebrow: "Catalog",
+		badge: "PARTS",
+		title: "Parts Categories",
+		body: "Suspension, brakes, electrical, lubricants — browse by line and check fitment via WhatsApp.",
+		accent: true,
+		span: "md:col-span-2 lg:col-span-2",
+	},
+	{
+		href: "/about",
+		eyebrow: "Company",
+		badge: "ABOUT",
+		title: "Our Legacy",
+		body: "Four decades in Kuching. Meet the team and learn why workshops trust Tiong Hock.",
+		accent: false,
+		span: "md:col-span-1 lg:col-span-2",
+	},
+	{
+		href: "/capabilities",
+		eyebrow: "Operations",
+		badge: "CAPS",
+		title: "Capabilities",
+		body: "OEM sourcing, fleet programmes, technical ID support, and fast-moving inventory depth.",
+		accent: false,
+		span: "md:col-span-1 lg:col-span-2",
+	},
+	{
+		href: "#contact",
+		eyebrow: "Branches",
+		badge: "CONTACT",
+		title: "Contact Us",
+		body: "Matang Jaya HQ, Kota Samarahan Automart — phone, email, and WhatsApp for each branch.",
+		accent: true,
+		span: "md:col-span-2 lg:col-span-2",
+	},
+];
+---
+
+<section id="explore" class="scroll-mt-24 th-section-alt">
+	<div class="th-container">
+		<div data-animate="fade-up">
+			<p class="th-tech-badge">Explore</p>
+			<h2 class="mt-4 text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">Spare Parts Categories</h2>
+			<p class="mt-3 max-w-xl text-base text-slate-600">Suspension, brakes, electrical, lubricants, and more — browse by line or check fitment via WhatsApp.</p>
+		</div>
+
+		<div
+			class="mt-10 grid auto-rows-[minmax(160px,auto)] grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-6"
+			data-animate="stagger-parent"
+		>
+			{
+				links.map((link) => (
+					<a href={link.href} class:list={["block h-full no-underline", link.span]}>
+						<BentoCard accent={link.accent} badges={[link.badge]} class="h-full">
+							<p class="font-mono text-[0.625rem] font-medium uppercase tracking-[0.2em] text-slate-500">{link.eyebrow}</p>
+							<h3 class="mt-3 text-lg font-bold text-slate-900 sm:text-xl">{link.title}</h3>
+							<p class="mt-3 flex-1 text-sm leading-relaxed text-slate-600">{link.body}</p>
+							<span class="mt-5 inline-flex items-center gap-1 font-mono text-xs font-bold uppercase tracking-[0.14em] text-brand-green">
+								Open
+								<svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+								</svg>
+							</span>
+						</BentoCard>
+					</a>
+				))
+			}
+		</div>
+	</div>
+</section>

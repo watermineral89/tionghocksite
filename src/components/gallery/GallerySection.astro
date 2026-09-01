@@ -1,0 +1,178 @@
+---
+import SectionHeader from "../ui/SectionHeader.astro";
+import { galleryPhotos } from "../../data/gallery.ts";
+
+const photoCount = galleryPhotos.length;
+const countLabel = String(photoCount).padStart(2, "0");
+---
+
+<section id="gallery" class="scroll-mt-24 th-section-alt" aria-labelledby="gallery-heading">
+	<div class="th-container pb-8 md:pb-10">
+		<div class="flex flex-wrap items-end justify-between gap-6">
+			<SectionHeader
+				eyebrow="Visual archive"
+				title="Photo gallery"
+				description="Drop photos into public/GALLERY — every image in that folder appears here automatically."
+				headingId="gallery-heading"
+				class="!mb-0 flex-1"
+			/>
+
+			<div
+				class="flex shrink-0 rounded-full border border-slate-200 bg-white p-1 shadow-sm"
+				role="tablist"
+				aria-label="Gallery view mode"
+			>
+				<button
+					type="button"
+					role="tab"
+					data-gallery-view="scroll"
+					aria-selected="true"
+					class="rounded-full border px-4 py-2 font-mono text-[0.65rem] font-semibold uppercase tracking-[0.14em] transition"
+				>
+					Scroll fade
+				</button>
+				<button
+					type="button"
+					role="tab"
+					data-gallery-view="grid"
+					aria-selected="false"
+					class="rounded-full border px-4 py-2 font-mono text-[0.65rem] font-semibold uppercase tracking-[0.14em] transition"
+				>
+					Listing
+				</button>
+			</div>
+		</div>
+	</div>
+
+	<div data-gallery-grid-root class="th-container pb-16 md:pb-24">
+		<ul class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+			{
+				galleryPhotos.map((photo) => (
+					<li class="group overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm transition hover:border-slate-300 hover:shadow-md">
+						<div class="flex min-h-[12rem] items-center justify-center overflow-hidden bg-slate-100">
+							<img
+								src={photo.src}
+								alt={photo.alt}
+								class="block h-auto max-h-[28rem] w-full object-contain object-center transition duration-500 group-hover:scale-[1.02]"
+								loading="lazy"
+								decoding="async"
+							/>
+						</div>
+						<div class="p-4">
+							<h3 class="text-sm font-bold text-slate-900">{photo.title}</h3>
+							{photo.caption ? (
+								<p class="mt-2 text-left text-sm leading-relaxed text-slate-600">{photo.caption}</p>
+							) : null}
+						</div>
+					</li>
+				))
+			}
+		</ul>
+	</div>
+
+	<div data-gallery-scroll-root class="relative hidden md:block">
+		<div class="gallery-scroll-track relative" data-gallery-scroll-track>
+			<div class="gallery-scroll-pin" data-gallery-scroll-pin>
+				<div class="relative flex min-h-[100dvh] flex-col">
+					<div class="absolute inset-x-0 top-0 z-30 bg-gradient-to-b from-slate-50/95 via-slate-50/70 to-transparent px-6 pb-8 pt-6 sm:px-10">
+						<div class="mx-auto flex max-w-6xl items-center justify-between gap-4">
+							<div class="flex items-center gap-2" aria-hidden="true">
+								{
+									galleryPhotos.map((_, index) => (
+										<span
+											class:list={[
+												"gallery-dot h-1.5 rounded-full bg-slate-200 transition-all duration-300",
+												index === 0 && "active w-8 bg-brand-green",
+												index !== 0 && "w-1.5",
+											]}
+											data-gallery-dot
+										/>
+									))
+								}
+							</div>
+							<p class="font-mono text-xs tracking-[0.2em] text-slate-400">
+								<span data-gallery-counter>01</span>
+								<span aria-hidden="true"> / </span>
+								<span>{countLabel}</span>
+							</p>
+						</div>
+					</div>
+
+					<div class="relative mx-auto flex w-full max-w-6xl flex-1 flex-col justify-center px-6 pb-24 pt-20 sm:px-10">
+						<div
+							class="gallery-frame relative flex min-h-[min(70vh,640px)] w-full items-center justify-center"
+							data-gallery-frame
+						>
+							{
+								galleryPhotos.map((photo, index) => (
+									<div
+										class="gallery-slide absolute inset-0 flex items-center justify-center px-2 sm:px-4"
+										data-gallery-slide
+										style={index === 0 ? undefined : "visibility:hidden;opacity:0"}
+									>
+										<img
+											src={photo.src}
+											alt={photo.alt}
+											class="gallery-slide-img max-h-[min(70vh,720px)] w-auto max-w-full rounded-xl object-contain shadow-lg"
+											loading={index === 0 ? "eager" : "lazy"}
+											decoding="async"
+										/>
+									</div>
+								))
+							}
+						</div>
+
+						<div class="relative mt-8 min-h-[5rem]">
+							{
+								galleryPhotos.map((photo, index) => (
+									<div
+										class="gallery-caption absolute inset-x-0 top-0 text-center"
+										data-gallery-caption
+										style={index === 0 ? undefined : "visibility:hidden;opacity:0"}
+									>
+										<p class="th-tech-badge">{photo.title}</p>
+										{photo.caption ? (
+											<p class="mx-auto mt-3 max-w-2xl text-left text-sm leading-relaxed text-slate-600 sm:text-center sm:text-base">
+												{photo.caption}
+											</p>
+										) : null}
+									</div>
+								))
+							}
+						</div>
+					</div>
+
+					<p
+						class="pointer-events-none absolute bottom-6 left-1/2 z-20 -translate-x-1/2 font-mono text-[0.625rem] uppercase tracking-[0.24em] text-slate-400"
+					>
+						Scroll to fade through photos
+					</p>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div data-gallery-scroll-root class="md:hidden">
+		<p class="th-container pb-4 font-mono text-[0.65rem] uppercase tracking-[0.18em] text-slate-400">
+			Switch to listing view on mobile, or scroll the grid above.
+		</p>
+	</div>
+</section>
+
+<style>
+	.gallery-dot.active {
+		width: 2rem;
+		background-color: var(--color-brand-green);
+	}
+
+	[data-gallery-scroll-root][hidden],
+	[data-gallery-grid-root][hidden] {
+		display: none !important;
+	}
+</style>
+
+<script>
+	import { initGalleryPage } from "../../scripts/gallery-scroll";
+
+	initGalleryPage();
+</script>

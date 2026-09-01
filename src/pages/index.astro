@@ -1,0 +1,49 @@
+---
+import PageLayout from "../layouts/PageLayout.astro";
+import Hero from "../components/Hero.astro";
+import HomeQuickLinks from "../components/HomeQuickLinks.astro";
+
+const seoTitle = "Tiong Hock Auto Parts (KCH) | Automotive Spare Parts Supplier Kuching & Samarahan";
+const seoDescription =
+	"Tiong Hock Auto Parts (KCH) Sdn Bhd — Leading wholesale & retail automotive spare parts distributor in Matang Jaya, Kuching & Kota Samarahan, Sarawak. Stocking genuine & OEM parts, absorbers, brakes, and APM R134a refrigerant.";
+
+const heroWhatsappHref = `https://wa.me/6082649433?text=${encodeURIComponent(
+	"Hello Tiong Hock — I have a parts inquiry.\n\nVehicle / chassis no.: \nParts needed: ",
+)}`;
+---
+
+<PageLayout title={seoTitle} description={seoDescription}>
+	<Hero
+		eyebrow="Tiong Hock Auto Parts (KCH)"
+		title="Automotive Spare Parts Supplier in Kuching & Samarahan"
+		description="50,000+ line items. Genuine & OEM parts for workshops and fleets across Matang Jaya, Kuching & Kota Samarahan."
+		primaryHref="/parts"
+		primaryLabel="Browse Parts"
+		whatsappHref={heroWhatsappHref}
+		whatsappLabel="WhatsApp Inquiry"
+	/>
+
+	<section id="apm-distributor" class="th-section">
+		<div class="th-container" data-animate="fade-up">
+			<p class="th-tech-badge">Official distributor</p>
+			<h2 class="mt-4 text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
+				Authorized APM &amp; OEM Parts Distributor
+			</h2>
+			<p class="mt-3 max-w-2xl text-base leading-relaxed text-slate-600">
+				Authorised stockist of APM R134a premium refrigerant and genuine OEM-equivalent spare parts — absorbers,
+				brakes, electrical, and fast-moving workshop lines across Sarawak.
+			</p>
+			<a
+				href="/parts#featured-product"
+				class="mt-6 inline-flex items-center gap-1 font-mono text-xs font-bold uppercase tracking-[0.14em] text-brand-green transition hover:text-brand-green/80"
+			>
+				View APM R134a &amp; parts catalog
+				<svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+				</svg>
+			</a>
+		</div>
+	</section>
+
+	<HomeQuickLinks />
+</PageLayout>

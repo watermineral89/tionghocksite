@@ -1,0 +1,70 @@
+---
+import SectionHeader from "../ui/SectionHeader.astro";
+
+const features = [
+	{
+		title: "Item master & costing",
+		body: "Full item records — codes, brands, weighted-average costing, and price control — maintained in one place.",
+	},
+	{
+		title: "Multi-branch stock",
+		body: "Live on-hand balances across Matang Jaya, Samarahan, and 13 Miles with shelf location tracking per branch.",
+	},
+	{
+		title: "Warehouse operations",
+		body: "Stock adjustments, movement history, incoming/outgoing visibility, and order recording built into daily workflow.",
+	},
+	{
+		title: "Built by us, for us",
+		body: "Developed in-house by Tiong Hock's own team — shaped around how we pick, stock, and fulfil for workshops.",
+	},
+];
+---
+
+<section id="stockpilot" class="scroll-mt-24 th-section" aria-labelledby="stockpilot-heading">
+	<div class="th-container">
+		<SectionHeader
+			eyebrow="Internal systems"
+			title="StockPilot"
+			description="Our own in-house developed inventory and warehouse platform — not off-the-shelf ERP software."
+			headingId="stockpilot-heading"
+			class="!items-start"
+		/>
+
+		<div class="mt-10 grid grid-cols-1 items-center gap-10 lg:grid-cols-2 lg:gap-14">
+			<div>
+				<p class="text-left text-base leading-relaxed text-slate-600 sm:text-lg">
+					<strong class="font-semibold text-slate-900">StockPilot</strong> powers how Tiong Hock Auto Parts manages
+					50,000+ line items across branches. From item master and shelf addresses to branch-level on-hand stock and
+					fulfilment — every counter, picker, and workshop enquiry runs on a system we designed and maintain ourselves.
+				</p>
+
+				<ul class="mt-8 grid gap-4 sm:grid-cols-2">
+					{
+						features.map((item) => (
+							<li class="rounded-xl border border-slate-200 bg-slate-50/80 p-4">
+								<h3 class="text-sm font-bold text-slate-900">{item.title}</h3>
+								<p class="mt-2 text-left text-sm leading-relaxed text-slate-600">{item.body}</p>
+							</li>
+						))
+					}
+				</ul>
+			</div>
+
+			<figure class="overflow-hidden rounded-xl shadow-md">
+				<img
+					src="/STOCK PILOT 2.jpg"
+					alt="StockPilot Stock Maintenance on a warehouse monitor — item master, branch stock, and inventory controls in our Matang Jaya operation"
+					width={1280}
+					height={853}
+					class="block h-auto w-full object-cover"
+					loading="lazy"
+					decoding="async"
+				/>
+				<figcaption class="bg-slate-50 px-4 py-3 font-mono text-[0.625rem] uppercase tracking-[0.18em] text-slate-500">
+					StockPilot · Stock Maintenance · In-house ERP
+				</figcaption>
+			</figure>
+		</div>
+	</div>
+</section>

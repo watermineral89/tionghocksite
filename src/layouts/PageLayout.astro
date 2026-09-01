@@ -1,0 +1,29 @@
+---
+import BaseLayout from "./BaseLayout.astro";
+import Navbar from "../components/Navbar.astro";
+import BranchLocations from "../components/BranchLocations.astro";
+import Footer from "../components/Footer.astro";
+import FloatingImageWidgets from "../components/FloatingImageWidgets.astro";
+
+interface Props {
+	title?: string;
+	description?: string;
+}
+
+const { title, description } = Astro.props;
+---
+
+<BaseLayout title={title} description={description}>
+	<Navbar />
+	<main class="overflow-x-clip">
+		<slot />
+	</main>
+	<BranchLocations />
+	<Footer />
+	<FloatingImageWidgets />
+</BaseLayout>
+
+<script>
+	import { initScrollAnimations } from "../scripts/gsap-init";
+	initScrollAnimations();
+</script>

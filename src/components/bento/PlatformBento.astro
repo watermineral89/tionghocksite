@@ -1,0 +1,88 @@
+---
+import BentoCard from "../ui/BentoCard.astro";
+
+const capabilities = [
+	{
+		title: "Genuine & OEM-equivalent",
+		body: "Traceable sourcing with batch consistency for high-wear assemblies and service-critical kits.",
+	},
+	{
+		title: "Technical ID support",
+		body: "VIN, chassis, and application cross-checks so the right component lands the first time.",
+	},
+	{
+		title: "Fleet programmes",
+		body: "Contract pricing, consolidated invoicing, and scheduled releases aligned to PM intervals.",
+	},
+	{
+		title: "Workshop throughput",
+		body: "Pick-face ready cartons, minimal repack friction, and predictable lead times on core movers.",
+	},
+];
+
+const partsLines = [
+	"Engine · gaskets, pumps, belts, filtration",
+	"Brake · discs, pads, hydraulics, ABS sensors",
+	"Drivetrain · differentials, UJ kits, hubs",
+	"Electrical · alternators, starters, lighting",
+	"Chassis · bushes, arms, dampers, steering",
+];
+---
+
+<section id="capabilities" class="scroll-mt-24 th-section">
+	<div class="th-container">
+		<div
+			class="grid auto-rows-[minmax(160px,auto)] grid-cols-1 gap-4 lg:grid-cols-6"
+			data-animate="stagger-parent"
+		>
+			<BentoCard span="lg:col-span-2 lg:row-span-2" accent badges={["OPERATIONS", "OEM GRADE"]} class="!p-6 sm:!p-8">
+				<p class="th-tech-badge">Capabilities</p>
+				<h2 class="mt-4 text-2xl font-semibold tracking-tight text-slate-900 sm:text-3xl">
+					Built like industrial OEM support.
+				</h2>
+				<p class="mt-4 text-base leading-relaxed text-slate-600 sm:text-lg">
+					From urban distribution to long-haul linehaul, we structure supply the way serious operators run maintenance:
+					predictable, documented, and fast.
+				</p>
+			</BentoCard>
+
+			{
+				capabilities.map((item) => (
+					<BentoCard span="lg:col-span-2">
+						<h3 class="text-lg font-semibold text-slate-900">{item.title}</h3>
+						<p class="mt-3 flex-1 text-justify text-sm leading-relaxed text-slate-600">{item.body}</p>
+					</BentoCard>
+				))
+			}
+
+			<BentoCard id="parts" span="lg:col-span-3 lg:row-span-2" badges={["FAST-MOVING"]} class="scroll-mt-24 !p-6 sm:!p-8">
+				<p class="th-tech-badge">Fast-moving depth</p>
+				<h2 class="mt-4 text-2xl font-semibold tracking-tight text-slate-900 sm:text-3xl">
+					Parts desk that understands duty cycles.
+				</h2>
+				<p class="mt-4 text-base leading-relaxed text-slate-600 sm:text-lg">
+					High-velocity categories are stocked for immediate dispatch. Specialist assemblies are sourced with lead-time
+					transparency—no mystery ETAs.
+				</p>
+			</BentoCard>
+
+			<BentoCard span="lg:col-span-3 lg:row-span-2" badges={["LINE INDEX"]}>
+				<ul class="flex flex-col gap-0">
+					{
+						partsLines.map((line, i) => (
+							<li
+								class:list={[
+									"flex items-start gap-4 py-4",
+									i > 0 && "border-t border-slate-200",
+								]}
+							>
+								<span class="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-brand-green" aria-hidden="true" />
+								<span class="text-base font-medium text-slate-800">{line}</span>
+							</li>
+						))
+					}
+				</ul>
+			</BentoCard>
+		</div>
+	</div>
+</section>

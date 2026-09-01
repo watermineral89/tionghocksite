@@ -1,0 +1,32 @@
+# build output
+dist/
+# generated types
+.astro/
+
+# dependencies
+node_modules/
+
+# logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# environment variables
+.env
+.env.production
+
+# macOS-specific files
+.DS_Store
+
+# jetbrains setting folder
+.idea/
+
+# legacy WordPress export — not part of the Astro site
+TIONG HOCK CLIENT/
+
+# stray assets at repo root (copies live in /public)
+/image_1.png
+/image_1BACK.png
+/houbestapm.webp
+/ivanpleasecall.webp

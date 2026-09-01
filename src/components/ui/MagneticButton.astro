@@ -1,0 +1,30 @@
+---
+interface Props {
+	href: string;
+	variant?: "primary" | "outline" | "wa";
+	external?: boolean;
+	class?: string;
+}
+
+const { href, variant = "primary", external = false, class: className = "" } = Astro.props;
+
+const base =
+	"magnetic-btn group relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-full px-6 py-3 text-sm font-semibold transition-[background-color,border-color,box-shadow] duration-200 will-change-transform focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2";
+
+const styles = {
+	primary:
+		"bg-brand-green text-white hover:bg-[color-mix(in_oklab,var(--color-brand-green)_88%,black)] focus-visible:outline-brand-green",
+	outline:
+		"border border-slate-300 bg-white text-slate-800 hover:border-slate-400 hover:bg-slate-50 focus-visible:outline-slate-400",
+	wa: "bg-brand text-white hover:bg-[color-mix(in_oklab,var(--color-brand)_88%,black)] focus-visible:outline-brand",
+};
+---
+
+<a
+	href={href}
+	data-magnetic
+	class:list={[base, styles[variant], className]}
+	{...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+>
+	<span class="relative z-10"><slot /></span>
+</a>

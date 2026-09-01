@@ -1,0 +1,114 @@
+---
+import BentoCard from "../ui/BentoCard.astro";
+import SectionHeader from "../ui/SectionHeader.astro";
+
+const waHref = `https://wa.me/6082649433?text=${encodeURIComponent(
+	"Hello Tiong Hock — I would like to enquire about *APM R134a Premium Refrigerant* stock and pricing.\n\nQuantity needed: \nBranch preference (Matang Jaya / Kota Samarahan): ",
+)}`;
+
+const highlights = [
+	{
+		title: "Automotive A/C Grade",
+		body: "Formulated for passenger and commercial vehicle air-conditioning systems.",
+		icon: "M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z M15 12a3 3 0 11-6 0 3 3 0 016 0z",
+	},
+	{
+		title: "Fast & Stable Performance",
+		body: "Consistent cooling output under tropical workshop and fleet duty cycles.",
+		icon: "M13 10V3L4 14h7v7l9-11h-7z",
+	},
+	{
+		title: "High Purity & Reliable",
+		body: "≥99.9% 1,1,1,2-Tetrafluoroethane — batch traceable, workshop trusted.",
+		icon: "M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z",
+	},
+];
+---
+
+<section id="featured-product" class="scroll-mt-24 th-section-alt">
+	<div class="th-container">
+		<SectionHeader
+			eyebrow="Featured product line"
+			title="Authorised distributor"
+			description="Premium APM refrigerant — ready stock at Tiong Hock Auto Parts (KCH) Sdn Bhd."
+			meta="SKU-TH-APM-R134a"
+		/>
+
+		<div id="apm-r134a" class="mt-10 grid grid-cols-1 items-stretch gap-4 lg:grid-cols-2" data-animate="fade-up">
+			<article
+				class="group/visual relative flex min-h-[280px] overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm transition-[border-color,box-shadow] duration-300 hover:border-slate-300 hover:shadow-md lg:min-h-0"
+			>
+				<div
+					class="pointer-events-none absolute inset-0"
+					style="background: radial-gradient(ellipse 90% 70% at 50% 50%, rgba(26,125,69,0.06), transparent 65%);"
+					aria-hidden="true"
+				>
+				</div>
+				<div class="relative flex flex-1 items-center justify-center p-4 sm:p-6 lg:p-8">
+					<img
+						src="/images/products/apm-r134a.jpg"
+						alt="APM R134a refrigerant cartons — product preview"
+						width="800"
+						height="1000"
+						class="max-h-[min(520px,70vh)] w-full object-contain object-center transition-transform duration-700 ease-out group-hover/visual:scale-[1.03]"
+						loading="lazy"
+						decoding="async"
+					/>
+				</div>
+			</article>
+
+			<BentoCard accent badges={["AUTHORISED DISTRIBUTOR", "NON-FLAMMABLE GAS 2"]} class="flex h-full flex-col !p-6 sm:!p-8">
+				<div class="flex flex-wrap gap-2">
+					<span class="th-tech-badge">MAX COOLING</span>
+					<span class="th-tech-badge">≥99.9% PURITY</span>
+				</div>
+
+				<h2 class="mt-5 text-2xl font-bold uppercase tracking-[0.06em] text-slate-900 sm:text-3xl">
+					APM R134a Premium Refrigerant
+				</h2>
+
+				<p class="mt-3 font-mono text-[0.65rem] uppercase tracking-[0.14em] text-slate-500">
+					1,1,1,2-Tetrafluoroethane · CAS 811-97-2
+				</p>
+
+				<p class="mt-5 text-sm leading-relaxed text-slate-600">
+					Automotive-grade R134a for workshop and fleet A/C systems. Distributed by Tiong Hock — ready stock
+					across Matang Jaya and Kota Samarahan.
+				</p>
+
+				<dl class="mt-6 grid grid-cols-2 gap-4 border-t border-slate-200 pt-6 font-mono text-[10px] uppercase tracking-wider sm:text-[11px]">
+					<div>
+						<dt class="text-brand-green">Net weight</dt>
+						<dd class="mt-1.5 text-sm font-medium normal-case tracking-normal text-slate-800">30 lbs (13.6 kg)</dd>
+					</div>
+					<div>
+						<dt class="text-brand-green">Classification</dt>
+						<dd class="mt-1.5 text-sm font-medium normal-case tracking-normal text-slate-800">Non-flammable Gas 2</dd>
+					</div>
+					<div class="col-span-2">
+						<dt class="text-brand-green">Chemical purity</dt>
+						<dd class="mt-1.5 text-sm font-medium normal-case tracking-normal text-slate-800">≥99.9%</dd>
+					</div>
+				</dl>
+
+				<a href={waHref} target="_blank" rel="noopener noreferrer" class="th-cta-wa mt-auto pt-8 w-full">
+					Request Stock &amp; Pricing via WhatsApp
+				</a>
+			</BentoCard>
+		</div>
+
+		<div class="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-3" data-animate="stagger-parent">
+			{
+				highlights.map((item) => (
+					<BentoCard>
+						<svg class="h-8 w-8 text-brand-green" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d={item.icon} />
+						</svg>
+						<h3 class="mt-4 text-sm font-bold uppercase tracking-wide text-slate-900">{item.title}</h3>
+						<p class="mt-2 text-sm leading-relaxed text-slate-600">{item.body}</p>
+					</BentoCard>
+				))
+			}
+		</div>
+	</div>
+</section>

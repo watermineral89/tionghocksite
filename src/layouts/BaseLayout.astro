@@ -1,0 +1,36 @@
+---
+import "../styles/global.css";
+
+interface Props {
+	title?: string;
+	description?: string;
+	ogUrl?: string;
+}
+
+const {
+	title = "Tiong Hock Auto Parts (KCH) | Automotive Spare Parts Supplier Kuching & Samarahan",
+	description = "Tiong Hock Auto Parts (KCH) Sdn Bhd — Leading wholesale & retail automotive spare parts distributor in Matang Jaya, Kuching & Kota Samarahan, Sarawak. Stocking genuine & OEM parts, absorbers, brakes, and APM R134a refrigerant.",
+	ogUrl = "https://tionghock.com",
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="en-MY" class="scroll-smooth">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<link rel="icon" href="/favicon.ico" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta name="generator" content={Astro.generator} />
+		<meta name="description" content={description} />
+		<meta name="geo.region" content="MY-13" />
+		<meta property="og:title" content={title} />
+		<meta property="og:description" content={description} />
+		<meta property="og:type" content="website" />
+		<meta property="og:url" content={ogUrl} />
+		<title>{title}</title>
+	</head>
+	<body class="min-h-dvh">
+		<slot />
+	</body>
+</html>
