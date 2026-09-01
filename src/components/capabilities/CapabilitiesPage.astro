@@ -1,0 +1,667 @@
+---
+const stockPilotHero = encodeURI("/ChatGPT Image Sep 1, 2026, 09_45_43 PM.png");
+const stockPilotUi = "/stockpilot-technology.jpg";
+const warehouseVisual = "/stockpilot-warehouse.png";
+const partsVisual = encodeURI("/GALLERY/ACONGAS.jpg");
+const technicalVisual = encodeURI("/GALLERY/DIRECTOR IVAN.jpg");
+const fulfilmentVisual = encodeURI("/GALLERY/DIRECTOR GARY.jpg");
+
+const flow = [
+	{ need: "Customer need", line: "“I need this part.”" },
+	{ step: "01", label: "Identify", detail: "What part is actually required?" },
+	{ step: "02", label: "Verify", detail: "Does it fit the vehicle / application?" },
+	{ step: "03", label: "Locate", detail: "Do we have it — and where?" },
+	{ step: "04", label: "Fulfil", detail: "Can we pick and prepare it accurately?" },
+	{ step: "05", label: "Deliver", detail: "Can we get it to the customer?" },
+];
+
+const capabilities = [
+	{
+		id: "parts-fitment",
+		index: "01",
+		eyebrow: "Parts & fitment",
+		title: "Parts Identification & Fitment",
+		lead: "Find the right part.",
+		body: "Part numbers, vehicle applications, brands and technical specifications are checked against real automotive requirements — not generic catalogue guesses.",
+		points: [
+			"Part number identification",
+			"Vehicle / application matching",
+			"OEM & aftermarket alternatives",
+			"Technical cross-reference",
+			"Fitment support",
+		],
+		visual: partsVisual,
+		visualAlt: "Automotive parts and product lines at Tiong Hock Auto Parts",
+		caption: "The right part starts with the right identification.",
+		reverse: false,
+	},
+	{
+		id: "stockpilot",
+		index: "02",
+		eyebrow: "StockPilot",
+		title: "Inventory Intelligence",
+		lead: "Know what is available.",
+		body: "Our StockPilot ERP gives our team a real-time view of inventory, locations and availability across our operations — the backbone of every counter answer and workshop enquiry.",
+		points: [
+			"50,000+ active line items",
+			"Stock availability",
+			"Warehouse locations",
+			"Stock movement",
+			"Replenishment visibility",
+			"Internal inventory control",
+		],
+		featured: true,
+		caption: "The intelligence behind our inventory.",
+		reverse: true,
+	},
+	{
+		id: "technical-support",
+		index: "03",
+		eyebrow: "Technical support",
+		title: "Technical & Failure Analysis",
+		lead: "Understand why the part failed.",
+		body: "Mechanical engineering expertise lets us go beyond supplying a replacement — we help workshops understand failure modes, installation considerations, and the correct part for the job.",
+		points: [
+			"Failure analysis",
+			"Mechanical troubleshooting",
+			"Technical consultation",
+			"Installation considerations",
+			"Workshop support",
+			"Correct-part identification",
+		],
+		visual: technicalVisual,
+		visualAlt: "Ivan Yong — Director of Sales & Mechanical Engineering, technical workshop support",
+		caption: "When the failure isn't obvious, technical knowledge matters.",
+		reverse: false,
+	},
+	{
+		id: "warehouse",
+		index: "04",
+		eyebrow: "Warehouse & fulfilment",
+		title: "Warehouse & Fulfilment",
+		lead: "Move parts accurately.",
+		body: "A disciplined warehouse operation supports high-volume picking, checking and fulfilment while maintaining control over thousands of individual part numbers — operations led from the floor up.",
+		points: [
+			"Structured inventory locations",
+			"Picking & checking",
+			"Order fulfilment",
+			"Stock accuracy",
+			"Packing",
+			"Dispatch coordination",
+		],
+		visual: warehouseVisual,
+		visualAlt: "StockPilot Warehouse Control in an organised warehouse with barcode scanner and shelf locations",
+		caption: "Thousands of parts. One controlled operation.",
+		reverse: true,
+	},
+	{
+		id: "distribution",
+		index: "05",
+		eyebrow: "Regional distribution",
+		title: "Regional Distribution",
+		lead: "Get parts where they need to go.",
+		body: "From our base in Sarawak, Tiong Hock supports workshops, businesses and automotive customers through an established regional distribution network across Matang Jaya and Kota Samarahan.",
+		points: [
+			"Kuching operations",
+			"Multi-branch support",
+			"Regional delivery",
+			"Commercial orders",
+			"Workshop supply",
+			"B2B distribution",
+		],
+		visual: fulfilmentVisual,
+		visualAlt: "Gary Chan — Director of Operations & Logistics, warehouse and distribution leadership",
+		caption: "Built to move parts across Sarawak.",
+		reverse: false,
+	},
+];
+---
+
+<section id="capabilities" class="capabilities-page scroll-mt-24" aria-labelledby="capabilities-heading">
+	<header class="capabilities-hero">
+		<div class="th-container capabilities-hero__inner">
+			<p class="th-tech-badge capabilities-hero__badge">Capability chain</p>
+			<h1 id="capabilities-heading" class="capabilities-hero__title">Capabilities</h1>
+			<p class="capabilities-hero__tagline">From part identification to fulfilment.</p>
+			<p class="capabilities-hero__sub">One connected automotive distribution operation.</p>
+		</div>
+	</header>
+
+	<div class="capabilities-flow">
+		<div class="th-container">
+			<ol class="capabilities-flow__track" aria-label="Tiong Hock capability chain">
+				<li class="capabilities-flow__need">
+					<p class="capabilities-flow__need-label">{flow[0].need}</p>
+					<p class="capabilities-flow__need-line">{flow[0].line}</p>
+				</li>
+				{
+					flow.slice(1).map((item) => (
+						<li class="capabilities-flow__step">
+							<span class="capabilities-flow__arrow" aria-hidden="true">↓</span>
+							<p class="capabilities-flow__step-no">{item.step}</p>
+							<p class="capabilities-flow__step-label">{item.label}</p>
+							<p class="capabilities-flow__step-detail">{item.detail}</p>
+						</li>
+					))
+				}
+			</ol>
+			<p class="capabilities-flow__summary">From identification to fulfilment, one connected operation.</p>
+		</div>
+	</div>
+
+	<div class="capabilities-sections">
+		{
+			capabilities.map((cap) => (
+				<article
+					id={cap.id}
+					class:list={["capabilities-block scroll-mt-24", cap.featured && "capabilities-block--featured"]}
+					aria-labelledby={`${cap.id}-heading`}
+				>
+					{cap.featured ? (
+						<div class="capabilities-block__featured">
+							<div class="th-container capabilities-block__grid capabilities-block__grid--featured">
+								<div class="capabilities-block__copy">
+									<p class="capabilities-block__index">
+										<span>{cap.index}</span> — {cap.eyebrow}
+									</p>
+									<h2 id={`${cap.id}-heading`} class="capabilities-block__title">{cap.title}</h2>
+									<p class="capabilities-block__lead">{cap.lead}</p>
+									<p class="capabilities-block__body">{cap.body}</p>
+									<div class="capabilities-block__means">
+										<p class="capabilities-block__means-label">What this means</p>
+										<ul class="capabilities-block__points">
+											{cap.points.map((point) => (
+												<li>{point}</li>
+											))}
+										</ul>
+									</div>
+								</div>
+								<div class="capabilities-block__visuals">
+									<figure class="capabilities-visual capabilities-visual--hero">
+										<img
+											src={stockPilotHero}
+											width={1024}
+											height={576}
+											alt="StockPilot ERP — inventory intelligence on a monitor in a professional workspace"
+											class="capabilities-visual__img"
+											loading="lazy"
+											decoding="async"
+										/>
+										<figcaption class="capabilities-visual__caption">{cap.caption}</figcaption>
+									</figure>
+									<figure class="capabilities-visual capabilities-visual--ui">
+										<img
+											src={stockPilotUi}
+											width={512}
+											height={317}
+											alt="Close-up of StockPilot interface — part numbers, brands, models, locations and stock search"
+											class="capabilities-visual__img"
+											loading="lazy"
+											decoding="async"
+										/>
+									</figure>
+								</div>
+							</div>
+						</div>
+					) : (
+						<div class="th-container">
+							<div
+								class:list={[
+									"capabilities-block__grid",
+									cap.reverse && "capabilities-block__grid--reverse",
+								]}
+							>
+								<div class="capabilities-block__copy">
+									<p class="capabilities-block__index">
+										<span>{cap.index}</span> — {cap.eyebrow}
+									</p>
+									<h2 id={`${cap.id}-heading`} class="capabilities-block__title">{cap.title}</h2>
+									<p class="capabilities-block__lead">{cap.lead}</p>
+									<p class="capabilities-block__body">{cap.body}</p>
+									<div class="capabilities-block__means">
+										<p class="capabilities-block__means-label">What this means</p>
+										<ul class="capabilities-block__points">
+											{cap.points.map((point) => (
+												<li>{point}</li>
+											))}
+										</ul>
+									</div>
+								</div>
+								<figure class="capabilities-visual">
+									<img
+										src={cap.visual}
+										width={1024}
+										height={640}
+										alt={cap.visualAlt}
+										class="capabilities-visual__img"
+										loading="lazy"
+										decoding="async"
+									/>
+									<figcaption class="capabilities-visual__caption">{cap.caption}</figcaption>
+								</figure>
+							</div>
+						</div>
+					)}
+				</article>
+			))
+		}
+	</div>
+
+	<footer class="capabilities-closer">
+		<div class="th-container capabilities-closer__inner">
+			<p class="capabilities-closer__eyebrow">Engineered for the way automotive parts move</p>
+			<p class="capabilities-closer__title">Not just selling parts.</p>
+			<p class="capabilities-closer__chain">Identify · Verify · Locate · Fulfil · Deliver</p>
+			<p class="capabilities-closer__body">
+				Mechanical engineering, parts knowledge, 50,000+ active SKUs, StockPilot, warehouse discipline, and regional
+				distribution — one supply chain a workshop can actually trust.
+			</p>
+		</div>
+	</footer>
+</section>
+
+<style>
+	.capabilities-page {
+		background: rgb(248 250 252);
+	}
+
+	/* Hero */
+	.capabilities-hero {
+		background:
+			radial-gradient(ellipse 70% 55% at 50% 0%, rgb(26 125 69 / 0.1) 0%, transparent 55%),
+			linear-gradient(180deg, rgb(15 17 20) 0%, rgb(22 25 30) 100%);
+		padding-block: clamp(3.5rem, 9vw, 5.5rem);
+		color: rgb(248 250 252);
+	}
+
+	.capabilities-hero__badge {
+		border-color: rgb(255 255 255 / 0.12);
+		background: rgb(255 255 255 / 0.06);
+		color: rgb(134 239 172);
+	}
+
+	.capabilities-hero__title {
+		margin-top: 1rem;
+		font-size: clamp(2.5rem, 7vw, 4rem);
+		font-weight: 700;
+		line-height: 1;
+		letter-spacing: -0.02em;
+		text-transform: uppercase;
+	}
+
+	.capabilities-hero__tagline {
+		margin-top: 1rem;
+		font-size: clamp(1.125rem, 2.8vw, 1.5rem);
+		font-weight: 500;
+		color: rgb(201 162 39);
+	}
+
+	.capabilities-hero__sub {
+		margin-top: 0.5rem;
+		max-width: 32rem;
+		font-size: 1.0625rem;
+		line-height: 1.55;
+		color: rgb(203 213 225);
+	}
+
+	/* Flow chain */
+	.capabilities-flow {
+		border-bottom: 1px solid rgb(226 232 240);
+		background: white;
+		padding-block: clamp(2.5rem, 6vw, 3.5rem);
+	}
+
+	.capabilities-flow__track {
+		display: grid;
+		gap: 0;
+		list-style: none;
+		margin: 0;
+		padding: 0;
+	}
+
+	@media (min-width: 1024px) {
+		.capabilities-flow__track {
+			grid-template-columns: repeat(6, minmax(0, 1fr));
+			align-items: start;
+			gap: 0.75rem;
+		}
+
+		.capabilities-flow__step .capabilities-flow__arrow {
+			display: none;
+		}
+
+		.capabilities-flow__step:not(:last-child)::after {
+			content: "→";
+			position: absolute;
+			right: -0.35rem;
+			top: 2.5rem;
+			font-size: 0.875rem;
+			color: rgb(148 163 184);
+		}
+
+		.capabilities-flow__step {
+			position: relative;
+		}
+	}
+
+	.capabilities-flow__need {
+		padding: 1.25rem;
+		border-radius: 0.75rem;
+		border: 1px solid rgb(226 232 240);
+		background: rgb(248 250 252);
+	}
+
+	@media (min-width: 1024px) {
+		.capabilities-flow__need {
+			grid-column: span 1;
+		}
+	}
+
+	.capabilities-flow__need-label {
+		font-family: var(--font-mono);
+		font-size: 0.625rem;
+		font-weight: 600;
+		letter-spacing: 0.18em;
+		text-transform: uppercase;
+		color: rgb(100 116 139);
+	}
+
+	.capabilities-flow__need-line {
+		margin-top: 0.5rem;
+		font-size: 0.9375rem;
+		font-weight: 600;
+		font-style: italic;
+		color: rgb(15 23 42);
+	}
+
+	.capabilities-flow__step {
+		padding: 1.25rem 1.25rem 1rem;
+		border-radius: 0.75rem;
+		border: 1px solid rgb(226 232 240);
+		background: white;
+	}
+
+	.capabilities-flow__arrow {
+		display: block;
+		margin-bottom: 0.35rem;
+		font-size: 0.875rem;
+		color: rgb(148 163 184);
+		text-align: center;
+	}
+
+	.capabilities-flow__step-no {
+		font-family: var(--font-mono);
+		font-size: 0.625rem;
+		font-weight: 600;
+		letter-spacing: 0.16em;
+		color: rgb(100 116 139);
+	}
+
+	.capabilities-flow__step-label {
+		margin-top: 0.35rem;
+		font-size: 0.9375rem;
+		font-weight: 700;
+		text-transform: uppercase;
+		letter-spacing: 0.06em;
+		color: var(--color-brand-green);
+	}
+
+	.capabilities-flow__step-detail {
+		margin-top: 0.5rem;
+		font-size: 0.8125rem;
+		line-height: 1.45;
+		color: rgb(71 85 105);
+	}
+
+	.capabilities-flow__summary {
+		margin-top: 1.75rem;
+		text-align: center;
+		font-size: 1rem;
+		font-weight: 600;
+		color: rgb(51 65 85);
+	}
+
+	/* Capability blocks */
+	.capabilities-sections {
+		display: grid;
+		gap: 0;
+	}
+
+	.capabilities-block {
+		padding-block: clamp(3rem, 7vw, 4.5rem);
+		border-bottom: 1px solid rgb(226 232 240);
+		background: white;
+	}
+
+	.capabilities-block:nth-child(even):not(.capabilities-block--featured) {
+		background: rgb(248 250 252);
+	}
+
+	.capabilities-block--featured {
+		padding-block: 0;
+		border-bottom: none;
+		background: rgb(15 17 20);
+	}
+
+	.capabilities-block__featured {
+		padding-block: clamp(3rem, 7vw, 4.5rem);
+	}
+
+	.capabilities-block__grid {
+		display: grid;
+		gap: 2.5rem;
+		align-items: center;
+	}
+
+	@media (min-width: 1024px) {
+		.capabilities-block__grid {
+			grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+			gap: 3rem;
+		}
+
+		.capabilities-block__grid--reverse {
+			direction: rtl;
+		}
+
+		.capabilities-block__grid--reverse > * {
+			direction: ltr;
+		}
+
+		.capabilities-block__grid--featured {
+			grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+		}
+	}
+
+	.capabilities-block__index {
+		font-family: var(--font-mono);
+		font-size: 0.6875rem;
+		font-weight: 600;
+		letter-spacing: 0.2em;
+		text-transform: uppercase;
+		color: var(--color-brand-green);
+	}
+
+	.capabilities-block__index span {
+		color: rgb(100 116 139);
+	}
+
+	.capabilities-block--featured .capabilities-block__index span {
+		color: rgb(148 163 184);
+	}
+
+	.capabilities-block--featured .capabilities-block__index {
+		color: rgb(134 239 172);
+	}
+
+	.capabilities-block__title {
+		margin-top: 0.75rem;
+		font-size: clamp(1.5rem, 3.5vw, 2rem);
+		font-weight: 700;
+		line-height: 1.15;
+		color: rgb(15 23 42);
+	}
+
+	.capabilities-block--featured .capabilities-block__title {
+		color: white;
+	}
+
+	.capabilities-block__lead {
+		margin-top: 0.75rem;
+		font-size: 1.125rem;
+		font-weight: 600;
+		color: rgb(201 162 39);
+	}
+
+	.capabilities-block__body {
+		margin-top: 1rem;
+		font-size: 1rem;
+		line-height: 1.7;
+		color: rgb(71 85 105);
+	}
+
+	.capabilities-block--featured .capabilities-block__body {
+		color: rgb(203 213 225);
+	}
+
+	.capabilities-block__means {
+		margin-top: 1.5rem;
+		padding-top: 1.25rem;
+		border-top: 1px solid rgb(226 232 240);
+	}
+
+	.capabilities-block--featured .capabilities-block__means {
+		border-top-color: rgb(255 255 255 / 0.1);
+	}
+
+	.capabilities-block__means-label {
+		font-family: var(--font-mono);
+		font-size: 0.625rem;
+		font-weight: 600;
+		letter-spacing: 0.18em;
+		text-transform: uppercase;
+		color: rgb(100 116 139);
+	}
+
+	.capabilities-block--featured .capabilities-block__means-label {
+		color: rgb(148 163 184);
+	}
+
+	.capabilities-block__points {
+		margin: 0.875rem 0 0;
+		padding: 0;
+		list-style: none;
+		display: grid;
+		gap: 0.5rem;
+	}
+
+	@media (min-width: 640px) {
+		.capabilities-block__points {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+			gap: 0.5rem 1rem;
+		}
+	}
+
+	.capabilities-block__points li {
+		position: relative;
+		padding-left: 1rem;
+		font-size: 0.875rem;
+		line-height: 1.45;
+		color: rgb(51 65 85);
+	}
+
+	.capabilities-block--featured .capabilities-block__points li {
+		color: rgb(226 232 240);
+	}
+
+	.capabilities-block__points li::before {
+		content: "";
+		position: absolute;
+		left: 0;
+		top: 0.5em;
+		height: 0.35rem;
+		width: 0.35rem;
+		border-radius: 999px;
+		background: var(--color-brand-green);
+	}
+
+	/* Visuals */
+	.capabilities-visual {
+		margin: 0;
+	}
+
+	.capabilities-visual__img {
+		display: block;
+		width: 100%;
+		height: auto;
+		border-radius: 0.875rem;
+		border: 1px solid rgb(226 232 240);
+		box-shadow: 0 20px 48px rgb(15 23 42 / 0.1);
+	}
+
+	.capabilities-block--featured .capabilities-visual__img {
+		border-color: rgb(255 255 255 / 0.08);
+		box-shadow: 0 24px 56px rgb(0 0 0 / 0.45);
+	}
+
+	.capabilities-visual__caption {
+		margin-top: 0.875rem;
+		font-size: 0.8125rem;
+		line-height: 1.5;
+		color: rgb(100 116 139);
+	}
+
+	.capabilities-block--featured .capabilities-visual__caption {
+		color: rgb(148 163 184);
+	}
+
+	.capabilities-block__visuals {
+		display: grid;
+		gap: 1rem;
+	}
+
+	.capabilities-visual--ui .capabilities-visual__img {
+		max-width: 28rem;
+		margin-inline: auto;
+	}
+
+	/* Closer */
+	.capabilities-closer {
+		background:
+			radial-gradient(ellipse 60% 50% at 50% 100%, rgb(26 125 69 / 0.08) 0%, transparent 60%),
+			rgb(15 17 20);
+		padding-block: clamp(3rem, 8vw, 5rem);
+		color: rgb(248 250 252);
+	}
+
+	.capabilities-closer__eyebrow {
+		font-family: var(--font-mono);
+		font-size: 0.6875rem;
+		font-weight: 600;
+		letter-spacing: 0.2em;
+		text-transform: uppercase;
+		color: rgb(134 239 172);
+	}
+
+	.capabilities-closer__title {
+		margin-top: 1rem;
+		font-size: clamp(1.75rem, 4vw, 2.5rem);
+		font-weight: 700;
+		line-height: 1.15;
+	}
+
+	.capabilities-closer__chain {
+		margin-top: 0.75rem;
+		font-size: clamp(1rem, 2.2vw, 1.25rem);
+		font-weight: 600;
+		letter-spacing: 0.04em;
+		color: rgb(201 162 39);
+	}
+
+	.capabilities-closer__body {
+		margin-top: 1.25rem;
+		max-width: 40rem;
+		font-size: 1rem;
+		line-height: 1.7;
+		color: rgb(203 213 225);
+	}
+</style>
