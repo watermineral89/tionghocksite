@@ -58,6 +58,22 @@
 		@apply inline-flex items-center justify-center rounded-full border border-brand bg-brand px-4 py-2.5 text-center font-mono text-[0.7rem] font-bold uppercase tracking-[0.12em] text-white transition hover:bg-[color-mix(in_oklab,var(--color-brand)_88%,black)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand;
 	}
 
+	.th-avail {
+		@apply inline-flex rounded-full border px-2.5 py-0.5 font-mono text-[0.625rem] font-semibold uppercase tracking-[0.12em];
+	}
+
+	.th-avail-in {
+		@apply border-emerald-200 bg-emerald-50 text-brand-green;
+	}
+
+	.th-avail-limited {
+		@apply border-amber-200 bg-amber-50 text-amber-800;
+	}
+
+	.th-avail-enquire {
+		@apply border-slate-200 bg-slate-100 text-slate-600;
+	}
+
 	.bento-grid {
 		display: grid;
 		gap: 1rem;

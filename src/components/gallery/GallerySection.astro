@@ -21,6 +21,7 @@ const countLabel = String(photoCount).padStart(2, "0");
 				class="flex shrink-0 rounded-full border border-slate-200 bg-white p-1 shadow-sm"
 				role="tablist"
 				aria-label="Gallery view mode"
+				data-gallery-view-toggle
 			>
 				<button
 					type="button"
@@ -150,12 +151,6 @@ const countLabel = String(photoCount).padStart(2, "0");
 				</div>
 			</div>
 		</div>
-	</div>
-
-	<div data-gallery-scroll-root class="md:hidden">
-		<p class="th-container pb-4 font-mono text-[0.65rem] uppercase tracking-[0.18em] text-slate-400">
-			Switch to listing view on mobile, or scroll the grid above.
-		</p>
 	</div>
 </section>
 

@@ -117,20 +117,26 @@ export function initGalleryScroll() {
 }
 
 export function setGalleryView(view: "scroll" | "grid") {
-	const scrollRoot = document.querySelector<HTMLElement>("[data-gallery-scroll-root]");
+	const scrollRoots = document.querySelectorAll<HTMLElement>("[data-gallery-scroll-root]");
 	const gridRoot = document.querySelector<HTMLElement>("[data-gallery-grid-root]");
 	const buttons = document.querySelectorAll<HTMLButtonElement>("[data-gallery-view]");
+	const viewToggle = document.querySelector<HTMLElement>("[data-gallery-view-toggle]");
 
-	if (!scrollRoot || !gridRoot) return;
+	if (!gridRoot || scrollRoots.length === 0) return;
 
-	const isScroll = view === "scroll";
+	const isMobile = window.matchMedia("(max-width: 767px)").matches;
 	const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+	const effectiveView = isMobile || reducedMotion ? "grid" : view;
 
-	scrollRoot.hidden = !isScroll || reducedMotion;
-	gridRoot.hidden = isScroll && !reducedMotion;
+	scrollRoots.forEach((root) => {
+		root.hidden = effectiveView !== "scroll";
+	});
+	gridRoot.hidden = effectiveView !== "grid";
+
+	if (viewToggle) viewToggle.hidden = isMobile;
 
 	buttons.forEach((btn) => {
-		const active = btn.dataset.galleryView === view;
+		const active = btn.dataset.galleryView === effectiveView;
 		btn.setAttribute("aria-selected", active ? "true" : "false");
 		btn.classList.toggle("bg-brand-green", active);
 		btn.classList.toggle("text-white", active);
@@ -140,16 +146,18 @@ export function setGalleryView(view: "scroll" | "grid") {
 		btn.classList.toggle("border-slate-200", !active);
 	});
 
-	if (isScroll && !reducedMotion) {
+	if (effectiveView === "scroll") {
 		requestAnimationFrame(() => initGalleryScroll());
 	} else {
 		killGalleryScroll();
 	}
 
-	try {
-		localStorage.setItem("th-gallery-view", view);
-	} catch {
-		/* ignore */
+	if (!isMobile) {
+		try {
+			localStorage.setItem("th-gallery-view", view);
+		} catch {
+			/* ignore */
+		}
 	}
 }
 
@@ -162,7 +170,11 @@ export function initGalleryPage() {
 		}
 	})();
 
-	const defaultView = window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "grid" : saved ?? "scroll";
+	const defaultView = window.matchMedia("(prefers-reduced-motion: reduce)").matches
+		? "grid"
+		: window.matchMedia("(max-width: 767px)").matches
+			? "grid"
+			: saved ?? "scroll";
 	setGalleryView(defaultView);
 
 	document.querySelectorAll<HTMLButtonElement>("[data-gallery-view]").forEach((btn) => {
@@ -173,9 +185,13 @@ export function initGalleryPage() {
 	});
 
 	window.addEventListener("resize", () => {
-		if (!document.querySelector("[data-gallery-scroll-track]")?.hidden) {
-			killGalleryScroll();
-			initGalleryScroll();
-		}
+		const saved = (() => {
+			try {
+				return localStorage.getItem("th-gallery-view") as "scroll" | "grid" | null;
+			} catch {
+				return null;
+			}
+		})();
+		setGalleryView(saved ?? "scroll");
 	});
 }
