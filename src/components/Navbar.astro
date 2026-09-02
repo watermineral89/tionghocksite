@@ -8,6 +8,7 @@ const links = [
 	{ href: "/directors", label: "Directors" },
 	{ href: "/capabilities", label: "Capabilities" },
 	{ href: "/gallery", label: "Gallery" },
+	{ href: "/contact", label: "Contact" },
 ];
 
 function isActive(href: string) {
@@ -65,8 +66,14 @@ const mobileLinkClass = (href: string) =>
 				082-649433
 			</a>
 			<a
-				href="#contact"
-				class="hidden items-center justify-center bg-brand px-3 py-2 text-sm font-semibold text-white transition hover:bg-[color-mix(in_oklab,var(--color-brand)_88%,black)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand sm:inline-flex sm:px-4"
+				href="/contact"
+				class:list={[
+					"hidden items-center justify-center px-3 py-2 text-sm font-semibold transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 sm:inline-flex sm:px-4",
+					isActive("/contact")
+						? "bg-brand-green text-white focus-visible:outline-brand-green"
+						: "bg-brand text-white hover:bg-[color-mix(in_oklab,var(--color-brand)_88%,black)] focus-visible:outline-brand",
+				]}
+				aria-current={isActive("/contact") ? "page" : undefined}
 			>
 				Contact
 			</a>
@@ -100,13 +107,6 @@ const mobileLinkClass = (href: string) =>
 					</a>
 				))
 			}
-			<a
-				href="#contact"
-				class="mt-2 block rounded-lg bg-brand px-3 py-3 text-center text-sm font-semibold text-white"
-				data-mobile-menu-close
-			>
-				Contact
-			</a>
 		</div>
 	</nav>
 </header>

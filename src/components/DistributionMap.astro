@@ -1,0 +1,292 @@
+---
+interface Props {
+	variant?: "default" | "compact";
+	id?: string;
+}
+
+const { variant = "default", id } = Astro.props;
+
+const mapBg = "/images/sarawak_logistics.webp";
+const accent = "#119e1b";
+
+const waHref = (waPhone: string, message: string) =>
+	`https://wa.me/${waPhone}?text=${encodeURIComponent(message)}`;
+
+const branches = [
+	{
+		name: "Matang Jaya HQ",
+		legal: "Tiong Hock Auto Parts (Kch) Sdn Bhd",
+		address: "Sublot 37, Phase 12, Jln Matang Jaya, Taman Lee Ling, 93050 Kuching",
+		phone: "082-649 433",
+		phoneTel: "+6082649433",
+		waPhone: "60168860864",
+		waId: "whatsapp-matang",
+		waMessage:
+			"Hello Tiong Hock Auto Parts (Kch) Sdn Bhd — WhatsApp enquiry for *HQ / Matang Jaya*.\n\nParts / vehicle: ",
+	},
+	{
+		name: "Kota Samarahan Automart",
+		legal: "Tiong Hock AutoMart Sdn Bhd",
+		address: "Uni Central Commercial Centre, Lot 27, Ground Floor, 94300 Kota Samarahan",
+		phone: "082-375 775",
+		phoneTel: "+6082375775",
+		waPhone: "60102130132",
+		waId: "whatsapp-samarahan",
+		waMessage:
+			"Hello Tiong Hock AutoMart — WhatsApp enquiry for *Uni Central, Kota Samarahan*.\n\nParts / vehicle: ",
+	},
+];
+---
+
+<section
+	id={id}
+	class:list={["distribution", variant === "compact" && "distribution--compact", id && "scroll-mt-24"]}
+	aria-labelledby="distribution-heading"
+>
+	<div class="distribution__bleed" aria-hidden="true">
+		<img src={mapBg} alt="" class="distribution__bg" loading="lazy" decoding="async" />
+		<div class="distribution__wash"></div>
+	</div>
+
+	<div class="distribution__content th-container">
+		<div class="distribution__overlay" data-animate="fade-up">
+			<h2 id="distribution-heading" class="distribution__headline">
+				Built in Kuching.<br />
+				<span class="distribution__headline-accent">Built to move across Sarawak.</span>
+			</h2>
+			<p class="distribution__lede">
+				A regional automotive parts distribution operation — not a single retail counter. Two active branches
+				in Matang Jaya and Kota Samarahan.
+			</p>
+
+			<div class="distribution__cards" data-animate="stagger-parent">
+				{
+					branches.map((b) => (
+						<article class="distribution__card">
+							<h3 class="distribution__card-name">{b.name}</h3>
+							<p class="distribution__card-legal">{b.legal}</p>
+							<address class="distribution__card-address">{b.address}</address>
+							<div class="distribution__card-actions">
+								<a class="distribution__card-tel" href={`tel:${b.phoneTel}`}>
+									{b.phone}
+								</a>
+								<a
+									id={b.waId}
+									href={waHref(b.waPhone, b.waMessage)}
+									target="_blank"
+									rel="noopener noreferrer"
+									class="distribution__card-wa"
+								>
+									WhatsApp
+								</a>
+							</div>
+						</article>
+					))
+				}
+			</div>
+		</div>
+	</div>
+</section>
+
+<style define:vars={{ accent }}>
+	.distribution {
+		position: relative;
+		overflow: hidden;
+		background: #ffffff;
+		padding-block: clamp(4rem, 10vw, 7rem);
+		font-family: Inter, Montserrat, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+	}
+
+	.distribution--compact {
+		padding-block: clamp(3rem, 8vw, 5rem);
+	}
+
+	.distribution__bleed {
+		position: absolute;
+		inset: 0;
+		pointer-events: none;
+	}
+
+	.distribution__bg {
+		position: absolute;
+		inset: 0;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		object-position: 62% center;
+	}
+
+	.distribution__wash {
+		position: absolute;
+		inset: 0;
+		background:
+			linear-gradient(105deg, #ffffff 0%, #ffffff 34%, rgb(255 255 255 / 0.92) 48%, rgb(248 250 252 / 0.55) 62%, rgb(248 250 252 / 0.2) 100%),
+			linear-gradient(180deg, #f8fafc 0%, transparent 35%, transparent 100%);
+	}
+
+	.distribution__content {
+		position: relative;
+		z-index: 1;
+	}
+
+	.distribution__overlay {
+		max-width: 42rem;
+	}
+
+	@media (min-width: 1024px) {
+		.distribution__overlay {
+			max-width: 46rem;
+		}
+	}
+
+	.distribution__headline {
+		margin: 0;
+		font-size: clamp(1.85rem, 4.5vw, 3rem);
+		font-weight: 800;
+		line-height: 1.05;
+		letter-spacing: -0.025em;
+		text-transform: uppercase;
+		text-align: left;
+		color: #0f172a;
+	}
+
+	.distribution__headline-accent {
+		color: var(--accent);
+	}
+
+	.distribution__lede {
+		margin: 1.25rem 0 0;
+		max-width: 32rem;
+		font-size: 0.95rem;
+		line-height: 1.65;
+		text-align: left;
+		color: #64748b;
+	}
+
+	.distribution__cards {
+		display: grid;
+		gap: 1rem;
+		margin-top: 2rem;
+	}
+
+	@media (min-width: 640px) {
+		.distribution__cards {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+			gap: 1.25rem;
+		}
+	}
+
+	.distribution__card {
+		padding: 1.25rem 1.35rem;
+		background: rgb(255 255 255 / 0.94);
+		border: 1px solid #e2e8f0;
+		border-radius: 0.125rem;
+		box-shadow:
+			0 1px 2px rgb(15 23 42 / 0.04),
+			0 12px 32px rgb(15 23 42 / 0.08);
+		backdrop-filter: blur(6px);
+		transition:
+			transform 0.2s ease,
+			box-shadow 0.2s ease,
+			border-color 0.2s ease;
+	}
+
+	.distribution__card:hover {
+		transform: translateY(-2px);
+		border-color: #cbd5e1;
+		box-shadow:
+			0 2px 4px rgb(15 23 42 / 0.05),
+			0 18px 40px rgb(15 23 42 / 0.1);
+	}
+
+	.distribution__card-name {
+		margin: 0;
+		font-size: 0.95rem;
+		font-weight: 700;
+		color: #0f172a;
+	}
+
+	.distribution__card-legal {
+		margin: 0.35rem 0 0;
+		font-size: 0.75rem;
+		font-weight: 500;
+		color: #94a3b8;
+	}
+
+	.distribution__card-address {
+		margin: 0.65rem 0 0;
+		font-style: normal;
+		font-size: 0.85rem;
+		line-height: 1.55;
+		text-align: left;
+		color: #475569;
+	}
+
+	.distribution__card-actions {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 0.75rem 1rem;
+		margin-top: 1rem;
+		padding-top: 1rem;
+		border-top: 1px solid #f1f5f9;
+	}
+
+	.distribution__card-tel {
+		font-size: 0.9rem;
+		font-weight: 600;
+		color: #0f172a;
+		text-decoration: none;
+		transition: color 0.15s ease;
+	}
+
+	.distribution__card-tel:hover {
+		color: var(--accent);
+	}
+
+	.distribution__card-wa {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		padding: 0.45rem 0.9rem;
+		font-size: 0.75rem;
+		font-weight: 700;
+		letter-spacing: 0.04em;
+		text-transform: uppercase;
+		text-decoration: none;
+		color: #fff;
+		background: var(--accent);
+		border-radius: 9999px;
+		transition:
+			background-color 0.15s ease,
+			transform 0.15s ease,
+			box-shadow 0.15s ease;
+	}
+
+	.distribution__card-wa:hover {
+		background: color-mix(in oklab, var(--accent) 88%, black);
+		transform: translateY(-1px);
+		box-shadow: 0 8px 20px rgb(17 158 27 / 0.25);
+	}
+
+	.distribution__card-wa:focus-visible {
+		outline: 2px solid var(--accent);
+		outline-offset: 2px;
+	}
+
+	@media (max-width: 639px) {
+		.distribution__bg {
+			object-position: 70% center;
+		}
+
+		.distribution__wash {
+			background:
+				linear-gradient(180deg, #ffffff 0%, #ffffff 42%, rgb(255 255 255 / 0.88) 58%, rgb(248 250 252 / 0.45) 100%),
+				linear-gradient(180deg, #f8fafc 0%, transparent 30%);
+		}
+
+		.distribution__overlay {
+			max-width: none;
+		}
+	}
+</style>

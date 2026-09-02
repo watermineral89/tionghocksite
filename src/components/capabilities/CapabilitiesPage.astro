@@ -1,4 +1,6 @@
 ---
+import DistributionMap from "../DistributionMap.astro";
+
 const stockPilotHero = encodeURI("/ChatGPT Image Sep 1, 2026, 09_45_43 PM.png");
 const stockPilotUi = "/stockpilot-technology.jpg";
 const warehouseImg = "/stockpilot-warehouse.png";
@@ -72,19 +74,6 @@ const technicalPoints = [
 	"Correct-part identification",
 	"Installation considerations",
 	"Workshop counter support",
-];
-
-const branches = [
-	{
-		name: "Matang Jaya HQ",
-		legal: "Tiong Hock Auto Parts (Kch) Sdn Bhd",
-		address: "Sublot 37, Phase 12, Jln Matang Jaya, Taman Lee Ling, 93050 Kuching",
-	},
-	{
-		name: "Kota Samarahan Automart",
-		legal: "Tiong Hock AutoMart Sdn Bhd",
-		address: "Uni Central Commercial Centre, Lot 27, Ground Floor, 94300 Kota Samarahan",
-	},
 ];
 
 const stats = [
@@ -308,44 +297,7 @@ const stats = [
 	</section>
 
 	<!-- 7. REGIONAL DISTRIBUTION -->
-	<section id="distribution" class="cap-region scroll-mt-24" aria-labelledby="cap-region-heading">
-		<div class="th-container cap-region__grid">
-			<div class="cap-region__copy" data-animate="fade-up">
-				<h2 id="cap-region-heading" class="cap-editorial__headline">
-					Built in Kuching.<br />
-					<span class="cap-editorial__headline-accent">Built to move across Sarawak.</span>
-				</h2>
-				<p class="cap-editorial__lede">
-					A regional automotive parts distribution operation — not a single retail counter. Two active branches
-					serving workshops and businesses across East Malaysia.
-				</p>
-				<div class="cap-branches">
-					{
-						branches.map((b) => (
-							<article class="cap-branch">
-								<h3 class="cap-branch__name">{b.name}</h3>
-								<p class="cap-branch__legal">{b.legal}</p>
-								<address class="cap-branch__address">{b.address}</address>
-							</article>
-						))
-					}
-				</div>
-			</div>
-			<div class="cap-region__map" data-animate="fade-up" aria-hidden="true">
-				<svg viewBox="0 0 320 420" class="cap-sarawak" role="img" aria-label="Sarawak branch locations">
-					<path
-						class="cap-sarawak__land"
-						d="M48 40 L120 28 L200 45 L260 80 L280 160 L270 260 L240 340 L180 380 L100 360 L60 280 L40 180 Z"
-					></path>
-					<circle class="cap-sarawak__dot" cx="130" cy="200" r="6"></circle>
-					<text class="cap-sarawak__label" x="142" y="204">Matang Jaya</text>
-					<circle class="cap-sarawak__dot" cx="115" cy="235" r="6"></circle>
-					<text class="cap-sarawak__label" x="127" y="239">Samarahan</text>
-					<text class="cap-sarawak__region" x="160" y="400">SARAWAK</text>
-				</svg>
-			</div>
-		</div>
-	</section>
+	<DistributionMap id="distribution" />
 
 	<!-- 8. STATS -->
 	<section class="cap-stats" aria-label="Capability at scale">
@@ -373,7 +325,7 @@ const stats = [
 			<p class="cap-cta__support">From identification to delivery, we&rsquo;re built to move it.</p>
 			<div class="cap-cta__actions">
 				<a href="/search" class="cap-btn cap-btn--primary">Find a part</a>
-				<a href="#contact" class="cap-btn cap-btn--ghost">Contact our team</a>
+				<a href="/contact" class="cap-btn cap-btn--ghost">Contact our team</a>
 			</div>
 		</div>
 	</section>
@@ -918,94 +870,6 @@ const stats = [
 
 	.cap-warehouse .cap-tags {
 		margin-top: 1.25rem;
-	}
-
-	/* —— REGION —— */
-	.cap-region {
-		padding-block: clamp(3.5rem, 8vw, 5.5rem);
-		background: white;
-		border-bottom: 1px solid rgb(226 232 240);
-	}
-
-	.cap-region__grid {
-		display: grid;
-		gap: 3rem;
-		align-items: center;
-	}
-
-	@media (min-width: 1024px) {
-		.cap-region__grid {
-			grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
-		}
-	}
-
-	.cap-branches {
-		display: grid;
-		gap: 1.25rem;
-		margin-top: 2rem;
-	}
-
-	@media (min-width: 640px) {
-		.cap-branches {
-			grid-template-columns: repeat(2, minmax(0, 1fr));
-		}
-	}
-
-	.cap-branch {
-		padding-top: 1rem;
-		border-top: 2px solid rgb(15 23 42);
-	}
-
-	.cap-branch__name {
-		font-size: 0.9375rem;
-		font-weight: 700;
-		color: rgb(15 23 42);
-	}
-
-	.cap-branch__legal {
-		margin-top: 0.25rem;
-		font-size: 0.75rem;
-		color: rgb(100 116 139);
-	}
-
-	.cap-branch__address {
-		margin-top: 0.5rem;
-		font-size: 0.8125rem;
-		line-height: 1.5;
-		font-style: normal;
-		color: rgb(71 85 105);
-	}
-
-	.cap-sarawak {
-		width: 100%;
-		max-width: 20rem;
-		margin-inline: auto;
-	}
-
-	.cap-sarawak__land {
-		fill: rgb(248 250 252);
-		stroke: rgb(203 213 225);
-		stroke-width: 1.5;
-	}
-
-	.cap-sarawak__dot {
-		fill: var(--color-brand-green);
-	}
-
-	.cap-sarawak__label {
-		font-family: var(--font-mono);
-		font-size: 11px;
-		font-weight: 600;
-		fill: rgb(51 65 85);
-	}
-
-	.cap-sarawak__region {
-		font-family: var(--font-mono);
-		font-size: 14px;
-		font-weight: 700;
-		letter-spacing: 0.2em;
-		fill: rgb(148 163 184);
-		text-anchor: middle;
 	}
 
 	/* —— STATS —— */
