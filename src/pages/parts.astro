@@ -1,13 +1,15 @@
 ---
 import PageLayout from "../layouts/PageLayout.astro";
+import StockSearchSection from "../components/StockSearchSection.astro";
+import PartsCatalog from "../components/PartsCatalog.astro";
 import FeaturedProductBento from "../components/bento/FeaturedProductBento.astro";
-import PartsBento from "../components/bento/PartsBento.astro";
 ---
 
 <PageLayout
-	title="Parts Categories | Tiong Hock Auto Parts"
-	description="Browse spare part categories — suspension, brakes, body, electrical, lubricants, and APM R134a refrigerant. Check fitment via WhatsApp."
+	title="Parts & Stock Search | Tiong Hock Auto Parts"
+	description="Find the right part fast — search by part number, brand, vehicle or description. Browse automotive systems from engine to suspension, brakes, electrical and more."
 >
+	<StockSearchSection />
+	<PartsCatalog />
 	<FeaturedProductBento />
-	<PartsBento />
 </PageLayout>

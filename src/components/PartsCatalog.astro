@@ -1,0 +1,232 @@
+---
+import { partsSystems, waCategoryMessage } from "../data/parts-systems";
+
+const wa = (message: string) => `https://wa.me/60168860864?text=${encodeURIComponent(message)}`;
+---
+
+<section id="parts-categories" class="scroll-mt-24 border-b border-slate-200 bg-white py-12 md:py-16">
+	<div class="th-container">
+		<div data-animate="fade-up">
+			<p class="parts-catalog__eyebrow">Browse by system</p>
+			<h2 class="parts-catalog__title">Automotive parts catalogue</h2>
+			<p class="parts-catalog__lead">
+				13 systems covering the lines we supply most often. Select a subcategory to enquire — or use search above for part numbers and brands.
+			</p>
+		</div>
+
+		<div class="parts-catalog__grid" data-animate="stagger-parent">
+			{
+				partsSystems.map((system) => (
+					<article class="parts-system" id={`system-${system.id}`}>
+						<header class="parts-system__head">
+							<h3 class="parts-system__name">{system.name}</h3>
+							<p class="parts-system__summary">{system.summary}</p>
+						</header>
+
+						<ul class="parts-system__subs">
+							{
+								system.subcategories.map((sub) =>
+									sub.searchHint ? (
+										<li class="parts-system__sub">
+											<button
+												type="button"
+												class="parts-system__sub-link parts-system__sub-link--btn"
+												data-parts-search={sub.searchHint}
+											>
+												<span>{sub.name}</span>
+												<span class="parts-system__sub-action">Search</span>
+											</button>
+										</li>
+									) : (
+										<li class="parts-system__sub">
+											<a
+												href={wa(waCategoryMessage(system.name, sub.name))}
+												target="_blank"
+												rel="noopener noreferrer"
+												class="parts-system__sub-link"
+											>
+												<span>{sub.name}</span>
+												<span class="parts-system__sub-action">Enquire</span>
+											</a>
+										</li>
+									),
+								)
+							}
+						</ul>
+
+						<a
+							href={wa(waCategoryMessage(system.name))}
+							target="_blank"
+							rel="noopener noreferrer"
+							class="parts-system__wa"
+						>
+							WhatsApp — {system.name}
+						</a>
+					</article>
+				))
+			}
+		</div>
+	</div>
+</section>
+
+<script>
+	document.querySelectorAll<HTMLButtonElement>("[data-parts-search]").forEach((btn) => {
+		btn.addEventListener("click", () => {
+			const term = btn.dataset.partsSearch;
+			const input = document.querySelector<HTMLInputElement>("[data-stock-search-input]");
+			if (!term || !input) return;
+
+			input.value = term;
+			input.dispatchEvent(new Event("input", { bubbles: true }));
+			document.getElementById("stock-search")?.scrollIntoView({ behavior: "smooth", block: "start" });
+			input.focus();
+		});
+	});
+</script>
+
+<style>
+	.parts-catalog__eyebrow {
+		margin: 0;
+		font-size: 0.65rem;
+		font-weight: 700;
+		letter-spacing: 0.16em;
+		text-transform: uppercase;
+		color: var(--color-brand-green);
+	}
+
+	.parts-catalog__title {
+		margin: 0.75rem 0 0;
+		font-size: clamp(1.5rem, 3vw, 2rem);
+		font-weight: 800;
+		letter-spacing: -0.02em;
+		color: #0f172a;
+	}
+
+	.parts-catalog__lead {
+		margin: 0.75rem 0 0;
+		max-width: 40rem;
+		font-size: 0.95rem;
+		line-height: 1.6;
+		color: #64748b;
+	}
+
+	.parts-catalog__grid {
+		display: grid;
+		gap: 1rem;
+		margin-top: 2rem;
+	}
+
+	@media (min-width: 640px) {
+		.parts-catalog__grid {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+	}
+
+	@media (min-width: 1024px) {
+		.parts-catalog__grid {
+			grid-template-columns: repeat(3, minmax(0, 1fr));
+			gap: 1.25rem;
+		}
+	}
+
+	.parts-system {
+		display: flex;
+		flex-direction: column;
+		border: 1px solid #e2e8f0;
+		background: #fff;
+		padding: 1.25rem 1.35rem 1rem;
+	}
+
+	.parts-system__head {
+		padding-bottom: 0.85rem;
+		border-bottom: 1px solid #f1f5f9;
+	}
+
+	.parts-system__name {
+		margin: 0;
+		font-size: 0.95rem;
+		font-weight: 700;
+		color: #0f172a;
+	}
+
+	.parts-system__summary {
+		margin: 0.35rem 0 0;
+		font-size: 0.8rem;
+		line-height: 1.5;
+		color: #64748b;
+	}
+
+	.parts-system__subs {
+		margin: 0.85rem 0 0;
+		padding: 0;
+		list-style: none;
+		flex: 1;
+	}
+
+	.parts-system__sub {
+		border-bottom: 1px solid #f8fafc;
+	}
+
+	.parts-system__sub:last-child {
+		border-bottom: 0;
+	}
+
+	.parts-system__sub-link {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 0.75rem;
+		width: 100%;
+		padding: 0.45rem 0;
+		font-size: 0.85rem;
+		color: #334155;
+		text-decoration: none;
+		transition: color 0.15s ease;
+	}
+
+	.parts-system__sub-link--btn {
+		border: 0;
+		background: none;
+		cursor: pointer;
+		text-align: left;
+		font: inherit;
+	}
+
+	.parts-system__sub-link:hover {
+		color: var(--color-brand-green);
+	}
+
+	.parts-system__sub-link::before {
+		content: "→";
+		margin-right: 0.35rem;
+		font-size: 0.7rem;
+		color: #cbd5e1;
+	}
+
+	.parts-system__sub-action {
+		flex-shrink: 0;
+		font-size: 0.6rem;
+		font-weight: 700;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		color: #94a3b8;
+	}
+
+	.parts-system__sub-link:hover .parts-system__sub-action {
+		color: var(--color-brand-green);
+	}
+
+	.parts-system__wa {
+		margin-top: 1rem;
+		padding-top: 0.85rem;
+		border-top: 1px solid #f1f5f9;
+		font-size: 0.75rem;
+		font-weight: 600;
+		color: var(--color-brand-green);
+		text-decoration: none;
+	}
+
+	.parts-system__wa:hover {
+		text-decoration: underline;
+	}
+</style>

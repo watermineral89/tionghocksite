@@ -74,6 +74,8 @@ export function toPublicSearchResult(item) {
 		sku: item.sku,
 		name: item.name,
 		brand: item.brand,
+		altCode: item.altCode ?? "",
+		article: item.article ?? "",
 		uom: item.uom,
 		availability: item.availability,
 	};

@@ -82,6 +82,13 @@ async function runSearch(query: string) {
 	return { results: hits, updatedAt: catalog.updatedAt };
 }
 
+function refLine(item: { altCode: string; article: string }): string {
+	const parts: string[] = [];
+	if (item.altCode) parts.push(`Alt: ${item.altCode}`);
+	if (item.article) parts.push(`Ref: ${item.article}`);
+	return parts.join(" · ");
+}
+
 function renderResults(
 	container: HTMLElement,
 	meta: HTMLElement,
@@ -92,39 +99,44 @@ function renderResults(
 	container.innerHTML = "";
 
 	if (!sanitizeSearchQuery(query)) {
-		meta.textContent = "Type at least 2 characters to search our catalog.";
+		meta.textContent = "Type at least 2 characters — try a SKU, brand, or OEM reference.";
 		return;
 	}
 
 	if (results.length === 0) {
-		meta.textContent = `No matches for “${query}”. Try a part number, brand, or keyword — or WhatsApp us with your chassis no.`;
+		meta.textContent = `No matches for “${query}”. Try another part number or WhatsApp us with your chassis no.`;
 		return;
 	}
 
 	meta.textContent = updatedAt
-		? `${results.length} result${results.length === 1 ? "" : "s"} · catalog updated ${new Date(updatedAt).toLocaleString("en-MY", { dateStyle: "medium", timeStyle: "short" })}`
+		? `${results.length} result${results.length === 1 ? "" : "s"} · updated ${new Date(updatedAt).toLocaleString("en-MY", { dateStyle: "medium", timeStyle: "short" })}`
 		: `${results.length} result${results.length === 1 ? "" : "s"}`;
 
 	for (const item of results) {
+		const refs = refLine(item);
 		const row = document.createElement("article");
-		row.className =
-			"flex flex-col gap-3 rounded-xl border border-slate-200 bg-white p-4 shadow-sm sm:flex-row sm:items-center sm:justify-between sm:p-5";
+		row.className = "parts-result";
 
 		row.innerHTML = `
-			<div class="min-w-0 flex-1">
-				<div class="flex flex-wrap items-center gap-2">
-					<p class="font-mono text-xs font-bold uppercase tracking-wide text-brand-green">${escapeHtml(item.sku)}</p>
+			<div class="parts-result__body">
+				<div class="parts-result__top">
+					<p class="parts-result__sku">${escapeHtml(item.sku)}</p>
 					<span class="${availabilityClass(item.availability)}">${availabilityLabel(item.availability)}</span>
 				</div>
-				<h3 class="mt-2 text-base font-semibold text-slate-900">${escapeHtml(item.name)}</h3>
-				<p class="mt-1 text-sm text-slate-500">${escapeHtml(item.brand)} · ${escapeHtml(item.uom)}</p>
+				<h3 class="parts-result__name">${escapeHtml(item.name)}</h3>
+				<p class="parts-result__meta">
+					<span>${escapeHtml(item.brand)}</span>
+					<span aria-hidden="true">·</span>
+					<span>${escapeHtml(item.uom)}</span>
+					${refs ? `<span aria-hidden="true">·</span><span>${escapeHtml(refs)}</span>` : ""}
+				</p>
 			</div>
 			<a
-				class="th-cta-wa shrink-0 sm:min-w-[11rem]"
+				class="parts-result__wa th-cta-wa"
 				href="${waHref(item.sku, item.name)}"
 				target="_blank"
 				rel="noopener noreferrer"
-			>WhatsApp Enquiry</a>
+			>WhatsApp for price &amp; fitment</a>
 		`;
 
 		container.appendChild(row);
@@ -151,6 +163,15 @@ export function initStockSearch(root: HTMLElement) {
 	const execute = async (query: string) => {
 		activeQuery = query;
 		setBusy(true);
+
+		const url = new URL(window.location.href);
+		if (sanitizeSearchQuery(query)) {
+			url.searchParams.set("q", query.trim());
+		} else {
+			url.searchParams.delete("q");
+		}
+		window.history.replaceState({}, "", url);
+
 		try {
 			const { results: hits, updatedAt } = await runSearch(query);
 			if (activeQuery !== query) return;
