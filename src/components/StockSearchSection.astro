@@ -44,14 +44,16 @@
 					<span class="parts-search__hints-note">Pricing via WhatsApp</span>
 				</div>
 
-				<p data-stock-search-status class="parts-search__status" hidden aria-live="polite">
-					Searching…
-				</p>
-				<p data-stock-search-meta class="parts-search__meta">
-					Type at least 2 characters — try a SKU, brand, or OEM reference.
-				</p>
+				<div class="parts-search__feedback" aria-live="polite">
+					<p data-stock-search-status class="parts-search__status" hidden>
+						Searching…
+					</p>
+					<p data-stock-search-meta class="parts-search__meta">
+						Type at least 2 characters — try a SKU, brand, or OEM reference.
+					</p>
+				</div>
 
-				<div data-stock-search-results class="parts-search__results" aria-live="polite"></div>
+				<div data-stock-search-results class="parts-search__results"></div>
 			</div>
 		</div>
 	</div>
@@ -181,16 +183,34 @@
 		font-size: 0.75rem;
 	}
 
+	.parts-search__feedback {
+		position: relative;
+		min-height: 2.55rem;
+		margin-top: 0.75rem;
+	}
+
+	.parts-search__status,
+	.parts-search__meta {
+		margin: 0;
+		min-height: 2.55rem;
+		font-size: 0.85rem;
+		line-height: 1.5;
+		color: #64748b;
+	}
+
 	.parts-search__status {
-		margin: 0.75rem 0 0;
-		font-size: 0.75rem;
+		position: absolute;
+		inset: 0;
+		font-size: 0.85rem;
 		color: #94a3b8;
 	}
 
-	.parts-search__meta {
-		margin: 0.75rem 0 0;
-		font-size: 0.85rem;
-		color: #64748b;
+	.parts-search__status[hidden] {
+		display: none;
+	}
+
+	.parts-search__root:has([data-stock-search-status]:not([hidden])) .parts-search__meta {
+		visibility: hidden;
 	}
 
 	.parts-search__results {
@@ -198,6 +218,7 @@
 		flex-direction: column;
 		gap: 0.75rem;
 		margin-top: 1.25rem;
+		min-height: 0;
 	}
 
 	.parts-search__results :global(.parts-result) {
