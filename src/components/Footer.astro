@@ -38,16 +38,23 @@ const quickLinks = [
 			<div class="th-footer__col">
 				<h3 class="th-footer__heading">Direct contacts</h3>
 				<ul class="th-footer__list text-sm text-slate-600">
-					<li>
-						<span class="text-slate-500">HQ</span>{" "}
-						<a class="text-slate-900 hover:underline" href="tel:+6082649433">082-649 433</a>
+					<li class="th-footer__contact-block">
+						<span class="th-footer__contact-label">Matang Jaya HQ</span>
+						<span class="th-footer__phone">
+							<span class="th-footer__phone-text">082-649 433</span>
+							<a class="th-footer__phone-link" href="tel:+6082649433">082-649 433</a>
+						</span>
 					</li>
-					<li>
-						<span class="text-slate-500">Automart</span>{" "}
-						<a class="text-slate-900 hover:underline" href="tel:+6082375775">082-375 775</a>
+					<li class="th-footer__contact-block">
+						<span class="th-footer__contact-label">Kota Samarahan Automart</span>
+						<span class="th-footer__phone">
+							<span class="th-footer__phone-text">082-375 775</span>
+							<a class="th-footer__phone-link" href="tel:+6082375775">082-375 775</a>
+						</span>
 					</li>
-					<li>
-						<a class="text-slate-900 hover:underline" href="mailto:accounts@tionghock.com">accounts@tionghock.com</a>
+					<li class="th-footer__contact-block">
+						<span class="th-footer__contact-label">Email</span>
+						<a class="th-footer__contact-value" href="mailto:accounts@tionghock.com">accounts@tionghock.com</a>
 					</li>
 				</ul>
 			</div>
@@ -143,7 +150,58 @@ const quickLinks = [
 		padding: 0;
 		list-style: none;
 		display: grid;
-		gap: 0.625rem;
+		gap: 0.95rem;
+	}
+
+	.th-footer__contact-block {
+		display: grid;
+		gap: 0.15rem;
+	}
+
+	.th-footer__contact-label {
+		color: rgb(100 116 139);
+		font-size: 0.7rem;
+		font-weight: 600;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+	}
+
+	.th-footer__contact-value {
+		color: rgb(15 23 42);
+		text-decoration: none;
+	}
+
+	.th-footer__contact-value:hover {
+		text-decoration: underline;
+	}
+
+	.th-footer__contact-value--muted {
+		color: rgb(71 85 105);
+	}
+
+	/* Landlines: plain text on desktop, tap-to-call on mobile only */
+	.th-footer__phone {
+		color: rgb(15 23 42);
+	}
+
+	.th-footer__phone-link {
+		display: none;
+		color: inherit;
+		text-decoration: none;
+	}
+
+	.th-footer__phone-text {
+		display: inline;
+	}
+
+	@media (max-width: 768px) {
+		.th-footer__phone-text {
+			display: none;
+		}
+
+		.th-footer__phone-link {
+			display: inline;
+		}
 	}
 
 	.th-footer__legal {
