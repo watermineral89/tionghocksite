@@ -1,10 +1,13 @@
 @import "tailwindcss";
 
 @theme {
-	--font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
-	--font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
-	--color-brand: #da251c;
-	--color-brand-green: #1a7d45;
+	--font-sans: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+	--font-display: "Archivo", "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+	--font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+	/* Logo palette: forest + lime (from transparent logo assets) */
+	--color-brand: #003820;
+	--color-brand-green: #003820;
+	--color-brand-lime: #98d030;
 	--color-charcoal-950: #0f172a;
 	--color-charcoal-900: #1e293b;
 }
@@ -16,8 +19,14 @@
 	body {
 		@apply bg-white text-slate-800 font-sans antialiased;
 	}
+	h1,
+	h2,
+	h3 {
+		font-family: var(--font-display);
+	}
 	::selection {
-		background: color-mix(in oklab, var(--color-brand-green) 35%, transparent);
+		background: color-mix(in oklab, var(--color-brand-lime) 45%, transparent);
+		color: var(--color-brand);
 	}
 }
 
@@ -50,12 +59,12 @@
 	}
 
 	.th-tech-badge {
-		@apply inline-flex font-mono text-[0.625rem] font-semibold uppercase tracking-[0.18em] text-brand-green;
-		@apply rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-0.5 text-brand-green;
+		@apply inline-flex font-mono text-[0.625rem] font-semibold uppercase tracking-[0.18em];
+		@apply rounded-full border border-[color-mix(in_oklab,var(--color-brand-lime)_55%,white)] bg-[color-mix(in_oklab,var(--color-brand-lime)_16%,white)] px-2.5 py-0.5 text-brand;
 	}
 
 	.th-cta-wa {
-		@apply inline-flex items-center justify-center rounded-full border border-brand bg-brand px-4 py-2.5 text-center font-mono text-[0.7rem] font-bold uppercase tracking-[0.12em] text-white transition hover:bg-[color-mix(in_oklab,var(--color-brand)_88%,black)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand;
+		@apply inline-flex items-center justify-center rounded-full border border-brand-lime bg-brand-lime px-4 py-2.5 text-center font-mono text-[0.7rem] font-bold uppercase tracking-[0.12em] text-brand transition hover:bg-[color-mix(in_oklab,var(--color-brand-lime)_82%,black)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-lime;
 	}
 
 	.th-avail {
@@ -63,7 +72,7 @@
 	}
 
 	.th-avail-in {
-		@apply border-emerald-200 bg-emerald-50 text-brand-green;
+		@apply border-[color-mix(in_oklab,var(--color-brand-lime)_50%,white)] bg-[color-mix(in_oklab,var(--color-brand-lime)_14%,white)] text-brand;
 	}
 
 	.th-avail-limited {

@@ -55,3 +55,23 @@ git push -u origin main
 4. Live URL: `https://random-name.netlify.app`
 
 Share the live URL with Gemini or anyone to review the site.
+
+## Stock search catalog (Option A — recommended)
+
+Keep AutoCount / SQL / Tailscale private on Matang. Export a sanitized JSON every 15 minutes for `/parts` search (name + brand + availability only).
+
+Full Matang setup guide:
+
+→ [`scripts/README-catalog-export.md`](scripts/README-catalog-export.md)
+
+Quick path on Matang:
+
+```powershell
+copy .env.example .env
+# edit .env with DB_* and CATALOG_AUTO_PUSH=1
+
+pip install -r scripts\requirements-catalog.txt
+powershell -ExecutionPolicy Bypass -File scripts\run-catalog-export.ps1
+powershell -ExecutionPolicy Bypass -File scripts\install-catalog-export-task.ps1
+```
+

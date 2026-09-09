@@ -9,7 +9,7 @@
 				<span class="parts-search__headline-accent">Fast.</span>
 			</h1>
 			<p class="parts-search__subhead">
-				Search by part number, brand, vehicle or description.
+				Search by part name or brand.
 			</p>
 		</div>
 	</div>
@@ -31,7 +31,7 @@
 						name="q"
 						autocomplete="off"
 						spellcheck="false"
-						placeholder="KYB · DENSO · 04465-… · brake pad · R134a"
+						placeholder="e.g. KYB · DENSO · shock absorber · brake pad"
 						class="parts-search__input"
 					/>
 					<button type="submit" class="parts-search__submit">Search</button>
@@ -49,7 +49,7 @@
 						Searching…
 					</p>
 					<p data-stock-search-meta class="parts-search__meta">
-						Type at least 2 characters — try a SKU, brand, or OEM reference.
+						Type at least 2 characters — try a part name or brand.
 					</p>
 				</div>
 
@@ -250,12 +250,12 @@
 		gap: 0.5rem;
 	}
 
-	.parts-search__results :global(.parts-result__sku) {
+	.parts-search__results :global(.parts-result__brand) {
 		margin: 0;
-		font-family: ui-monospace, monospace;
 		font-size: 0.75rem;
 		font-weight: 700;
 		letter-spacing: 0.06em;
+		text-transform: uppercase;
 		color: #4ade80;
 	}
 
@@ -264,15 +264,6 @@
 		font-size: 1rem;
 		font-weight: 600;
 		color: #f8fafc;
-	}
-
-	.parts-search__results :global(.parts-result__meta) {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 0.35rem;
-		margin: 0.35rem 0 0;
-		font-size: 0.8rem;
-		color: #94a3b8;
 	}
 
 	.parts-search__results :global(.parts-result__wa) {

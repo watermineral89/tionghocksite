@@ -1,14 +1,10 @@
-/** Public catalog types — no price, cost, OHB, or internal notes. */
+/** Public catalog types — only name, brand, and coarse availability. No SKU/price/OHB. */
 
 export type Availability = "in_stock" | "limited" | "enquire";
 
 export interface PublicCatalogItem {
-	sku: string;
 	name: string;
 	brand: string;
-	altCode?: string;
-	article?: string;
-	uom: string;
 	availability: Availability;
 }
 
@@ -31,6 +27,11 @@ export function availabilityFromOhb(totalOhb: number): Availability {
 }
 
 export const BLOCKED_PUBLIC_FIELDS = [
+	"sku",
+	"itemcode",
+	"altcode",
+	"article",
+	"uom",
 	"price",
 	"netcost",
 	"cost",
@@ -62,16 +63,7 @@ function tokenizeQuery(raw: string): string[] {
 }
 
 function itemHaystack(item: PublicCatalogItem): string {
-	return [
-		item.sku,
-		item.name,
-		item.brand,
-		item.altCode ?? "",
-		item.article ?? "",
-		item.uom,
-	]
-		.join(" ")
-		.toLowerCase();
+	return [item.name, item.brand].join(" ").toLowerCase();
 }
 
 function matchesAllTokens(item: PublicCatalogItem, tokens: string[]): boolean {
@@ -109,12 +101,8 @@ export function searchPublicCatalog(
 
 export function toPublicSearchResult(item: PublicCatalogItem) {
 	return {
-		sku: item.sku,
 		name: item.name,
 		brand: item.brand,
-		altCode: item.altCode ?? "",
-		article: item.article ?? "",
-		uom: item.uom,
 		availability: item.availability,
 	};
 }

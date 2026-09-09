@@ -18,30 +18,32 @@ function isActive(href: string) {
 const linkClass = (href: string) =>
 	[
 		"px-2.5 py-2 text-[0.65rem] font-bold uppercase tracking-[0.16em] transition sm:px-3 sm:text-xs sm:tracking-[0.18em]",
-		isActive(href) ? "text-brand-green" : "text-slate-600 hover:text-slate-900",
+		isActive(href) ? "text-brand" : "text-slate-600 hover:text-brand",
 	].join(" ");
 
 const mobileLinkClass = (href: string) =>
 	[
 		"block rounded-lg px-3 py-3 text-sm font-semibold uppercase tracking-[0.12em] transition",
-		isActive(href) ? "bg-emerald-50 text-brand-green" : "text-slate-700 hover:bg-slate-50",
+		isActive(href)
+			? "bg-[color-mix(in_oklab,var(--color-brand-lime)_18%,white)] text-brand"
+			: "text-slate-700 hover:bg-slate-50",
 	].join(" ");
 ---
 
 <header
 	class="sticky top-0 z-50 border-b border-slate-200 bg-white/90 backdrop-blur-md supports-[backdrop-filter]:bg-white/80"
 >
-	<div class="th-container flex min-h-[4.25rem] items-center justify-between gap-3 lg:min-h-[5rem]">
+	<div class="th-container flex min-h-[5rem] items-center justify-between gap-3 sm:min-h-[5.5rem] lg:min-h-[6.25rem]">
 		<a
 			href="/"
-			class="group flex min-w-0 shrink-0 items-center border border-slate-200 bg-white p-1 outline-offset-4 transition hover:border-slate-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand-green sm:p-1.5"
+			class="group flex min-w-0 shrink-0 items-center outline-offset-4 transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand"
 		>
 			<img
-				src="/image_1.png"
-				width="240"
-				height="64"
-				alt="Tiong Hock Auto Parts (Kch) Sdn Bhd"
-				class="h-11 w-auto max-h-12 object-contain object-left transition-[filter] duration-300 ease-out group-hover:opacity-90 sm:h-12 sm:max-h-14 lg:h-14 lg:max-h-14"
+				src="/logo-horizontal.png"
+				width="420"
+				height="96"
+				alt="Tiong Hock Auto Parts"
+				class="h-14 w-auto max-h-14 object-contain object-left transition duration-300 ease-out group-hover:opacity-90 sm:h-16 sm:max-h-16 lg:h-[4.5rem] lg:max-h-[4.5rem]"
 				loading="eager"
 				decoding="async"
 			/>
@@ -67,9 +69,9 @@ const mobileLinkClass = (href: string) =>
 			<a
 				href="/contact"
 				class:list={[
-					"hidden items-center justify-center px-3 py-2 text-sm font-semibold transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 sm:inline-flex sm:px-4",
+					"hidden items-center justify-center px-3 py-2 text-sm font-semibold uppercase tracking-[0.08em] transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 sm:inline-flex sm:px-4",
 					isActive("/contact")
-						? "bg-brand-green text-white focus-visible:outline-brand-green"
+						? "bg-brand-lime text-brand focus-visible:outline-brand-lime"
 						: "bg-brand text-white hover:bg-[color-mix(in_oklab,var(--color-brand)_88%,black)] focus-visible:outline-brand",
 				]}
 				aria-current={isActive("/contact") ? "page" : undefined}

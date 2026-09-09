@@ -1,6 +1,6 @@
 /** @typedef {'in_stock'|'limited'|'enquire'} Availability */
 
-/** @typedef {{ sku: string, name: string, brand: string, altCode?: string, article?: string, uom: string, availability: Availability }} PublicCatalogItem */
+/** @typedef {{ name: string, brand: string, availability: Availability }} PublicCatalogItem */
 
 /** @typedef {{ version: number, updatedAt: string, items: PublicCatalogItem[] }} PublicCatalog */
 
@@ -10,6 +10,11 @@ const DEFAULT_LIMIT = 20;
 const MAX_LIMIT = 30;
 
 const BLOCKED_KEYS = new Set([
+	"sku",
+	"itemcode",
+	"altcode",
+	"article",
+	"uom",
 	"price",
 	"netcost",
 	"cost",
@@ -41,9 +46,7 @@ function tokenizeQuery(raw) {
 }
 
 function itemHaystack(item) {
-	return [item.sku, item.name, item.brand, item.altCode || "", item.article || "", item.uom]
-		.join(" ")
-		.toLowerCase();
+	return [item.name, item.brand].join(" ").toLowerCase();
 }
 
 function matchesAllTokens(item, tokens) {
@@ -71,12 +74,8 @@ export function searchPublicCatalog(catalog, rawQuery, limit = DEFAULT_LIMIT) {
 /** @param {PublicCatalogItem} item */
 export function toPublicSearchResult(item) {
 	return {
-		sku: item.sku,
 		name: item.name,
 		brand: item.brand,
-		altCode: item.altCode ?? "",
-		article: item.article ?? "",
-		uom: item.uom,
 		availability: item.availability,
 	};
 }

@@ -13,8 +13,9 @@ const DEBOUNCE_MS = 400;
 
 let catalogCache: PublicCatalog | null = null;
 
-function waHref(sku: string, name: string): string {
-	const text = `Hello Tiong Hock — stock enquiry for *${sku}* (${name}).\n\nVehicle / chassis no.: `;
+function waHref(brand: string, name: string): string {
+	const label = [brand, name].filter(Boolean).join(" — ");
+	const text = `Hello Tiong Hock — stock enquiry for *${label}*.\n\nVehicle / chassis no.: `;
 	return `https://wa.me/${WA_PHONE}?text=${encodeURIComponent(text)}`;
 }
 
@@ -82,13 +83,6 @@ async function runSearch(query: string) {
 	return { results: hits, updatedAt: catalog.updatedAt };
 }
 
-function refLine(item: { altCode: string; article: string }): string {
-	const parts: string[] = [];
-	if (item.altCode) parts.push(`Alt: ${item.altCode}`);
-	if (item.article) parts.push(`Ref: ${item.article}`);
-	return parts.join(" · ");
-}
-
 function renderResults(
 	container: HTMLElement,
 	meta: HTMLElement,
@@ -99,12 +93,12 @@ function renderResults(
 	container.innerHTML = "";
 
 	if (!sanitizeSearchQuery(query)) {
-		meta.textContent = "Type at least 2 characters — try a SKU, brand, or OEM reference.";
+		meta.textContent = "Type at least 2 characters — try a part name or brand.";
 		return;
 	}
 
 	if (results.length === 0) {
-		meta.textContent = `No matches for “${query}”. Try another part number or WhatsApp us with your chassis no.`;
+		meta.textContent = `No matches for “${query}”. Try another name or brand — or WhatsApp us with your chassis no.`;
 		return;
 	}
 
@@ -113,27 +107,20 @@ function renderResults(
 		: `${results.length} result${results.length === 1 ? "" : "s"}`;
 
 	for (const item of results) {
-		const refs = refLine(item);
 		const row = document.createElement("article");
 		row.className = "parts-result";
 
 		row.innerHTML = `
 			<div class="parts-result__body">
 				<div class="parts-result__top">
-					<p class="parts-result__sku">${escapeHtml(item.sku)}</p>
+					<p class="parts-result__brand">${escapeHtml(item.brand)}</p>
 					<span class="${availabilityClass(item.availability)}">${availabilityLabel(item.availability)}</span>
 				</div>
 				<h3 class="parts-result__name">${escapeHtml(item.name)}</h3>
-				<p class="parts-result__meta">
-					<span>${escapeHtml(item.brand)}</span>
-					<span aria-hidden="true">·</span>
-					<span>${escapeHtml(item.uom)}</span>
-					${refs ? `<span aria-hidden="true">·</span><span>${escapeHtml(refs)}</span>` : ""}
-				</p>
 			</div>
 			<a
 				class="parts-result__wa th-cta-wa"
-				href="${waHref(item.sku, item.name)}"
+				href="${waHref(item.brand, item.name)}"
 				target="_blank"
 				rel="noopener noreferrer"
 			>WhatsApp for price &amp; fitment</a>

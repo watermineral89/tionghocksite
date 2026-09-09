@@ -18,7 +18,7 @@ const { span = "", accent = false, id, class: className = "", badges = [] } = As
 		"transition-[border-color,box-shadow] duration-300",
 		"hover:border-slate-300 hover:shadow-md",
 		"will-change-transform [transform-style:preserve-3d]",
-		accent && "border-emerald-200/80 ring-1 ring-emerald-100",
+		accent && "border-[color-mix(in_oklab,var(--color-brand-lime)_45%,white)] ring-1 ring-[color-mix(in_oklab,var(--color-brand-lime)_22%,white)]",
 		span,
 		className,
 	]}
@@ -26,7 +26,7 @@ const { span = "", accent = false, id, class: className = "", badges = [] } = As
 	<div
 		class="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
 		aria-hidden="true"
-		style="background: radial-gradient(500px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(26, 125, 69, 0.06), transparent 45%);"
+		style="background: radial-gradient(500px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), color-mix(in oklab, var(--color-brand-lime) 14%, transparent), transparent 45%);"
 	>
 	</div>
 
