@@ -5,8 +5,8 @@ const links = [
 	{ href: "/parts", label: "Parts" },
 	{ href: "/about", label: "About" },
 	{ href: "/directors", label: "Directors" },
-	{ href: "/capabilities", label: "Capabilities" },
 	{ href: "/gallery", label: "Gallery" },
+	{ href: "/careers", label: "Careers" },
 	{ href: "/contact", label: "Contact" },
 ];
 
@@ -59,39 +59,18 @@ const mobileLinkClass = (href: string) =>
 			}
 		</nav>
 
-		<div class="flex items-center gap-2 sm:gap-3">
-			<a
-				href="tel:+6082649433"
-				class="hidden font-mono text-[0.65rem] font-medium uppercase tracking-[0.14em] text-slate-500 transition hover:text-slate-900 sm:text-xs lg:inline"
-			>
-				082-649433
-			</a>
-			<a
-				href="/contact"
-				class:list={[
-					"hidden items-center justify-center px-3 py-2 text-sm font-semibold uppercase tracking-[0.08em] transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 sm:inline-flex sm:px-4",
-					isActive("/contact")
-						? "bg-brand-lime text-brand focus-visible:outline-brand-lime"
-						: "bg-brand text-white hover:bg-[color-mix(in_oklab,var(--color-brand)_88%,black)] focus-visible:outline-brand",
-				]}
-				aria-current={isActive("/contact") ? "page" : undefined}
-			>
-				Contact
-			</a>
-
-			<button
-				type="button"
-				class="inline-flex h-10 w-10 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-700 transition hover:border-slate-300 md:hidden"
-				aria-label="Open menu"
-				aria-expanded="false"
-				aria-controls="mobile-nav"
-				data-mobile-menu-toggle
-			>
-				<svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
-					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7h16M4 12h16M4 17h16"></path>
-				</svg>
-			</button>
-		</div>
+		<button
+			type="button"
+			class="inline-flex h-10 w-10 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-700 transition hover:border-slate-300 md:hidden"
+			aria-label="Open menu"
+			aria-expanded="false"
+			aria-controls="mobile-nav"
+			data-mobile-menu-toggle
+		>
+			<svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+				<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7h16M4 12h16M4 17h16"></path>
+			</svg>
+		</button>
 	</div>
 
 	<nav

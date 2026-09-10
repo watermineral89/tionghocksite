@@ -16,6 +16,7 @@ pnpm-debug.log*
 .env
 .env.production
 .env.local
+.dev.vars
 
 # catalog export logs (Matang server)
 scripts/logs/
@@ -25,6 +26,9 @@ scripts/logs/
 
 # jetbrains setting folder
 .idea/
+
+# Cloudflare / Wrangler local state
+.wrangler/
 
 # legacy WordPress export — not part of the Astro site
 TIONG HOCK CLIENT/

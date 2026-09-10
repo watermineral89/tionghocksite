@@ -56,6 +56,23 @@ git push -u origin main
 
 Share the live URL with Gemini or anyone to review the site.
 
+## Careers form (Cloudflare Pages)
+
+The careers page posts to the Pages Function `functions/api/careers.js` (`POST /api/careers`), which emails applications via [Resend](https://resend.com).
+
+In Cloudflare Pages → Settings → Environment variables, set:
+
+- `RESEND_API_KEY`
+- `CAREERS_TO` (default `careers@tionghock.com.my`)
+- `CAREERS_FROM` (use a verified domain sender in Resend)
+
+`astro dev` does **not** run Pages Functions. To test the API locally:
+
+```bash
+npm run build
+npx wrangler pages dev dist
+```
+
 ## Stock search catalog (Option A — recommended)
 
 Keep AutoCount / SQL / Tailscale private on Matang. Export a sanitized JSON every 15 minutes for `/parts` search (name + brand + availability only).
