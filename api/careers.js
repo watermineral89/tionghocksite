@@ -100,10 +100,6 @@ function escapeHtml(value) {
 		.replace(/"/g, "&quot;");
 }
 
-function env(name, fallback = "") {
-	return process.env[name] || fallback;
-}
-
 function buildEmailBodies(form, file) {
 	const name = cleanText(form.get("name"), 120);
 	const email = cleanText(form.get("email"), 160);
@@ -146,9 +142,10 @@ function buildEmailBodies(form, file) {
 }
 
 async function sendWithResend(payload, attachment) {
-	const apiKey = env("RESEND_API_KEY");
-	const to = env("CAREERS_TO") || "careers@tionghock.com.my";
-	const from = env("CAREERS_FROM") || "Tiong Hock Careers <onboarding@resend.dev>";
+	// Edge requires static process.env.NAME access (dynamic keys are stripped).
+	const apiKey = process.env.RESEND_API_KEY;
+	const to = process.env.CAREERS_TO || "careers@tionghock.com.my";
+	const from = process.env.CAREERS_FROM || "Tiong Hock Careers <onboarding@resend.dev>";
 
 	if (!apiKey) {
 		throw new Error("RESEND_API_KEY is not configured");

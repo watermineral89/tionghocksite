@@ -73,17 +73,14 @@ function escapeHtml(value) {
 		.replace(/"/g, "&quot;");
 }
 
-function env(name, fallback = "") {
-	return process.env[name] || fallback;
-}
-
 async function sendWithResend(payload) {
-	const apiKey = env("RESEND_API_KEY");
-	const to = env("ENQUIRIES_TO") || env("CONTACT_TO") || "enquiries@tionghock.com.my";
+	// Edge requires static process.env.NAME access (dynamic keys are stripped).
+	const apiKey = process.env.RESEND_API_KEY;
+	const to = process.env.ENQUIRIES_TO || process.env.CONTACT_TO || "enquiries@tionghock.com.my";
 	const from =
-		env("ENQUIRIES_FROM") ||
-		env("CONTACT_FROM") ||
-		env("CAREERS_FROM") ||
+		process.env.ENQUIRIES_FROM ||
+		process.env.CONTACT_FROM ||
+		process.env.CAREERS_FROM ||
 		"Tiong Hock <onboarding@resend.dev>";
 
 	if (!apiKey) {
