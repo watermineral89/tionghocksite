@@ -4,42 +4,28 @@ const RATE_MAX = 20;
 /** @type {Map<string, { count: number, reset: number }>} */
 const rateMap = new Map();
 
-export const config = {
-	runtime: "edge",
-};
-
-function corsHeaders(origin) {
-	const allowed =
-		origin &&
-		(/^(https:\/\/(tionghock\.com|www\.tionghock\.com|[\w-]+\.pages\.dev|[\w-]+\.vercel\.app))$/.test(origin) ||
-			/^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin) ||
-			/\.ts\.net$/.test(origin));
-
-	return {
-		"Access-Control-Allow-Origin": allowed ? origin : "https://tionghock.com",
-		"Access-Control-Allow-Methods": "POST, OPTIONS",
-		"Access-Control-Allow-Headers": "Accept, Content-Type",
-		"Access-Control-Max-Age": "86400",
-		"Cache-Control": "private, max-age=0, no-store",
-	};
-}
-
-function jsonResponse(body, status, origin) {
-	return new Response(JSON.stringify(body), {
-		status,
-		headers: {
-			"Content-Type": "application/json; charset=utf-8",
-			...corsHeaders(origin),
-		},
-	});
-}
-
-function clientIp(request) {
+function allowOrigin(origin) {
+	if (!origin) return false;
 	return (
-		request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
-		request.headers.get("x-real-ip") ||
-		"unknown"
+		/^(https:\/\/(tionghock\.com|www\.tionghock\.com|[\w-]+\.pages\.dev|[\w-]+\.vercel\.app))$/.test(origin) ||
+		/^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin) ||
+		/\.ts\.net$/.test(origin)
 	);
+}
+
+function setCors(res, origin) {
+	res.setHeader("Access-Control-Allow-Origin", allowOrigin(origin) ? origin : "https://tionghock.com");
+	res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+	res.setHeader("Access-Control-Allow-Headers", "Accept, Content-Type");
+	res.setHeader("Access-Control-Max-Age", "86400");
+	res.setHeader("Cache-Control", "private, max-age=0, no-store");
+}
+
+function clientIp(req) {
+	const xf = req.headers["x-forwarded-for"];
+	if (typeof xf === "string" && xf.length) return xf.split(",")[0].trim();
+	if (Array.isArray(xf) && xf[0]) return String(xf[0]).split(",")[0].trim();
+	return req.headers["x-real-ip"] || "unknown";
 }
 
 function checkRateLimit(ip) {
@@ -73,8 +59,16 @@ function escapeHtml(value) {
 		.replace(/"/g, "&quot;");
 }
 
+async function readJsonBody(req) {
+	if (req.body && typeof req.body === "object") return req.body;
+	const chunks = [];
+	for await (const chunk of req) chunks.push(chunk);
+	const raw = Buffer.concat(chunks).toString("utf8");
+	if (!raw) return {};
+	return JSON.parse(raw);
+}
+
 async function sendWithResend(payload) {
-	// Edge requires static process.env.NAME access (dynamic keys are stripped).
 	const apiKey = process.env.RESEND_API_KEY;
 	const to = process.env.ENQUIRIES_TO || process.env.CONTACT_TO || "enquiries@tionghock.com.my";
 	const from =
@@ -132,60 +126,68 @@ async function sendWithResend(payload) {
 	return data;
 }
 
-export default async function handler(request) {
-	const origin = request.headers.get("Origin") || "";
+export default async function handler(req, res) {
+	const origin = typeof req.headers.origin === "string" ? req.headers.origin : "";
+	setCors(res, origin);
 
-	if (request.method === "OPTIONS") {
-		return new Response(null, { status: 204, headers: corsHeaders(origin) });
+	if (req.method === "OPTIONS") {
+		return res.status(204).end();
 	}
 
-	if (request.method !== "POST") {
-		return jsonResponse({ ok: false, error: "Use POST" }, 405, origin);
+	if (req.method === "GET") {
+		return res.status(200).json({
+			ok: true,
+			service: "contact",
+			resendConfigured: Boolean(process.env.RESEND_API_KEY),
+			enquiriesToConfigured: Boolean(process.env.ENQUIRIES_TO || process.env.CONTACT_TO),
+			enquiriesFromConfigured: Boolean(process.env.ENQUIRIES_FROM || process.env.CONTACT_FROM),
+		});
 	}
 
-	if (!checkRateLimit(clientIp(request))) {
-		return jsonResponse({ ok: false, error: "Too many messages from this network. Try again later." }, 429, origin);
+	if (req.method !== "POST") {
+		return res.status(405).json({ ok: false, error: "Use POST" });
 	}
 
-	let form;
+	if (!checkRateLimit(clientIp(req))) {
+		return res.status(429).json({ ok: false, error: "Too many messages from this network. Try again later." });
+	}
+
+	let body;
 	try {
-		form = await request.formData();
+		body = await readJsonBody(req);
 	} catch {
-		return jsonResponse({ ok: false, error: "Invalid form data." }, 400, origin);
+		return res.status(400).json({ ok: false, error: "Invalid JSON body." });
 	}
 
-	const honey = cleanText(form.get("website") ?? form.get("_honey"), 200);
+	const honey = cleanText(body.website ?? body._honey, 200);
 	if (honey) {
-		return jsonResponse({ ok: true }, 200, origin);
+		return res.status(200).json({ ok: true });
 	}
 
-	const name = cleanText(form.get("name"), 120);
-	const email = cleanText(form.get("email"), 160).toLowerCase();
-	const subject = cleanText(form.get("subject") ?? form.get("_subject"), 200);
-	const message = cleanText(form.get("message"), 4000);
+	const name = cleanText(body.name, 120);
+	const email = cleanText(body.email, 160).toLowerCase();
+	const subject = cleanText(body.subject ?? body._subject, 200);
+	const message = cleanText(body.message, 4000);
 
 	if (!name || !email || !subject || !message) {
-		return jsonResponse({ ok: false, error: "Please complete all required fields." }, 400, origin);
+		return res.status(400).json({ ok: false, error: "Please complete all required fields." });
 	}
 	if (!isEmail(email)) {
-		return jsonResponse({ ok: false, error: "Please enter a valid email address." }, 400, origin);
+		return res.status(400).json({ ok: false, error: "Please enter a valid email address." });
 	}
 
 	try {
 		await sendWithResend({ name, email, subject, message });
-		return jsonResponse({ ok: true }, 200, origin);
+		return res.status(200).json({ ok: true });
 	} catch (err) {
 		const msg = err instanceof Error ? err.message : "Send failed";
+		console.error("[api/contact]", msg);
 		const missingKey = /RESEND_API_KEY/i.test(msg);
-		return jsonResponse(
-			{
-				ok: false,
-				error: missingKey
-					? "Contact email is not configured yet. Please try again later."
-					: "Could not send right now. Please email enquiries@tionghock.com.my directly.",
-			},
-			missingKey ? 503 : 502,
-			origin,
-		);
+		return res.status(missingKey ? 503 : 502).json({
+			ok: false,
+			error: missingKey
+				? "Contact email is not configured yet. Please try again later."
+				: "Could not send right now. Please email enquiries@tionghock.com.my directly.",
+		});
 	}
 }

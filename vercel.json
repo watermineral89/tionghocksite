@@ -1,5 +1,11 @@
 {
-  "buildCommand": "npm run build",
-  "outputDirectory": "dist",
-  "framework": "astro"
+	"buildCommand": "npm run build",
+	"outputDirectory": "dist",
+	"framework": "astro",
+	"functions": {
+		"api/**/*.js": {
+			"memory": 1024,
+			"maxDuration": 30
+		}
+	}
 }

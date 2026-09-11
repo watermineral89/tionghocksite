@@ -207,25 +207,92 @@ export async function onRequestPost(context) {
 		return jsonResponse({ ok: false, error: "Too many applications from this network. Try again later." }, 429, origin);
 	}
 
-	let form;
+	const contentType = context.request.headers.get("Content-Type") || "";
+	/** @type {Record<string, any>} */
+	let fields = {};
+	/** @type {File | null} */
+	let file = null;
+	/** @type {{ filename: string, content: string, contentType: string } | null} */
+	let attachment = null;
+
 	try {
-		form = await context.request.formData();
+		if (contentType.includes("application/json")) {
+			fields = await context.request.json();
+			const rawAttachment = fields.attachment;
+			if (rawAttachment && typeof rawAttachment === "object" && rawAttachment.content) {
+				const filename = cleanText(rawAttachment.filename || rawAttachment.name, 180);
+				const content = String(rawAttachment.content || "");
+				const contentTypeAtt = cleanText(
+					rawAttachment.contentType || rawAttachment.type || "application/octet-stream",
+					120,
+				);
+				const ext = fileExt(filename);
+				if (!ALLOWED_EXT.has(ext)) {
+					return jsonResponse(
+						{ ok: false, error: "Attachment must be PDF, DOC, DOCX, JPG, PNG, or WEBP." },
+						400,
+						origin,
+					);
+				}
+				if (contentTypeAtt && !ALLOWED_MIME.has(contentTypeAtt)) {
+					return jsonResponse({ ok: false, error: "Unsupported attachment type." }, 400, origin);
+				}
+				const approxBytes = Math.floor((content.length * 3) / 4);
+				if (approxBytes > MAX_FILE_BYTES) {
+					return jsonResponse({ ok: false, error: "Attachment must be 5 MB or smaller." }, 400, origin);
+				}
+				attachment = {
+					filename: filename || `resume.${ext}`,
+					content,
+					contentType: contentTypeAtt || "application/octet-stream",
+				};
+			}
+		} else {
+			const form = await context.request.formData();
+			for (const [key, value] of form.entries()) {
+				if (key === "attachment") continue;
+				fields[key] = value;
+			}
+			const rawFile = form.get("attachment");
+			if (rawFile && typeof rawFile === "object" && "arrayBuffer" in rawFile && rawFile.size > 0) {
+				file = /** @type {File} */ (rawFile);
+				const ext = fileExt(file.name);
+				if (!ALLOWED_EXT.has(ext)) {
+					return jsonResponse(
+						{ ok: false, error: "Attachment must be PDF, DOC, DOCX, JPG, PNG, or WEBP." },
+						400,
+						origin,
+					);
+				}
+				if (file.type && !ALLOWED_MIME.has(file.type)) {
+					return jsonResponse({ ok: false, error: "Unsupported attachment type." }, 400, origin);
+				}
+				if (file.size > MAX_FILE_BYTES) {
+					return jsonResponse({ ok: false, error: "Attachment must be 5 MB or smaller." }, 400, origin);
+				}
+				const bytes = new Uint8Array(await file.arrayBuffer());
+				attachment = {
+					filename: file.name.slice(0, 180) || `resume.${ext}`,
+					content: uint8ToBase64(bytes),
+					contentType: file.type || "application/octet-stream",
+				};
+			}
+		}
 	} catch {
 		return jsonResponse({ ok: false, error: "Invalid form data." }, 400, origin);
 	}
 
-	// Honeypot — silently accept bots
-	const honey = cleanText(form.get("website") ?? form.get("_honey"), 200);
+	const honey = cleanText(fields.website ?? fields._honey, 200);
 	if (honey) {
 		return jsonResponse({ ok: true }, 200, origin);
 	}
 
-	const name = cleanText(form.get("name"), 120);
-	const email = cleanText(form.get("email"), 160).toLowerCase();
-	const phone = cleanText(form.get("phone"), 40);
-	const location = cleanText(form.get("location"), 80);
-	const position = cleanText(form.get("position"), 80);
-	const message = cleanText(form.get("message"), 4000);
+	const name = cleanText(fields.name, 120);
+	const email = cleanText(fields.email, 160).toLowerCase();
+	const phone = cleanText(fields.phone, 40);
+	const location = cleanText(fields.location, 80);
+	const position = cleanText(fields.position, 80);
+	const message = cleanText(fields.message, 4000);
 
 	if (!name || !email || !phone || !location || !position || !message) {
 		return jsonResponse({ ok: false, error: "Please complete all required fields." }, 400, origin);
@@ -234,38 +301,12 @@ export async function onRequestPost(context) {
 		return jsonResponse({ ok: false, error: "Please enter a valid email address." }, 400, origin);
 	}
 
-	const rawFile = form.get("attachment");
-	/** @type {File | null} */
-	let file = null;
-	/** @type {{ filename: string, content: string, contentType: string } | null} */
-	let attachment = null;
-
-	if (rawFile && typeof rawFile === "object" && "arrayBuffer" in rawFile && rawFile.size > 0) {
-		file = /** @type {File} */ (rawFile);
-		const ext = fileExt(file.name);
-		if (!ALLOWED_EXT.has(ext)) {
-			return jsonResponse(
-				{ ok: false, error: "Attachment must be PDF, DOC, DOCX, JPG, PNG, or WEBP." },
-				400,
-				origin,
-			);
-		}
-		if (file.type && !ALLOWED_MIME.has(file.type)) {
-			return jsonResponse({ ok: false, error: "Unsupported attachment type." }, 400, origin);
-		}
-		if (file.size > MAX_FILE_BYTES) {
-			return jsonResponse({ ok: false, error: "Attachment must be 5 MB or smaller." }, 400, origin);
-		}
-
-		const bytes = new Uint8Array(await file.arrayBuffer());
-		attachment = {
-			filename: file.name.slice(0, 180) || `resume.${ext}`,
-			content: uint8ToBase64(bytes),
-			contentType: file.type || "application/octet-stream",
-		};
-	}
-
-	const bodies = buildEmailBodies(form, file);
+	const formLike = {
+		get(key) {
+			return fields[key];
+		},
+	};
+	const bodies = buildEmailBodies(formLike, file || (attachment ? { name: attachment.filename, type: attachment.contentType, size: 1 } : null));
 
 	try {
 		await sendWithResend(context.env, { ...bodies, position }, attachment);
@@ -288,5 +329,13 @@ export async function onRequestPost(context) {
 
 export async function onRequestGet(context) {
 	const origin = context.request.headers.get("Origin") || "";
-	return jsonResponse({ ok: false, error: "Use POST" }, 405, origin);
+	return jsonResponse(
+		{
+			ok: true,
+			service: "careers",
+			resendConfigured: Boolean(context.env?.RESEND_API_KEY),
+		},
+		200,
+		origin,
+	);
 }

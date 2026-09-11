@@ -142,22 +142,30 @@ export async function onRequestPost(context) {
 		return jsonResponse({ ok: false, error: "Too many messages from this network. Try again later." }, 429, origin);
 	}
 
-	let form;
+	const contentType = context.request.headers.get("Content-Type") || "";
+	/** @type {Record<string, FormDataEntryValue | string>} */
+	let fields = {};
+
 	try {
-		form = await context.request.formData();
+		if (contentType.includes("application/json")) {
+			fields = await context.request.json();
+		} else {
+			const form = await context.request.formData();
+			for (const [key, value] of form.entries()) fields[key] = value;
+		}
 	} catch {
 		return jsonResponse({ ok: false, error: "Invalid form data." }, 400, origin);
 	}
 
-	const honey = cleanText(form.get("website") ?? form.get("_honey"), 200);
+	const honey = cleanText(fields.website ?? fields._honey, 200);
 	if (honey) {
 		return jsonResponse({ ok: true }, 200, origin);
 	}
 
-	const name = cleanText(form.get("name"), 120);
-	const email = cleanText(form.get("email"), 160).toLowerCase();
-	const subject = cleanText(form.get("subject") ?? form.get("_subject"), 200);
-	const message = cleanText(form.get("message"), 4000);
+	const name = cleanText(fields.name, 120);
+	const email = cleanText(fields.email, 160).toLowerCase();
+	const subject = cleanText(fields.subject ?? fields._subject, 200);
+	const message = cleanText(fields.message, 4000);
 
 	if (!name || !email || !subject || !message) {
 		return jsonResponse({ ok: false, error: "Please complete all required fields." }, 400, origin);
@@ -187,5 +195,13 @@ export async function onRequestPost(context) {
 
 export async function onRequestGet(context) {
 	const origin = context.request.headers.get("Origin") || "";
-	return jsonResponse({ ok: false, error: "Use POST" }, 405, origin);
+	return jsonResponse(
+		{
+			ok: true,
+			service: "contact",
+			resendConfigured: Boolean(context.env?.RESEND_API_KEY),
+		},
+		200,
+		origin,
+	);
 }

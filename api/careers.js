@@ -15,42 +15,28 @@ const ALLOWED_MIME = new Set([
 /** @type {Map<string, { count: number, reset: number }>} */
 const rateMap = new Map();
 
-export const config = {
-	runtime: "edge",
-};
-
-function corsHeaders(origin) {
-	const allowed =
-		origin &&
-		(/^(https:\/\/(tionghock\.com|www\.tionghock\.com|[\w-]+\.pages\.dev|[\w-]+\.vercel\.app))$/.test(origin) ||
-			/^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin) ||
-			/\.ts\.net$/.test(origin));
-
-	return {
-		"Access-Control-Allow-Origin": allowed ? origin : "https://tionghock.com",
-		"Access-Control-Allow-Methods": "POST, OPTIONS",
-		"Access-Control-Allow-Headers": "Accept, Content-Type",
-		"Access-Control-Max-Age": "86400",
-		"Cache-Control": "private, max-age=0, no-store",
-	};
-}
-
-function jsonResponse(body, status, origin) {
-	return new Response(JSON.stringify(body), {
-		status,
-		headers: {
-			"Content-Type": "application/json; charset=utf-8",
-			...corsHeaders(origin),
-		},
-	});
-}
-
-function clientIp(request) {
+function allowOrigin(origin) {
+	if (!origin) return false;
 	return (
-		request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
-		request.headers.get("x-real-ip") ||
-		"unknown"
+		/^(https:\/\/(tionghock\.com|www\.tionghock\.com|[\w-]+\.pages\.dev|[\w-]+\.vercel\.app))$/.test(origin) ||
+		/^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin) ||
+		/\.ts\.net$/.test(origin)
 	);
+}
+
+function setCors(res, origin) {
+	res.setHeader("Access-Control-Allow-Origin", allowOrigin(origin) ? origin : "https://tionghock.com");
+	res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+	res.setHeader("Access-Control-Allow-Headers", "Accept, Content-Type");
+	res.setHeader("Access-Control-Max-Age", "86400");
+	res.setHeader("Cache-Control", "private, max-age=0, no-store");
+}
+
+function clientIp(req) {
+	const xf = req.headers["x-forwarded-for"];
+	if (typeof xf === "string" && xf.length) return xf.split(",")[0].trim();
+	if (Array.isArray(xf) && xf[0]) return String(xf[0]).split(",")[0].trim();
+	return req.headers["x-real-ip"] || "unknown";
 }
 
 function checkRateLimit(ip) {
@@ -83,15 +69,6 @@ function fileExt(name) {
 	return parts.length > 1 ? parts.pop() : "";
 }
 
-function uint8ToBase64(bytes) {
-	const chunk = 0x8000;
-	let binary = "";
-	for (let i = 0; i < bytes.length; i += chunk) {
-		binary += String.fromCharCode(...bytes.subarray(i, i + chunk));
-	}
-	return btoa(binary);
-}
-
 function escapeHtml(value) {
 	return String(value)
 		.replace(/&/g, "&amp;")
@@ -100,49 +77,52 @@ function escapeHtml(value) {
 		.replace(/"/g, "&quot;");
 }
 
-function buildEmailBodies(form, file) {
-	const name = cleanText(form.get("name"), 120);
-	const email = cleanText(form.get("email"), 160);
-	const phone = cleanText(form.get("phone"), 40);
-	const location = cleanText(form.get("location"), 80);
-	const position = cleanText(form.get("position"), 80);
-	const message = cleanText(form.get("message"), 4000);
+async function readJsonBody(req) {
+	if (req.body && typeof req.body === "object") return req.body;
+	const chunks = [];
+	for await (const chunk of req) chunks.push(chunk);
+	const raw = Buffer.concat(chunks).toString("utf8");
+	if (!raw) return {};
+	return JSON.parse(raw);
+}
 
+function buildEmailBodies(fields, fileMeta) {
 	const text = [
 		"New career application — Tiong Hock Auto Parts",
 		"",
-		`Name: ${name}`,
-		`Email: ${email}`,
-		`Phone: ${phone}`,
-		`Preferred location: ${location}`,
-		`Position: ${position}`,
+		`Name: ${fields.name}`,
+		`Email: ${fields.email}`,
+		`Phone: ${fields.phone}`,
+		`Preferred location: ${fields.location}`,
+		`Position: ${fields.position}`,
 		"",
 		"About applicant:",
-		message,
+		fields.message,
 		"",
-		file ? `Attachment: ${file.name} (${file.type || "unknown"}, ${file.size} bytes)` : "Attachment: none",
+		fileMeta
+			? `Attachment: ${fileMeta.filename} (${fileMeta.contentType || "unknown"})`
+			: "Attachment: none",
 	].join("\n");
 
 	const html = `
 		<h2>New career application</h2>
 		<table cellpadding="6" cellspacing="0" style="border-collapse:collapse;font-family:sans-serif;font-size:14px">
-			<tr><td><strong>Name</strong></td><td>${escapeHtml(name)}</td></tr>
-			<tr><td><strong>Email</strong></td><td>${escapeHtml(email)}</td></tr>
-			<tr><td><strong>Phone</strong></td><td>${escapeHtml(phone)}</td></tr>
-			<tr><td><strong>Preferred location</strong></td><td>${escapeHtml(location)}</td></tr>
-			<tr><td><strong>Position</strong></td><td>${escapeHtml(position)}</td></tr>
+			<tr><td><strong>Name</strong></td><td>${escapeHtml(fields.name)}</td></tr>
+			<tr><td><strong>Email</strong></td><td>${escapeHtml(fields.email)}</td></tr>
+			<tr><td><strong>Phone</strong></td><td>${escapeHtml(fields.phone)}</td></tr>
+			<tr><td><strong>Preferred location</strong></td><td>${escapeHtml(fields.location)}</td></tr>
+			<tr><td><strong>Position</strong></td><td>${escapeHtml(fields.position)}</td></tr>
 		</table>
-		<p style="font-family:sans-serif;font-size:14px;white-space:pre-wrap"><strong>About applicant</strong><br>${escapeHtml(message)}</p>
+		<p style="font-family:sans-serif;font-size:14px;white-space:pre-wrap"><strong>About applicant</strong><br>${escapeHtml(fields.message)}</p>
 		<p style="font-family:sans-serif;font-size:13px;color:#64748b">${
-			file ? `Attachment included: ${escapeHtml(file.name)}` : "No attachment uploaded."
+			fileMeta ? `Attachment included: ${escapeHtml(fileMeta.filename)}` : "No attachment uploaded."
 		}</p>
 	`;
 
-	return { text, html, name, email, phone, location, position, message };
+	return { text, html };
 }
 
 async function sendWithResend(payload, attachment) {
-	// Edge requires static process.env.NAME access (dynamic keys are stripped).
 	const apiKey = process.env.RESEND_API_KEY;
 	const to = process.env.CAREERS_TO || "careers@tionghock.com.my";
 	const from = process.env.CAREERS_FROM || "Tiong Hock Careers <onboarding@resend.dev>";
@@ -188,99 +168,109 @@ async function sendWithResend(payload, attachment) {
 	return data;
 }
 
-export default async function handler(request) {
-	const origin = request.headers.get("Origin") || "";
+export default async function handler(req, res) {
+	const origin = typeof req.headers.origin === "string" ? req.headers.origin : "";
+	setCors(res, origin);
 
-	if (request.method === "OPTIONS") {
-		return new Response(null, { status: 204, headers: corsHeaders(origin) });
+	if (req.method === "OPTIONS") {
+		return res.status(204).end();
 	}
 
-	if (request.method !== "POST") {
-		return jsonResponse({ ok: false, error: "Use POST" }, 405, origin);
+	if (req.method === "GET") {
+		return res.status(200).json({
+			ok: true,
+			service: "careers",
+			resendConfigured: Boolean(process.env.RESEND_API_KEY),
+			careersToConfigured: Boolean(process.env.CAREERS_TO),
+			careersFromConfigured: Boolean(process.env.CAREERS_FROM),
+		});
 	}
 
-	if (!checkRateLimit(clientIp(request))) {
-		return jsonResponse(
-			{ ok: false, error: "Too many applications from this network. Try again later." },
-			429,
-			origin,
-		);
+	if (req.method !== "POST") {
+		return res.status(405).json({ ok: false, error: "Use POST" });
 	}
 
-	let form;
+	if (!checkRateLimit(clientIp(req))) {
+		return res.status(429).json({ ok: false, error: "Too many applications from this network. Try again later." });
+	}
+
+	let body;
 	try {
-		form = await request.formData();
+		body = await readJsonBody(req);
 	} catch {
-		return jsonResponse({ ok: false, error: "Invalid form data." }, 400, origin);
+		return res.status(400).json({ ok: false, error: "Invalid JSON body." });
 	}
 
-	const honey = cleanText(form.get("website") ?? form.get("_honey"), 200);
+	const honey = cleanText(body.website ?? body._honey, 200);
 	if (honey) {
-		return jsonResponse({ ok: true }, 200, origin);
+		return res.status(200).json({ ok: true });
 	}
 
-	const name = cleanText(form.get("name"), 120);
-	const email = cleanText(form.get("email"), 160).toLowerCase();
-	const phone = cleanText(form.get("phone"), 40);
-	const location = cleanText(form.get("location"), 80);
-	const position = cleanText(form.get("position"), 80);
-	const message = cleanText(form.get("message"), 4000);
+	const name = cleanText(body.name, 120);
+	const email = cleanText(body.email, 160).toLowerCase();
+	const phone = cleanText(body.phone, 40);
+	const location = cleanText(body.location, 80);
+	const position = cleanText(body.position, 80);
+	const message = cleanText(body.message, 4000);
 
 	if (!name || !email || !phone || !location || !position || !message) {
-		return jsonResponse({ ok: false, error: "Please complete all required fields." }, 400, origin);
+		return res.status(400).json({ ok: false, error: "Please complete all required fields." });
 	}
 	if (!isEmail(email)) {
-		return jsonResponse({ ok: false, error: "Please enter a valid email address." }, 400, origin);
+		return res.status(400).json({ ok: false, error: "Please enter a valid email address." });
 	}
 
-	const rawFile = form.get("attachment");
-	/** @type {File | null} */
-	let file = null;
 	/** @type {{ filename: string, content: string, contentType: string } | null} */
 	let attachment = null;
+	const rawAttachment = body.attachment;
 
-	if (rawFile && typeof rawFile === "object" && "arrayBuffer" in rawFile && rawFile.size > 0) {
-		file = /** @type {File} */ (rawFile);
-		const ext = fileExt(file.name);
+	if (rawAttachment && typeof rawAttachment === "object") {
+		const filename = cleanText(rawAttachment.filename || rawAttachment.name, 180);
+		const content = String(rawAttachment.content || "");
+		const contentType = cleanText(rawAttachment.contentType || rawAttachment.type || "application/octet-stream", 120);
+		const ext = fileExt(filename);
+
+		if (!filename || !content) {
+			return res.status(400).json({ ok: false, error: "Invalid attachment." });
+		}
 		if (!ALLOWED_EXT.has(ext)) {
-			return jsonResponse(
-				{ ok: false, error: "Attachment must be PDF, DOC, DOCX, JPG, PNG, or WEBP." },
-				400,
-				origin,
-			);
+			return res.status(400).json({
+				ok: false,
+				error: "Attachment must be PDF, DOC, DOCX, JPG, PNG, or WEBP.",
+			});
 		}
-		if (file.type && !ALLOWED_MIME.has(file.type)) {
-			return jsonResponse({ ok: false, error: "Unsupported attachment type." }, 400, origin);
-		}
-		if (file.size > MAX_FILE_BYTES) {
-			return jsonResponse({ ok: false, error: "Attachment must be 5 MB or smaller." }, 400, origin);
+		if (contentType && !ALLOWED_MIME.has(contentType)) {
+			return res.status(400).json({ ok: false, error: "Unsupported attachment type." });
 		}
 
-		const bytes = new Uint8Array(await file.arrayBuffer());
+		// Rough size check from base64 length
+		const approxBytes = Math.floor((content.length * 3) / 4);
+		if (approxBytes > MAX_FILE_BYTES) {
+			return res.status(400).json({ ok: false, error: "Attachment must be 5 MB or smaller." });
+		}
+
 		attachment = {
-			filename: file.name.slice(0, 180) || `resume.${ext}`,
-			content: uint8ToBase64(bytes),
-			contentType: file.type || "application/octet-stream",
+			filename: filename || `resume.${ext}`,
+			content,
+			contentType: contentType || "application/octet-stream",
 		};
 	}
 
-	const bodies = buildEmailBodies(form, file);
+	const fields = { name, email, phone, location, position, message };
+	const bodies = buildEmailBodies(fields, attachment);
 
 	try {
-		await sendWithResend({ ...bodies, position }, attachment);
-		return jsonResponse({ ok: true }, 200, origin);
+		await sendWithResend({ ...bodies, ...fields }, attachment);
+		return res.status(200).json({ ok: true });
 	} catch (err) {
 		const msg = err instanceof Error ? err.message : "Send failed";
+		console.error("[api/careers]", msg);
 		const missingKey = /RESEND_API_KEY/i.test(msg);
-		return jsonResponse(
-			{
-				ok: false,
-				error: missingKey
-					? "Careers email is not configured yet. Please try again later."
-					: "Could not send application right now. Please try again later.",
-			},
-			missingKey ? 503 : 502,
-			origin,
-		);
+		return res.status(missingKey ? 503 : 502).json({
+			ok: false,
+			error: missingKey
+				? "Careers email is not configured yet. Please try again later."
+				: "Could not send application right now. Please try again later.",
+		});
 	}
 }

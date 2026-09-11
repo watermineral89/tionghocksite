@@ -233,10 +233,20 @@ const branches = [
 			setStatus("", "");
 
 			try {
+				const data = Object.fromEntries(new FormData(form).entries());
 				const response = await fetch("/api/contact", {
 					method: "POST",
-					headers: { Accept: "application/json" },
-					body: new FormData(form),
+					headers: {
+						Accept: "application/json",
+						"Content-Type": "application/json",
+					},
+					body: JSON.stringify({
+						name: data.name,
+						email: data.email,
+						subject: data.subject,
+						message: data.message,
+						website: data.website,
+					}),
 				});
 
 				const result = (await response.json().catch(() => ({}))) as { ok?: boolean; error?: string };

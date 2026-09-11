@@ -215,10 +215,38 @@ const roles = [
 
 			try {
 				const formData = new FormData(form);
+				/** @type {Record<string, unknown>} */
+				const payload = {
+					name: formData.get("name"),
+					email: formData.get("email"),
+					phone: formData.get("phone"),
+					location: formData.get("location"),
+					position: formData.get("position"),
+					message: formData.get("message"),
+					website: formData.get("website"),
+				};
+
+				if (file) {
+					const bytes = new Uint8Array(await file.arrayBuffer());
+					const chunk = 0x8000;
+					let binary = "";
+					for (let i = 0; i < bytes.length; i += chunk) {
+						binary += String.fromCharCode(...bytes.subarray(i, i + chunk));
+					}
+					payload.attachment = {
+						filename: file.name,
+						contentType: file.type || "application/octet-stream",
+						content: btoa(binary),
+					};
+				}
+
 				const response = await fetch("/api/careers", {
 					method: "POST",
-					headers: { Accept: "application/json" },
-					body: formData,
+					headers: {
+						Accept: "application/json",
+						"Content-Type": "application/json",
+					},
+					body: JSON.stringify(payload),
 				});
 
 				const result = (await response.json().catch(() => ({}))) as { ok?: boolean; error?: string };
