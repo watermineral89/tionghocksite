@@ -18,7 +18,11 @@ import { galleryPhotos } from "../../data/gallery.ts";
 		<ul class="gallery-grid" data-gallery-grid>
 			{
 				galleryPhotos.map((photo, index) => (
-					<li class="gallery-grid__item">
+					<li
+						class="gallery-grid__item gallery-grid__item--reveal"
+						data-gallery-reveal
+						style={`--reveal-index: ${index}`}
+					>
 						<button
 							type="button"
 							class="gallery-card"
@@ -30,7 +34,7 @@ import { galleryPhotos } from "../../data/gallery.ts";
 								<img
 									src={photo.src}
 									alt={photo.alt}
-									class="gallery-card__img"
+									class="gallery-card__img gallery-card__img--decode"
 									width={800}
 									height={600}
 									loading={index === 0 ? "eager" : "lazy"}
@@ -103,6 +107,21 @@ import { galleryPhotos } from "../../data/gallery.ts";
 		min-width: 0;
 	}
 
+	.gallery-grid__item--reveal {
+		opacity: 0;
+		transform: translateY(18px) scale(0.985);
+		transition:
+			opacity 600ms cubic-bezier(0.22, 1, 0.36, 1),
+			transform 600ms cubic-bezier(0.22, 1, 0.36, 1);
+		transition-delay: calc(var(--reveal-index, 0) * 60ms);
+		will-change: opacity, transform;
+	}
+
+	.gallery-grid__item--reveal.is-revealed {
+		opacity: 1;
+		transform: translateY(0) scale(1);
+	}
+
 	.gallery-card {
 		display: block;
 		width: 100%;
@@ -144,6 +163,17 @@ import { galleryPhotos } from "../../data/gallery.ts";
 		object-fit: cover;
 		object-position: center;
 		transition: transform 0.35s ease;
+	}
+
+	.gallery-card__img--decode {
+		opacity: 0;
+		transition:
+			opacity 400ms cubic-bezier(0.22, 1, 0.36, 1),
+			transform 0.35s ease;
+	}
+
+	.gallery-card__img--decode.is-ready {
+		opacity: 1;
 	}
 
 	.gallery-card:hover .gallery-card__img,
@@ -298,9 +328,21 @@ import { galleryPhotos } from "../../data/gallery.ts";
 	}
 
 	@media (prefers-reduced-motion: reduce) {
+		.gallery-grid__item--reveal {
+			opacity: 1;
+			transform: none;
+			transition: none;
+			will-change: auto;
+		}
+
 		.gallery-card__img,
+		.gallery-card__img--decode,
 		.gallery-card__frame {
 			transition: none;
+		}
+
+		.gallery-card__img--decode {
+			opacity: 1;
 		}
 
 		.gallery-card:hover .gallery-card__img,
@@ -311,6 +353,62 @@ import { galleryPhotos } from "../../data/gallery.ts";
 </style>
 
 <script define:vars={{ photos: galleryPhotos }}>
+	function whenImageReady(img) {
+		if (img.complete && img.naturalWidth > 0) {
+			return Promise.resolve();
+		}
+		if (typeof img.decode === "function") {
+			return img.decode().catch(() => {});
+		}
+		return new Promise((resolve) => {
+			img.addEventListener("load", () => resolve(), { once: true });
+			img.addEventListener("error", () => resolve(), { once: true });
+		});
+	}
+
+	function markImageReady(img) {
+		whenImageReady(img).then(() => {
+			requestAnimationFrame(() => img.classList.add("is-ready"));
+		});
+	}
+
+	function initGalleryReveal() {
+		const grid = document.querySelector("[data-gallery-grid]");
+		if (!grid) return;
+
+		const items = grid.querySelectorAll("[data-gallery-reveal]");
+		const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+		items.forEach((item) => {
+			const img = item.querySelector(".gallery-card__img--decode");
+			if (!img) return;
+			if (reducedMotion) {
+				img.classList.add("is-ready");
+			} else {
+				markImageReady(img);
+			}
+		});
+
+		if (reducedMotion) {
+			items.forEach((item) => item.classList.add("is-revealed"));
+			return;
+		}
+
+		const observer = new IntersectionObserver(
+			(entries) => {
+				for (const entry of entries) {
+					if (!entry.isIntersecting) continue;
+					const item = entry.target;
+					observer.unobserve(item);
+					requestAnimationFrame(() => item.classList.add("is-revealed"));
+				}
+			},
+			{ root: null, rootMargin: "0px 0px -5% 0px", threshold: 0 },
+		);
+
+		items.forEach((item) => observer.observe(item));
+	}
+
 	function initGalleryLightbox() {
 		const grid = document.querySelector("[data-gallery-grid]");
 		const lightbox = document.querySelector("[data-gallery-lightbox]");
@@ -395,5 +493,6 @@ import { galleryPhotos } from "../../data/gallery.ts";
 		});
 	}
 
+	initGalleryReveal();
 	initGalleryLightbox();
 </script>
