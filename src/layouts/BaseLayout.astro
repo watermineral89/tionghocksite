@@ -10,11 +10,13 @@ interface Props {
 }
 
 const {
-	title = "Tiong Hock Auto Parts (KCH) | Automotive Spare Parts Supplier Kuching & Samarahan",
-	description = "Tiong Hock Auto Parts (KCH) Sdn Bhd — Leading wholesale & retail automotive spare parts distributor in Matang Jaya, Kuching & Kota Samarahan, Sarawak. Stocking genuine & OEM parts, absorbers, brakes, and APM R134a refrigerant.",
+	title = "Tiong Hock | Automotive Spare Parts Kuching",
+	description = "Tiong Hock supplies genuine and OEM automotive spare parts for workshops, fleets and drivers in Kuching. 50,000+ active line items from Matang Jaya and Kota Samarahan.",
 	includeCanonical = true,
 	robots,
 } = Astro.props;
+
+const gaMeasurementId = "G-M0ZW3N632J";
 
 const pathname = Astro.url.pathname;
 const canonicalPath =
@@ -31,26 +33,32 @@ const ogImageAlt = "Tiong Hock Auto Parts (KCH) Sdn Bhd";
 <html lang="en-MY" class="scroll-smooth">
 	<head>
 		<meta charset="utf-8" />
-		<!-- Google tag (gtag.js). Loads once per full page; production hostnames only. -->
-		<script is:inline>
+		<!-- Google tag (gtag.js). One loader; production hostnames only. -->
+		<script is:inline define:vars={{ gaMeasurementId }}>
 			(function () {
 				var host = window.location.hostname;
 				if (host !== "tionghock.com" && host !== "www.tionghock.com") {
 					return;
 				}
+				if (window.__thGa4Init) {
+					return;
+				}
+				window.__thGa4Init = true;
 
 				window.dataLayer = window.dataLayer || [];
 				function gtag() {
 					dataLayer.push(arguments);
 				}
 				window.gtag = gtag;
-				gtag("js", new Date());
-				gtag("config", "G-M0ZW3N632J");
 
 				var script = document.createElement("script");
 				script.async = true;
-				script.src = "https://www.googletagmanager.com/gtag/js?id=G-M0ZW3N632J";
+				script.id = "th-ga4";
+				script.src = "https://www.googletagmanager.com/gtag/js?id=" + encodeURIComponent(gaMeasurementId);
 				document.head.appendChild(script);
+
+				gtag("js", new Date());
+				gtag("config", gaMeasurementId);
 			})();
 		</script>
 		<link rel="preconnect" href="https://fonts.googleapis.com" />

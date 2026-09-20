@@ -312,33 +312,5 @@ export async function onRequestPost(context) {
 
 export async function onRequestGet(context) {
 	const origin = context.request.headers.get("Origin") || "";
-	const env = context.env ?? {};
-	const to = env.ENQUIRIES_TO || env.CONTACT_TO || "enquiries@tionghock.com.my";
-	const from =
-		env.ENQUIRIES_FROM || env.CONTACT_FROM || env.CAREERS_FROM || "Tiong Hock <onboarding@resend.dev>";
-
-	return jsonResponse(
-		{
-			ok: true,
-			service: "contact",
-			resendConfigured: Boolean(env.RESEND_API_KEY),
-			envFlags: {
-				RESEND_API_KEY: Boolean(env.RESEND_API_KEY),
-				ENQUIRIES_FROM: Boolean(env.ENQUIRIES_FROM),
-				CONTACT_FROM: Boolean(env.CONTACT_FROM),
-				ENQUIRIES_TO: Boolean(env.ENQUIRIES_TO),
-				CONTACT_TO: Boolean(env.CONTACT_TO),
-				CAREERS_FROM: Boolean(env.CAREERS_FROM),
-			},
-			effectiveSend: {
-				from,
-				fromAddress: parseFromAddress(from),
-				to: [to],
-				replyToField: "reply_to",
-				subjectExample: "Website enquiry — {user subject}",
-			},
-		},
-		200,
-		origin,
-	);
+	return jsonResponse({ ok: true, service: "contact" }, 200, origin);
 }
