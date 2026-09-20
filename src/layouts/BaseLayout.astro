@@ -5,19 +5,54 @@ interface Props {
 	title?: string;
 	description?: string;
 	ogUrl?: string;
+	includeCanonical?: boolean;
+	robots?: string;
 }
 
 const {
 	title = "Tiong Hock Auto Parts (KCH) | Automotive Spare Parts Supplier Kuching & Samarahan",
 	description = "Tiong Hock Auto Parts (KCH) Sdn Bhd — Leading wholesale & retail automotive spare parts distributor in Matang Jaya, Kuching & Kota Samarahan, Sarawak. Stocking genuine & OEM parts, absorbers, brakes, and APM R134a refrigerant.",
-	ogUrl = "https://tionghock.com",
+	includeCanonical = true,
+	robots,
 } = Astro.props;
+
+const pathname = Astro.url.pathname;
+const canonicalPath =
+	pathname === "/" ? "/" : pathname.endsWith("/") ? pathname : `${pathname}/`;
+const canonicalURL = Astro.site
+	? new URL(canonicalPath, Astro.site).href
+	: undefined;
+const siteOrigin = Astro.site?.href ? new URL(Astro.site.href).origin : "https://tionghock.com";
+const ogImageUrl = new URL("/logo-horizontal.png", `${siteOrigin}/`).href;
+const ogImageAlt = "Tiong Hock Auto Parts (KCH) Sdn Bhd";
 ---
 
 <!doctype html>
 <html lang="en-MY" class="scroll-smooth">
 	<head>
 		<meta charset="utf-8" />
+		<!-- Google tag (gtag.js). Loads once per full page; production hostnames only. -->
+		<script is:inline>
+			(function () {
+				var host = window.location.hostname;
+				if (host !== "tionghock.com" && host !== "www.tionghock.com") {
+					return;
+				}
+
+				window.dataLayer = window.dataLayer || [];
+				function gtag() {
+					dataLayer.push(arguments);
+				}
+				window.gtag = gtag;
+				gtag("js", new Date());
+				gtag("config", "G-M0ZW3N632J");
+
+				var script = document.createElement("script");
+				script.async = true;
+				script.src = "https://www.googletagmanager.com/gtag/js?id=G-M0ZW3N632J";
+				document.head.appendChild(script);
+			})();
+		</script>
 		<link rel="preconnect" href="https://fonts.googleapis.com" />
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 		<link
@@ -25,17 +60,30 @@ const {
 			rel="stylesheet"
 		/>
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
+		<link rel="icon" type="image/x-icon" href="/favicon.ico" sizes="32x32" />
+		<link rel="apple-touch-icon" href="/logo-mark.png" />
 		<meta name="theme-color" content="#003820" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<meta name="generator" content={Astro.generator} />
 		<meta name="description" content={description} />
+		{robots && <meta name="robots" content={robots} />}
+		{includeCanonical && canonicalURL && <link rel="canonical" href={canonicalURL} />}
 		<meta name="geo.region" content="MY-13" />
+		<meta property="og:site_name" content="Tiong Hock Auto Parts" />
+		<meta property="og:locale" content="en_MY" />
 		<meta property="og:title" content={title} />
 		<meta property="og:description" content={description} />
 		<meta property="og:type" content="website" />
-		<meta property="og:url" content={ogUrl} />
+		{canonicalURL && <meta property="og:url" content={canonicalURL} />}
+		<meta property="og:image" content={ogImageUrl} />
+		<meta property="og:image:alt" content={ogImageAlt} />
+		<meta name="twitter:card" content="summary_large_image" />
+		<meta name="twitter:title" content={title} />
+		<meta name="twitter:description" content={description} />
+		<meta name="twitter:image" content={ogImageUrl} />
+		<meta name="twitter:image:alt" content={ogImageAlt} />
 		<title>{title}</title>
+		<slot name="head" />
 	</head>
 	<body class="min-h-dvh">
 		<slot />

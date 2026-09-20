@@ -1,93 +1,97 @@
-import fs from "node:fs";
-import path from "node:path";
-
 export interface GalleryPhoto {
+	/** Filename under public/gallery-assets (for maintenance). */
+	file: string;
 	src: string;
 	alt: string;
-	title: string;
-	caption?: string;
+	/** Short label for card overlay; omit if not set. */
+	title?: string;
 }
 
-const GALLERY_DIR = path.join(process.cwd(), "public", "GALLERY");
-const IMAGE_EXT = /\.(jpe?g|png|webp|gif|avif)$/i;
-
-/** Optional titles/captions for known files — everything else in /public/GALLERY is picked up automatically. */
-const photoMeta: Record<string, Omit<GalleryPhoto, "src">> = {
-	"DIRECTOR GARY.jpg": {
-		alt: "Gary Chan Kee Chong, Director of Operations & Logistics",
-		title: "Operations & logistics",
-		caption: "Gary Chan Kee Chong — aerospace-grade precision across warehouse and distribution.",
-	},
-	"DIRECTOR RAHIM.jpg": {
-		alt: "Rahim Chan, Managing Director",
-		title: "Managing director",
-		caption: "Rahim Chan — engineering-led growth and long-term industry strategy.",
-	},
-	"DIRECTOR VINCE.jpg": {
-		alt: "Vince Chan Chee Hou, Technical Director",
-		title: "StockPilot & systems",
-		caption: "Vince Chan Chee Hou — lead architect of our in-house StockPilot platform.",
-	},
-	"DIRECTOR IVAN.jpg": {
-		alt: "Ivan Yong, Director of Sales & Mechanical Engineering",
-		title: "Sales & engineering",
-		caption: "Ivan Yong — technical workshop support and failure analysis.",
-	},
-	"STOCK PILOT 2.jpg": {
-		alt: "StockPilot Stock Maintenance on a warehouse monitor",
-		title: "StockPilot in the warehouse",
-		caption: "Our in-house inventory system running live across Matang Jaya operations.",
-	},
-	"ACONGAS.jpg": {
-		alt: "Acongas product line",
-		title: "Product spotlight",
-		caption: "Authorized lines and fast-moving inventory from our Matang Jaya hub.",
-	},
-};
+const GALLERY_EXCLUDED = new Set([
+	"DIRECTOR GARY.jpg",
+	"DIRECTOR IVAN.jpg",
+	"DIRECTOR RAHIM.jpg",
+	"DIRECTOR VINCE.jpg",
+]);
 
 function gallerySrc(filename: string) {
-	return `/GALLERY/${encodeURIComponent(filename).replace(/%2F/g, "/")}`;
+	return `/gallery-assets/${encodeURIComponent(filename).replace(/%2F/g, "/")}`;
 }
 
-function titleFromFilename(filename: string) {
-	return filename
-		.replace(/\.[^.]+$/, "")
-		.replace(/[-_]+/g, " ")
-		.replace(/\s+/g, " ")
-		.trim();
-}
+/** Curated company gallery — director portraits live on /directors/ only. */
+const curatedGallery: GalleryPhoto[] = [
+	{
+		file: "unnamed.webp",
+		src: gallerySrc("unnamed.webp"),
+		title: "Street-facing storefront",
+		alt: "Multi-storey Tiong Hock Auto Parts building with red and white signage along the street",
+	},
+	{
+		file: "unnamed (5).webp",
+		src: gallerySrc("unnamed (5).webp"),
+		title: "Incoming stock delivery",
+		alt: "Cartons stacked on a tiled walkway beside a shuttered storefront entrance",
+	},
+	{
+		file: "unnamed (3).webp",
+		src: gallerySrc("unnamed (3).webp"),
+		title: "Warehouse storage aisle",
+		alt: "Narrow aisle between yellow industrial racks stacked with cartons and plastic bins",
+	},
+	{
+		file: "unnamed (6).webp",
+		src: gallerySrc("unnamed (6).webp"),
+		title: "Picking bins and shelves",
+		alt: "Warehouse aisle lined with yellow storage bins and shelved cartons",
+	},
+	{
+		file: "unnamed (7).webp",
+		src: gallerySrc("unnamed (7).webp"),
+		title: "Shelved steering components",
+		alt: "Yellow racks holding labelled cartons of tie rod ends and related steering parts",
+	},
+	{
+		file: "unnamed (9).webp",
+		src: gallerySrc("unnamed (9).webp"),
+		title: "Shelf-stocked spare parts",
+		alt: "Yellow shelving filled with small boxed automotive parts in a storage aisle",
+	},
+	{
+		file: "unnamed (4).webp",
+		src: gallerySrc("unnamed (4).webp"),
+		title: "Radiator fan motor",
+		alt: "Denso radiator fan motor assembly shown in front of its product carton",
+	},
+	{
+		file: "ACONGAS.jpg",
+		src: gallerySrc("ACONGAS.jpg"),
+		title: "APM refrigerant display",
+		alt: "Promotional display of stacked APM R134a refrigerant cartons in a warehouse setting",
+	},
+	{
+		file: "STOCK PILOT 2.jpg",
+		src: gallerySrc("STOCK PILOT 2.jpg"),
+		title: "Stock maintenance screen",
+		alt: "Computer monitor showing stock maintenance software in a warehouse office",
+	},
+	{
+		file: "unnamed (1).webp",
+		src: gallerySrc("unnamed (1).webp"),
+		title: "Workshop vehicle service",
+		alt: "Silver car on a lift with its hood open inside a service workshop",
+	},
+	{
+		file: "unnamed (8).webp",
+		src: gallerySrc("unnamed (8).webp"),
+		title: "Vehicle Maintenance",
+		alt: "Silver hatchback raised on a jack stand with its front wheel removed during maintenance",
+	},
+	{
+		file: "unnamed (10).webp",
+		src: gallerySrc("unnamed (10).webp"),
+		title: "Engine diagnostic check",
+		alt: "Technician using a handheld tester at the open engine bay of a vehicle",
+	},
+];
 
-function sortGalleryFiles(a: string, b: string) {
-	const order = (name: string) => {
-		if (name.startsWith("DIRECTOR")) return 0;
-		if (name.startsWith("STOCK PILOT")) return 1;
-		if (name === "ACONGAS.jpg") return 2;
-		return 3;
-	};
-	const diff = order(a) - order(b);
-	if (diff !== 0) return diff;
-	return a.localeCompare(b, undefined, { numeric: true, sensitivity: "base" });
-}
-
-function loadGalleryPhotos(): GalleryPhoto[] {
-	if (!fs.existsSync(GALLERY_DIR)) return [];
-
-	return fs
-		.readdirSync(GALLERY_DIR)
-		.filter((file) => IMAGE_EXT.test(file))
-		.sort(sortGalleryFiles)
-		.map((file) => {
-			const meta = photoMeta[file];
-			const fallbackTitle = titleFromFilename(file);
-
-			return {
-				src: gallerySrc(file),
-				alt: meta?.alt ?? fallbackTitle,
-				title: meta?.title ?? fallbackTitle,
-				caption: meta?.caption,
-			};
-		});
-}
-
-/** All images in /public/GALLERY — add files to the folder and rebuild (or refresh dev server). */
-export const galleryPhotos = loadGalleryPhotos();
+export const galleryPhotos = curatedGallery.filter((photo) => !GALLERY_EXCLUDED.has(photo.file));

@@ -1,7 +1,8 @@
 ---
-import DistributionMap from "./DistributionMap.astro";
+import { FACEBOOK_PAGE_URL } from "../data/social-links";
 
 const CONTACT_EMAIL = "enquiries@tionghock.com.my";
+const facebookUrl = FACEBOOK_PAGE_URL;
 
 const waHref = (waPhone: string, message: string) =>
 	`https://wa.me/${waPhone}?text=${encodeURIComponent(message)}`;
@@ -10,7 +11,8 @@ const branches = [
 	{
 		heading: "HQ · Matang Jaya",
 		legalName: "Tiong Hock Auto Parts (Kch) Sdn Bhd",
-		address: "Sublot 37, Phase 12, Jln Matang Jaya, Taman Lee Ling, 93050 Kuching",
+		address:
+			"Lot 9747, Section 65, Sublot 37, Phase 12, Jalan Matang Jaya, Taman Lee Ling, 93050 Kuching, Sarawak",
 		phone: "082-649 433",
 		phoneTel: "+6082649433",
 		waPhone: "60168860864",
@@ -40,12 +42,62 @@ const branches = [
 	<div class="th-container">
 		<div data-animate="fade-up">
 			<p class="th-tech-badge">Contact</p>
-			<h2 class="mt-4 text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
+			<h1 class="mt-4 text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
 				Get in touch
-			</h2>
+			</h1>
 			<p class="mt-3 max-w-2xl text-sm leading-relaxed text-slate-600 sm:text-base">
-				Email our team, call a branch, or visit Matang Jaya HQ and Kota Samarahan Automart in person.
+				Visit a branch, call or WhatsApp our team, or email us. Phone, WhatsApp and email are the best ways to reach us for parts and account matters.
 			</p>
+		</div>
+
+		<div class="contact-branches contact-branches--lead" data-animate="fade-up">
+			<div class="branch-list" data-animate="stagger-parent">
+				{
+					branches.map((b, i) => (
+						<article class:list={["branch-panel", i % 2 === 1 && "branch-panel--reverse"]}>
+							<div class="branch-panel__map">
+								<iframe
+									src={b.mapSrc}
+									class="branch-panel__iframe"
+									allowfullscreen=""
+									loading="lazy"
+									referrerpolicy="strict-origin-when-cross-origin"
+									title={b.mapTitle}
+								/>
+							</div>
+
+							<div class="branch-panel__body">
+								<div class="branch-panel__meta">
+									<p class="branch-panel__index" aria-hidden="true">{String(i + 1).padStart(2, "0")}</p>
+									<div>
+										<h2 class="branch-panel__heading">{b.heading}</h2>
+										<p class="branch-panel__legal">{b.legalName}</p>
+									</div>
+								</div>
+
+								<address class="branch-panel__address">{b.address}</address>
+
+								<div class="branch-panel__actions">
+									<a class="branch-panel__tel" href={`tel:${b.phoneTel}`}>
+										<span class="branch-panel__tel-label">Tel</span>
+										<span class="branch-panel__tel-value">{b.phone}</span>
+									</a>
+									<a
+										href={waHref(b.waPhone, b.waMessage)}
+										target="_blank"
+										rel="noopener noreferrer"
+										class="th-cta-wa branch-panel__wa"
+									>
+										WhatsApp Inquiry
+									</a>
+								</div>
+							</div>
+						</article>
+					))
+				}
+			</div>
+
+			<p class="branch-soon">Coming Soon: 3rd Location in Development</p>
 		</div>
 
 		<div class="contact-grid" data-animate="fade-up">
@@ -118,7 +170,7 @@ const branches = [
 			</div>
 
 			<aside class="contact-aside">
-				<h3 class="contact-aside__title">Direct lines</h3>
+				<h2 class="contact-aside__title">Telephone, WhatsApp and email</h2>
 				<ul class="contact-aside__list">
 					<li>
 						<span class="contact-aside__label">Email</span>
@@ -148,56 +200,36 @@ const branches = [
 			</aside>
 		</div>
 
-		<DistributionMap variant="compact" />
-
-		<div class="contact-branches" data-animate="fade-up">
-			<div class="branch-list" data-animate="stagger-parent">
-				{
-					branches.map((b, i) => (
-						<article class:list={["branch-panel", i % 2 === 1 && "branch-panel--reverse"]}>
-							<div class="branch-panel__map">
-								<iframe
-									src={b.mapSrc}
-									class="branch-panel__iframe"
-									allowfullscreen=""
-									loading="lazy"
-									referrerpolicy="strict-origin-when-cross-origin"
-									title={b.mapTitle}
-								/>
-							</div>
-
-							<div class="branch-panel__body">
-								<div class="branch-panel__meta">
-									<p class="branch-panel__index" aria-hidden="true">{String(i + 1).padStart(2, "0")}</p>
-									<div>
-										<h4 class="branch-panel__heading">{b.heading}</h4>
-										<p class="branch-panel__legal">{b.legalName}</p>
-									</div>
-								</div>
-
-								<address class="branch-panel__address">{b.address}</address>
-
-								<div class="branch-panel__actions">
-									<a class="branch-panel__tel" href={`tel:${b.phoneTel}`}>
-										<span class="branch-panel__tel-label">Tel</span>
-										<span class="branch-panel__tel-value">{b.phone}</span>
-									</a>
-									<a
-										href={waHref(b.waPhone, b.waMessage)}
-										target="_blank"
-										rel="noopener noreferrer"
-										class="th-cta-wa branch-panel__wa"
-									>
-										WhatsApp Inquiry
-									</a>
-								</div>
-							</div>
-						</article>
-					))
-				}
+		<div class="contact-facebook" data-animate="fade-up">
+			<div class="contact-facebook__row">
+				<div class="contact-facebook__lead">
+					<span class="contact-facebook__icon" aria-hidden="true">
+						<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+							<path
+								d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"
+							></path>
+						</svg>
+					</span>
+					<div>
+						<p class="contact-facebook__label">Official Facebook</p>
+						<p class="contact-facebook__text">
+							Follow us for company updates, announcements and scam alerts.
+						</p>
+					</div>
+				</div>
+				<a
+					class="contact-facebook__link"
+					href={facebookUrl}
+					target="_blank"
+					rel="noopener noreferrer"
+					aria-label="Visit Tiong Hock Auto Parts official Facebook page (opens in a new tab)"
+				>
+					Visit our Facebook page <span aria-hidden="true">→</span>
+				</a>
 			</div>
-
-			<p class="branch-soon">Coming Soon: 3rd Location in Development</p>
+			<p class="contact-facebook__warning" role="note">
+				We do not accept orders or payments through Facebook.
+			</p>
 		</div>
 	</div>
 </section>
@@ -240,18 +272,30 @@ const branches = [
 						Accept: "application/json",
 						"Content-Type": "application/json",
 					},
+					credentials: "same-origin",
 					body: JSON.stringify({
-						name: data.name,
-						email: data.email,
-						subject: data.subject,
-						message: data.message,
-						website: data.website,
+						name: String(data.name ?? ""),
+						email: String(data.email ?? ""),
+						subject: String(data.subject ?? ""),
+						message: String(data.message ?? ""),
+						website: String(data.website ?? ""),
 					}),
 				});
 
-				const result = (await response.json().catch(() => ({}))) as { ok?: boolean; error?: string };
+				const raw = await response.text();
+				let result: { ok?: boolean; error?: string } = {};
+				try {
+					result = raw ? (JSON.parse(raw) as { ok?: boolean; error?: string }) : {};
+				} catch {
+					result = {};
+				}
+
 				if (!response.ok || !result.ok) {
-					throw new Error(result.error || "Send failed");
+					const fallback =
+						response.status >= 500
+							? "Could not send right now. Please email enquiries@tionghock.com.my directly."
+							: "Send failed";
+					throw new Error(result.error || fallback);
 				}
 
 				form.reset();
@@ -540,6 +584,94 @@ const branches = [
 		margin-top: 2.5rem;
 		padding-top: 2.5rem;
 		border-top: 1px solid #e2e8f0;
+	}
+
+	.contact-branches--lead {
+		padding-top: 0;
+		border-top: none;
+	}
+
+	.contact-facebook {
+		margin-top: 2rem;
+		padding: 1.25rem 1.35rem;
+		border: 1px solid #e2e8f0;
+		background: #f8fafc;
+		min-width: 0;
+	}
+
+	.contact-facebook__row {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		justify-content: space-between;
+		gap: 0.85rem;
+	}
+
+	@media (min-width: 768px) {
+		.contact-facebook__row {
+			flex-direction: row;
+			align-items: center;
+			gap: 1.25rem;
+			min-height: 4.5rem;
+		}
+	}
+
+	.contact-facebook__lead {
+		display: flex;
+		align-items: flex-start;
+		gap: 0.65rem;
+		min-width: 0;
+	}
+
+	.contact-facebook__icon {
+		display: inline-flex;
+		flex-shrink: 0;
+		margin-top: 0.15rem;
+		color: #1877f2;
+	}
+
+	.contact-facebook__label {
+		margin: 0;
+		font-size: 0.65rem;
+		font-weight: 600;
+		letter-spacing: 0.12em;
+		text-transform: uppercase;
+		color: #64748b;
+	}
+
+	.contact-facebook__text {
+		margin: 0.35rem 0 0;
+		font-size: 0.875rem;
+		line-height: 1.5;
+		color: #475569;
+	}
+
+	.contact-facebook__link {
+		flex-shrink: 0;
+		font-size: 0.875rem;
+		font-weight: 600;
+		color: var(--color-brand-green);
+		text-decoration: none;
+	}
+
+	.contact-facebook__link:hover {
+		color: #0f172a;
+		text-decoration: underline;
+		text-underline-offset: 3px;
+	}
+
+	.contact-facebook__link:focus-visible {
+		outline: 2px solid var(--color-brand-lime);
+		outline-offset: 3px;
+	}
+
+	.contact-facebook__warning {
+		margin: 0.85rem 0 0;
+		padding-top: 0.85rem;
+		border-top: 1px solid #e2e8f0;
+		font-size: 0.8125rem;
+		line-height: 1.5;
+		color: #b45309;
 	}
 
 	.branch-list {

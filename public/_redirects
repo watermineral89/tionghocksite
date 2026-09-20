@@ -1,0 +1,26 @@
+# WordPress legacy URLs (exact paths before any wildcard rules)
+
+/car-spare-part-store-kuching /about/ 301
+/car-spare-part-store-kuching/ /about/ 301
+
+/car-products-kuching /parts/ 301
+/car-products-kuching/ /parts/ 301
+
+/car-services-kuching /about/ 301
+/car-services-kuching/ /about/ 301
+
+/job-application-kuching /careers/ 301
+/job-application-kuching/ /careers/ 301
+
+/car-auto-part-centre-kuching /contact/ 301
+/car-auto-part-centre-kuching/ /contact/ 301
+
+/product-category/spare-parts /parts/ 301
+/product-category/spare-parts/ /parts/ 301
+
+/product-category/body-parts /parts/ 301
+/product-category/body-parts/ /parts/ 301
+
+/product-category/engine-parts /parts/ 301
+/product-category/engine-parts/ /parts/ 301
+

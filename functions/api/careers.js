@@ -149,7 +149,7 @@ function buildEmailBodies(form, file) {
 async function sendWithResend(env, payload, attachment) {
 	const apiKey = env.RESEND_API_KEY;
 	const to = env.CAREERS_TO || "careers@tionghock.com.my";
-	const from = env.CAREERS_FROM || "Tiong Hock Careers <onboarding@resend.dev>";
+	const from = env.CAREERS_FROM || "Tiong Hock Careers <careers@tionghock.com.my>";
 
 	if (!apiKey) {
 		throw new Error("RESEND_API_KEY is not configured");

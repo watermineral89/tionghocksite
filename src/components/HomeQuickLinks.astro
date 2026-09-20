@@ -1,75 +1,62 @@
 ---
-import BentoCard from "./ui/BentoCard.astro";
+import { partsSystems } from "../data/parts-systems";
+import { FACEBOOK_PAGE_URL } from "../data/social-links";
 
-const links = [
-	{
-		href: "/parts",
-		eyebrow: "Catalog",
-		badge: "PARTS",
-		title: "Parts Categories",
-		body: "Suspension, brakes, electrical, lubricants — browse by line and check fitment via WhatsApp.",
-		accent: true,
-		span: "md:col-span-2 lg:col-span-2",
-	},
-	{
-		href: "/about",
-		eyebrow: "Company",
-		badge: "ABOUT",
-		title: "Our Legacy",
-		body: "Serving Kuching since 2013. Meet the team and learn why workshops trust Tiong Hock.",
-		accent: false,
-		span: "md:col-span-1 lg:col-span-2",
-	},
-	{
-		href: "/about#capabilities",
-		eyebrow: "Operations",
-		badge: "CAPS",
-		title: "Capabilities",
-		body: "From identification to delivery — fitment, StockPilot inventory, technical support, warehouse ops, and Sarawak distribution.",
-		accent: false,
-		span: "md:col-span-1 lg:col-span-2",
-	},
-	{
-		href: "/contact",
-		eyebrow: "Branches",
-		badge: "CONTACT",
-		title: "Contact Us",
-		body: "Matang Jaya HQ, Kota Samarahan Automart — phone, email, and WhatsApp for each branch.",
-		accent: true,
-		span: "md:col-span-2 lg:col-span-2",
-	},
-];
+const featured = ["suspension-steering", "brake", "engine", "electrical"];
+const categories = featured.map(id => partsSystems.find(system => system.id === id)!);
+const facebookUrl = FACEBOOK_PAGE_URL;
 ---
-
-<section id="explore" class="scroll-mt-24 th-section-alt">
-	<div class="th-container">
-		<div data-animate="fade-up">
-			<p class="th-tech-badge">Explore</p>
-			<h2 class="mt-4 text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">Spare Parts Categories</h2>
-			<p class="mt-3 max-w-xl text-base text-slate-600">Suspension, brakes, electrical, lubricants, and more — browse by line or check fitment via WhatsApp.</p>
+<section id="explore" class="th-section">
+ <div class="th-container">
+  <div class="section-intro"><div><p class="editorial-label">THE PARTS YOU RELY ON</p><h2>Every system. One parts partner.</h2></div><a class="quiet-link" href="/parts#parts-categories">All 13 systems <span aria-hidden="true">↗</span></a></div>
+  <div class="category-grid">{categories.map((category,index) => <a class="category-card" href={`/parts#system-${category.id}`}><div class="category-number"><span>0{index+1}</span><span aria-hidden="true">↗</span></div><h3>{category.name}</h3><p>{category.summary}</p><span class="category-action">Explore parts</span></a>)}</div>
+ </div>
+</section>
+<section class="company-section">
+ <div class="th-container company-grid">
+  <div><p class="editorial-label">LOCAL KNOWLEDGE. LASTING PARTNERSHIPS.</p><h2>More than a part.<br />A team you can count on.</h2><p class="company-copy">From identifying the right fit to keeping your workshop stocked, our team is here to help. Visit us in Matang Jaya or Kota Samarahan and put our parts knowledge to work.</p><a class="quiet-link" href="/about">Get to know Tiong Hock <span aria-hidden="true">↗</span></a></div>
+  <div class="service-list">{[{n:"01",title:"Find the right fit",body:"Share your vehicle details or part number with our parts team.",href:"/parts"},{n:"02",title:"Keep your workshop moving",body:"Explore genuine and OEM lines for everyday servicing and repairs.",href:"/about#capabilities"},{n:"03",title:"Visit your nearest branch",body:"Connect with our teams in Matang Jaya and Kota Samarahan.",href:"/contact"}].map(item=><a href={item.href}><span>{item.n}</span><div><h3>{item.title}</h3><p>{item.body}</p></div><b aria-hidden="true">↗</b></a>)}</div>
+ </div>
+</section>
+<section class="contact-band" aria-label="Contact and follow Tiong Hock">
+	<div class="th-container contact-band__wrap">
+		<div class="contact-band__cta">
+			<div>
+				<p class="editorial-label">LET’S GET YOU MOVING</p>
+				<h2>Looking for a particular part?</h2>
+				<p>Send us a part number or your vehicle details. We’ll help you find the right fit.</p>
+			</div>
+			<a class="solid-link" href="https://wa.me/60168860864" target="_blank" rel="noopener noreferrer">
+				Ask our parts team <span aria-hidden="true">↗</span>
+			</a>
 		</div>
-
-		<div
-			class="mt-10 grid auto-rows-[minmax(160px,auto)] grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-6"
-			data-animate="stagger-parent"
-		>
-			{
-				links.map((link) => (
-					<a href={link.href} class:list={["block h-full no-underline", link.span]}>
-						<BentoCard accent={link.accent} badges={[link.badge]} class="h-full">
-							<p class="font-mono text-[0.625rem] font-medium uppercase tracking-[0.2em] text-slate-500">{link.eyebrow}</p>
-							<h3 class="mt-3 text-lg font-bold text-slate-900 sm:text-xl">{link.title}</h3>
-							<p class="mt-3 flex-1 text-sm leading-relaxed text-slate-600">{link.body}</p>
-							<span class="mt-5 inline-flex items-center gap-1 font-mono text-xs font-bold uppercase tracking-[0.14em] text-brand-green">
-								Open
-								<svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
-									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-								</svg>
-							</span>
-						</BentoCard>
-					</a>
-				))
-			}
+		<div class="contact-band__divider" role="presentation" aria-hidden="true"></div>
+		<div class="contact-band__facebook">
+			<p class="contact-band__facebook-text">
+				<span class="contact-band__facebook-icon" aria-hidden="true">
+					<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+						<path
+							d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"
+						></path>
+					</svg>
+				</span>
+				Company updates, announcements and scam alerts
+			</p>
+			<a
+				class="contact-band__facebook-link"
+				href={facebookUrl}
+				target="_blank"
+				rel="noopener noreferrer"
+				aria-label="Follow Tiong Hock Auto Parts on our official Facebook page (opens in a new tab)"
+			>
+				Follow on Facebook <span aria-hidden="true">→</span>
+			</a>
 		</div>
 	</div>
 </section>
+<style>
+.section-intro{display:flex;justify-content:space-between;align-items:end;gap:24px;margin-bottom:36px}.section-intro h2,.company-grid h2{font-size:clamp(1.9rem,3.2vw,2.7rem);font-weight:700;line-height:1.14;letter-spacing:-.045em;color:#153b2b;margin-top:14px}.category-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}.category-card{background:#f6f7f2;border:1px solid #e2e6db;border-radius:6px;padding:25px;display:flex;flex-direction:column;transition:background .2s,transform .2s}.category-card:hover{background:#e9f0dd;transform:translateY(-4px)}.category-number{display:flex;justify-content:space-between;font-family:var(--font-mono);font-size:11px;color:#788775;margin-bottom:40px}.category-number span:last-child{font-size:22px;color:#245335}.category-card h3{font-size:20px;font-weight:700;letter-spacing:-.03em;color:#153b2b}.category-card p{font-size:13px;line-height:1.75;color:#697367;margin-top:12px;flex:1}.category-action{font-size:11px;font-weight:600;margin-top:28px;color:#285636}.company-section{background:#f4f5ef;padding:80px 0}.company-grid{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center}.company-copy{font-size:15px;line-height:1.85;color:#697367;margin:24px 0}.service-list a{display:flex;gap:20px;padding:25px 0;border-bottom:1px solid #d9dfd2}.service-list a:first-child{border-top:1px solid #d9dfd2}.service-list a>span{font-family:var(--font-mono);color:#718467;font-size:11px;padding-top:4px}.service-list h3{font-size:18px;color:#153b2b;font-weight:600}.service-list p{font-size:13px;line-height:1.75;color:#697367;margin-top:6px}.service-list b{margin-left:auto;font-weight:400;color:#245335}.contact-band{padding:60px 0 48px;background:#003820;color:#fff;overflow-x:clip}.contact-band__wrap{display:flex;flex-direction:column;gap:0;min-width:0}.contact-band__cta{display:flex;justify-content:space-between;align-items:center;gap:32px;min-width:0}.contact-band .editorial-label{color:#b6d78c}.contact-band h2{font-size:clamp(1.8rem,3vw,2.5rem);font-weight:600;letter-spacing:-.04em;margin:12px 0}.contact-band__cta p:not(.editorial-label){font-size:14px;color:#c2d2c7}.contact-band .solid-link{background:#b8dd80;color:#003820;flex-shrink:0}.contact-band__divider{margin:28px 0 0;border-top:1px solid color-mix(in oklab,#fff 14%,transparent)}.contact-band__facebook{display:flex;align-items:center;justify-content:space-between;gap:16px;min-height:60px;padding-top:18px;min-width:0}.contact-band__facebook-text{display:flex;align-items:center;gap:10px;margin:0;font-size:13px;line-height:1.45;color:color-mix(in oklab,#fff 72%,#c2d2c7)}.contact-band__facebook-icon{display:inline-flex;flex-shrink:0;color:#6b9beb}.contact-band__facebook-link{flex-shrink:0;font-size:13px;font-weight:600;color:#b8dd80;text-decoration:none;white-space:nowrap}.contact-band__facebook-link:hover{color:#fff;text-decoration:underline;text-underline-offset:3px}.contact-band__facebook-link:focus-visible{outline:2px solid #b8dd80;outline-offset:3px}
+@media(max-width:1000px){.category-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.company-grid{gap:35px}}
+@media(max-width:700px){.section-intro{align-items:start;flex-direction:column}.category-card{padding:20px}.category-card h3{font-size:18px}.category-number{margin-bottom:25px}.company-grid{grid-template-columns:1fr}.company-section{padding:54px 0}.contact-band{padding:42px 0 36px}.contact-band__cta{flex-direction:column;align-items:flex-start}.contact-band__facebook{flex-direction:column;align-items:flex-start;gap:10px;min-height:0;padding-top:16px}.contact-band__facebook-link{white-space:normal}}
+@media(prefers-reduced-motion:reduce){.category-card:hover{transform:none}}
+</style>

@@ -2,6 +2,7 @@
 const currentPath = Astro.url.pathname.replace(/\/$/, "") || "/";
 
 const links = [
+ { href: "/", label: "Home" },
 	{ href: "/parts", label: "Parts" },
 	{ href: "/about", label: "About" },
 	{ href: "/directors", label: "Directors" },
@@ -31,7 +32,7 @@ const mobileLinkClass = (href: string) =>
 ---
 
 <header
-	class="sticky top-0 z-50 border-b border-slate-200 bg-white/90 backdrop-blur-md supports-[backdrop-filter]:bg-white/80"
+	class="site-header sticky top-0 z-50 border-b border-slate-200 bg-white/90 backdrop-blur-md supports-[backdrop-filter]:bg-white/80"
 >
 	<div class="th-container flex min-h-[5rem] items-center justify-between gap-3 sm:min-h-[5.5rem] lg:min-h-[6.25rem]">
 		<a
@@ -49,7 +50,7 @@ const mobileLinkClass = (href: string) =>
 			/>
 		</a>
 
-		<nav class="hidden items-center gap-0.5 md:flex" aria-label="Primary">
+		<nav class="hidden items-center gap-0.5 lg:flex" aria-label="Primary">
 			{
 				links.map(({ href, label }) => (
 					<a href={href} class={linkClass(href)} aria-current={isActive(href) ? "page" : undefined}>
@@ -61,7 +62,7 @@ const mobileLinkClass = (href: string) =>
 
 		<button
 			type="button"
-			class="inline-flex h-10 w-10 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-700 transition hover:border-slate-300 md:hidden"
+			class="inline-flex h-10 w-10 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-700 transition hover:border-slate-300 lg:hidden"
 			aria-label="Open menu"
 			aria-expanded="false"
 			aria-controls="mobile-nav"
@@ -75,7 +76,7 @@ const mobileLinkClass = (href: string) =>
 
 	<nav
 		id="mobile-nav"
-		class="hidden border-t border-slate-200 bg-white md:hidden"
+		class="hidden border-t border-slate-200 bg-white lg:hidden"
 		aria-label="Mobile"
 		data-mobile-menu
 	>
@@ -102,7 +103,8 @@ const mobileLinkClass = (href: string) =>
 			menu.classList.toggle("hidden", !open);
 		};
 
-		toggle.addEventListener("click", () => {
+		document.addEventListener("keydown", (event) => { if (event.key === "Escape" && toggle.getAttribute("aria-expanded") === "true") { setOpen(false); toggle.focus(); } });
+toggle.addEventListener("click", () => {
 			setOpen(menu.classList.contains("hidden"));
 		});
 
@@ -111,7 +113,8 @@ const mobileLinkClass = (href: string) =>
 		});
 
 		window.addEventListener("resize", () => {
-			if (window.matchMedia("(min-width: 768px)").matches) setOpen(false);
+			if (window.matchMedia("(min-width: 1024px)").matches) setOpen(false);
 		});
 	}
 </script>
+

@@ -3,7 +3,7 @@ import {
 	searchPublicCatalog,
 	sanitizeSearchQuery,
 	toPublicSearchResult,
-} from "../../_lib/catalog-search.js";
+} from "./_catalog-search.js";
 
 const CATALOG_PATH = "/data/public-catalog.json";
 const RATE_WINDOW_MS = 60_000;

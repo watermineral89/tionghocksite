@@ -1,0 +1,12 @@
+---
+import { buildOrganizationJsonLd } from "../lib/organization-json-ld";
+
+if (!Astro.site) {
+	throw new Error("OrganizationStructuredData requires `site` in astro.config.mjs");
+}
+
+const jsonLd = buildOrganizationJsonLd(Astro.site);
+const serialized = JSON.stringify(jsonLd);
+---
+
+<script type="application/ld+json" is:inline set:html={serialized} />

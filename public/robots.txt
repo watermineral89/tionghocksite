@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://tionghock.com/sitemap.xml
+Sitemap: https://tionghock.com/sitemap-index.xml

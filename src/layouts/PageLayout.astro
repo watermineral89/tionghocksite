@@ -2,26 +2,30 @@
 import BaseLayout from "./BaseLayout.astro";
 import Navbar from "../components/Navbar.astro";
 import Footer from "../components/Footer.astro";
-import FloatingImageWidgets from "../components/FloatingImageWidgets.astro";
+
 
 interface Props {
 	title?: string;
 	description?: string;
+	includeCanonical?: boolean;
+	robots?: string;
 }
 
-const { title, description } = Astro.props;
+const { title, description, includeCanonical, robots } = Astro.props;
 ---
 
-<BaseLayout title={title} description={description}>
-	<Navbar />
-	<main class="overflow-x-clip">
+<BaseLayout title={title} description={description} includeCanonical={includeCanonical} robots={robots}>
+	<slot name="head" slot="head" />
+	<a class="skip-link" href="#main-content">Skip to content</a><Navbar />
+	<main id="main-content" class="overflow-x-clip" tabindex="-1">
 		<slot />
 	</main>
 	<Footer />
-	<FloatingImageWidgets />
+	
 </BaseLayout>
 
 <script>
 	import { initScrollAnimations } from "../scripts/gsap-init";
 	initScrollAnimations();
 </script>
+

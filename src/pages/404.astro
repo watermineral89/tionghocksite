@@ -1,0 +1,57 @@
+---
+import PageLayout from "../layouts/PageLayout.astro";
+---
+
+<PageLayout
+	title="Page Not Found | Tiong Hock Auto Parts"
+	description="This page could not be found. It may have moved — browse parts, contact our team, or return to the homepage."
+	includeCanonical={false}
+	robots="noindex, follow"
+>
+	<section class="not-found th-section-alt">
+		<div class="th-container not-found__inner">
+			<p class="th-tech-badge">Error 404</p>
+			<h1 class="not-found__title">Page not found</h1>
+			<p class="not-found__lede">
+				The page you requested is not here. It may have moved when we updated the website.
+			</p>
+			<nav class="not-found__links" aria-label="Helpful links">
+				<a class="solid-link" href="/">Home <span aria-hidden="true">↗</span></a>
+				<a class="solid-link" href="/parts/">Parts <span aria-hidden="true">↗</span></a>
+				<a class="solid-link" href="/contact/">Contact <span aria-hidden="true">↗</span></a>
+			</nav>
+		</div>
+	</section>
+</PageLayout>
+
+<style>
+	.not-found {
+		padding-block: clamp(4rem, 12vw, 7rem);
+	}
+
+	.not-found__inner {
+		max-width: 36rem;
+	}
+
+	.not-found__title {
+		margin-top: 1.25rem;
+		font-size: clamp(2rem, 5vw, 2.75rem);
+		font-weight: 800;
+		letter-spacing: -0.04em;
+		color: rgb(15 23 42);
+	}
+
+	.not-found__lede {
+		margin-top: 1rem;
+		font-size: 1rem;
+		line-height: 1.65;
+		color: rgb(71 85 105);
+	}
+
+	.not-found__links {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 1rem;
+		margin-top: 2rem;
+	}
+</style>

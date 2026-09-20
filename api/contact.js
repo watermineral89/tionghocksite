@@ -183,7 +183,7 @@ export default async function handler(req, res) {
 		const msg = err instanceof Error ? err.message : "Send failed";
 		console.error("[api/contact]", msg);
 		const missingKey = /RESEND_API_KEY/i.test(msg);
-		return res.status(missingKey ? 503 : 502).json({
+		return res.status(503).json({
 			ok: false,
 			error: missingKey
 				? "Contact email is not configured yet. Please try again later."
