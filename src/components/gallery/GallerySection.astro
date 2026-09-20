@@ -276,6 +276,9 @@ import { galleryPhotos } from "../../data/gallery.ts";
 		object-fit: contain;
 		border-radius: 0.5rem;
 		box-shadow: 0 20px 50px rgb(0 0 0 / 0.35);
+	}
+
+	.gallery-lightbox__stage .gallery-lightbox__img:not(.is-layer-idle) {
 		opacity: 1;
 		transform: translateX(0);
 	}
@@ -291,27 +294,27 @@ import { galleryPhotos } from "../../data/gallery.ts";
 		pointer-events: none;
 	}
 
-	.gallery-lightbox__img.nav-enter-from-next {
+	.gallery-lightbox__stage .gallery-lightbox__img.nav-enter-from-next {
 		opacity: 0;
 		transform: translateX(24px);
 	}
 
-	.gallery-lightbox__img.nav-enter-from-prev {
+	.gallery-lightbox__stage .gallery-lightbox__img.nav-enter-from-prev {
 		opacity: 0;
 		transform: translateX(-24px);
 	}
 
-	.gallery-lightbox__img.nav-exit-to-next {
+	.gallery-lightbox__stage .gallery-lightbox__img.nav-exit-to-next {
 		opacity: 0;
 		transform: translateX(-24px);
 	}
 
-	.gallery-lightbox__img.nav-exit-to-prev {
+	.gallery-lightbox__stage .gallery-lightbox__img.nav-exit-to-prev {
 		opacity: 0;
 		transform: translateX(24px);
 	}
 
-	.gallery-lightbox__img.nav-enter-to {
+	.gallery-lightbox__stage .gallery-lightbox__img.nav-enter-to {
 		opacity: 1;
 		transform: translateX(0);
 	}
@@ -679,12 +682,13 @@ import { galleryPhotos } from "../../data/gallery.ts";
 				stageEl.classList.add("is-nav-animating");
 				setCaption(photo);
 
+				// Force the enter-from styles to paint before the transition target.
+				void incoming.offsetWidth;
+
 				requestAnimationFrame(() => {
-					requestAnimationFrame(() => {
-						outgoing.classList.add(exitTo, "is-nav-animating-layer");
-						incoming.classList.remove(enterFrom);
-						incoming.classList.add("nav-enter-to");
-					});
+					outgoing.classList.add(exitTo, "is-nav-animating-layer");
+					incoming.classList.remove(enterFrom);
+					incoming.classList.add("nav-enter-to");
 				});
 
 				let finished = false;
@@ -696,7 +700,8 @@ import { galleryPhotos } from "../../data/gallery.ts";
 					finishNavTransition(nextIndex);
 				};
 				const onTransitionEnd = (event) => {
-					if (event.target !== incoming || event.propertyName !== "transform") return;
+					if (event.target !== incoming) return;
+					if (event.propertyName !== "transform" && event.propertyName !== "opacity") return;
 					complete();
 				};
 
