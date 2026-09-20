@@ -1,5 +1,8 @@
 # WordPress legacy URLs (exact paths before any wildcard rules)
 
+/capabilities /about/ 301
+/capabilities/ /about/ 301
+
 /car-spare-part-store-kuching /about/ 301
 /car-spare-part-store-kuching/ /about/ 301
 
