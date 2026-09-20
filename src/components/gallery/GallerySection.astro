@@ -212,6 +212,12 @@ import { galleryPhotos } from "../../data/gallery.ts";
 		position: absolute;
 		inset: 0;
 		background: rgb(15 23 42 / 0.88);
+		opacity: 0;
+		transition: opacity 200ms cubic-bezier(0.22, 1, 0.36, 1);
+	}
+
+	.gallery-lightbox.is-open .gallery-lightbox__backdrop {
+		opacity: 1;
 	}
 
 	.gallery-lightbox__panel {
@@ -232,6 +238,16 @@ import { galleryPhotos } from "../../data/gallery.ts";
 		flex-direction: column;
 		align-items: center;
 		gap: 0.75rem;
+		opacity: 0;
+		transform: translateY(8px) scale(0.96);
+		transition:
+			opacity 280ms cubic-bezier(0.22, 1, 0.36, 1),
+			transform 280ms cubic-bezier(0.22, 1, 0.36, 1);
+	}
+
+	.gallery-lightbox.is-open .gallery-lightbox__figure {
+		opacity: 1;
+		transform: translateY(0) scale(1);
 	}
 
 	.gallery-lightbox__img {
@@ -239,6 +255,7 @@ import { galleryPhotos } from "../../data/gallery.ts";
 		max-height: min(82dvh, 780px);
 		width: auto;
 		height: auto;
+		aspect-ratio: 4 / 3;
 		object-fit: contain;
 		border-radius: 0.5rem;
 		box-shadow: 0 20px 50px rgb(0 0 0 / 0.35);
@@ -269,6 +286,12 @@ import { galleryPhotos } from "../../data/gallery.ts";
 		font-size: 1.5rem;
 		line-height: 1;
 		cursor: pointer;
+		opacity: 0;
+		transition: opacity 280ms cubic-bezier(0.22, 1, 0.36, 1);
+	}
+
+	.gallery-lightbox.is-open .gallery-lightbox__close {
+		opacity: 1;
 	}
 
 	.gallery-lightbox__close:hover {
@@ -292,6 +315,12 @@ import { galleryPhotos } from "../../data/gallery.ts";
 		font-size: 1.75rem;
 		line-height: 1;
 		cursor: pointer;
+		opacity: 0;
+		transition: opacity 280ms cubic-bezier(0.22, 1, 0.36, 1);
+	}
+
+	.gallery-lightbox.is-open .gallery-lightbox__nav {
+		opacity: 1;
 	}
 
 	.gallery-lightbox__nav:hover {
@@ -347,6 +376,21 @@ import { galleryPhotos } from "../../data/gallery.ts";
 
 		.gallery-card:hover .gallery-card__img,
 		.gallery-card:focus-visible .gallery-card__img {
+			transform: none;
+		}
+
+		.gallery-lightbox__backdrop,
+		.gallery-lightbox__figure,
+		.gallery-lightbox__close,
+		.gallery-lightbox__nav {
+			transition: none;
+		}
+
+		.gallery-lightbox:not([hidden]) .gallery-lightbox__backdrop,
+		.gallery-lightbox:not([hidden]) .gallery-lightbox__figure,
+		.gallery-lightbox:not([hidden]) .gallery-lightbox__close,
+		.gallery-lightbox:not([hidden]) .gallery-lightbox__nav {
+			opacity: 1;
 			transform: none;
 		}
 	}
@@ -420,10 +464,14 @@ import { galleryPhotos } from "../../data/gallery.ts";
 		const prevBtn = lightbox.querySelector("[data-gallery-prev]");
 		const nextBtn = lightbox.querySelector("[data-gallery-next]");
 		const backdrop = lightbox.querySelector("[data-gallery-backdrop]");
+		const figureEl = lightbox.querySelector(".gallery-lightbox__figure");
 		const triggers = grid.querySelectorAll("[data-gallery-open]");
+		const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+		const LIGHTBOX_CLOSE_MS = 300;
 
 		let index = 0;
 		let lastFocus = null;
+		let isClosing = false;
 
 		function showAt(i) {
 			const total = photos.length;
@@ -444,16 +492,10 @@ import { galleryPhotos } from "../../data/gallery.ts";
 			}
 		}
 
-		function openAt(i, trigger) {
-			lastFocus = trigger;
-			showAt(i);
-			lightbox.hidden = false;
-			document.body.style.overflow = "hidden";
-			closeBtn?.focus();
-		}
-
-		function close() {
+		function finishClose() {
+			isClosing = false;
 			lightbox.hidden = true;
+			lightbox.classList.remove("is-open");
 			document.body.style.overflow = "";
 			if (imgEl) {
 				imgEl.removeAttribute("src");
@@ -466,8 +508,64 @@ import { galleryPhotos } from "../../data/gallery.ts";
 			if (lastFocus instanceof HTMLElement) lastFocus.focus();
 		}
 
+		function openAt(i, trigger) {
+			if (isClosing) return;
+			lastFocus = trigger;
+			showAt(i);
+			lightbox.classList.remove("is-open");
+			lightbox.hidden = false;
+			document.body.style.overflow = "hidden";
+
+			if (reducedMotion) {
+				lightbox.classList.add("is-open");
+				closeBtn?.focus();
+				return;
+			}
+
+			requestAnimationFrame(() => {
+				requestAnimationFrame(() => {
+					lightbox.classList.add("is-open");
+					closeBtn?.focus();
+				});
+			});
+		}
+
+		function close() {
+			if (lightbox.hidden || isClosing) return;
+
+			if (reducedMotion) {
+				finishClose();
+				return;
+			}
+
+			isClosing = true;
+			lightbox.classList.remove("is-open");
+
+			if (!figureEl) {
+				window.setTimeout(finishClose, LIGHTBOX_CLOSE_MS);
+				return;
+			}
+
+			let closed = false;
+			const completeClose = () => {
+				if (closed) return;
+				closed = true;
+				figureEl.removeEventListener("transitionend", onTransitionEnd);
+				window.clearTimeout(fallbackTimer);
+				finishClose();
+			};
+			const onTransitionEnd = (event) => {
+				if (event.target !== figureEl || event.propertyName !== "transform") return;
+				completeClose();
+			};
+
+			figureEl.addEventListener("transitionend", onTransitionEnd);
+			const fallbackTimer = window.setTimeout(completeClose, LIGHTBOX_CLOSE_MS);
+		}
+
 		triggers.forEach((btn) => {
 			btn.addEventListener("click", () => {
+				if (isClosing) return;
 				const i = Number(btn.getAttribute("data-index"));
 				openAt(i, btn);
 			});
@@ -475,11 +573,17 @@ import { galleryPhotos } from "../../data/gallery.ts";
 
 		closeBtn?.addEventListener("click", close);
 		backdrop?.addEventListener("click", close);
-		prevBtn?.addEventListener("click", () => showAt(index - 1));
-		nextBtn?.addEventListener("click", () => showAt(index + 1));
+		prevBtn?.addEventListener("click", () => {
+			if (isClosing) return;
+			showAt(index - 1);
+		});
+		nextBtn?.addEventListener("click", () => {
+			if (isClosing) return;
+			showAt(index + 1);
+		});
 
 		lightbox.addEventListener("keydown", (event) => {
-			if (lightbox.hidden) return;
+			if (lightbox.hidden || isClosing) return;
 			if (event.key === "Escape") {
 				event.preventDefault();
 				close();
