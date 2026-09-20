@@ -72,7 +72,15 @@ import { galleryPhotos } from "../../data/gallery.ts";
 				<span aria-hidden="true">›</span>
 			</button>
 			<figure class="gallery-lightbox__figure">
-				<img class="gallery-lightbox__img" data-gallery-lightbox-img alt="" />
+				<div class="gallery-lightbox__stage" data-gallery-lightbox-stage>
+					<img class="gallery-lightbox__img" data-gallery-lightbox-img alt="" />
+					<img
+						class="gallery-lightbox__img is-layer-idle"
+						data-gallery-lightbox-img
+						alt=""
+						aria-hidden="true"
+					/>
+				</div>
 				<figcaption class="gallery-lightbox__caption" data-gallery-lightbox-caption hidden></figcaption>
 			</figure>
 		</div>
@@ -250,7 +258,16 @@ import { galleryPhotos } from "../../data/gallery.ts";
 		transform: translateY(0) scale(1);
 	}
 
-	.gallery-lightbox__img {
+	.gallery-lightbox__stage {
+		position: relative;
+		display: grid;
+		place-items: center;
+		width: 100%;
+		max-height: min(82dvh, 780px);
+	}
+
+	.gallery-lightbox__stage .gallery-lightbox__img {
+		grid-area: 1 / 1;
 		max-width: 100%;
 		max-height: min(82dvh, 780px);
 		width: auto;
@@ -259,6 +276,44 @@ import { galleryPhotos } from "../../data/gallery.ts";
 		object-fit: contain;
 		border-radius: 0.5rem;
 		box-shadow: 0 20px 50px rgb(0 0 0 / 0.35);
+		opacity: 1;
+		transform: translateX(0);
+	}
+
+	.gallery-lightbox__stage.is-nav-animating .gallery-lightbox__img {
+		transition:
+			opacity 260ms cubic-bezier(0.22, 1, 0.36, 1),
+			transform 260ms cubic-bezier(0.22, 1, 0.36, 1);
+	}
+
+	.gallery-lightbox__img.is-layer-idle:not(.is-nav-animating-layer) {
+		visibility: hidden;
+		pointer-events: none;
+	}
+
+	.gallery-lightbox__img.nav-enter-from-next {
+		opacity: 0;
+		transform: translateX(24px);
+	}
+
+	.gallery-lightbox__img.nav-enter-from-prev {
+		opacity: 0;
+		transform: translateX(-24px);
+	}
+
+	.gallery-lightbox__img.nav-exit-to-next {
+		opacity: 0;
+		transform: translateX(-24px);
+	}
+
+	.gallery-lightbox__img.nav-exit-to-prev {
+		opacity: 0;
+		transform: translateX(24px);
+	}
+
+	.gallery-lightbox__img.nav-enter-to {
+		opacity: 1;
+		transform: translateX(0);
 	}
 
 	.gallery-lightbox__caption {
@@ -393,6 +448,10 @@ import { galleryPhotos } from "../../data/gallery.ts";
 			opacity: 1;
 			transform: none;
 		}
+
+		.gallery-lightbox__stage.is-nav-animating .gallery-lightbox__img {
+			transition: none;
+		}
 	}
 </style>
 
@@ -458,7 +517,8 @@ import { galleryPhotos } from "../../data/gallery.ts";
 		const lightbox = document.querySelector("[data-gallery-lightbox]");
 		if (!grid || !lightbox) return;
 
-		const imgEl = lightbox.querySelector("[data-gallery-lightbox-img]");
+		const imgLayers = Array.from(lightbox.querySelectorAll("[data-gallery-lightbox-img]"));
+		const stageEl = lightbox.querySelector("[data-gallery-lightbox-stage]");
 		const captionEl = lightbox.querySelector("[data-gallery-lightbox-caption]");
 		const closeBtn = lightbox.querySelector("[data-gallery-close]");
 		const prevBtn = lightbox.querySelector("[data-gallery-prev]");
@@ -468,38 +528,193 @@ import { galleryPhotos } from "../../data/gallery.ts";
 		const triggers = grid.querySelectorAll("[data-gallery-open]");
 		const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 		const LIGHTBOX_CLOSE_MS = 300;
+		const LIGHTBOX_NAV_MS = 280;
 
 		let index = 0;
 		let lastFocus = null;
 		let isClosing = false;
+		let isNavigating = false;
+		let activeLayer = 0;
+
+		const NAV_CLASSES = [
+			"nav-enter-from-next",
+			"nav-enter-from-prev",
+			"nav-exit-to-next",
+			"nav-exit-to-prev",
+			"nav-enter-to",
+			"is-nav-animating-layer",
+		];
+
+		function activeImg() {
+			return imgLayers[activeLayer] ?? null;
+		}
+
+		function inactiveImg() {
+			return imgLayers[activeLayer ^ 1] ?? null;
+		}
+
+		function clearNavClasses(img) {
+			if (!img) return;
+			for (const cls of NAV_CLASSES) img.classList.remove(cls);
+		}
+
+		function resetImgLayers() {
+			activeLayer = 0;
+			isNavigating = false;
+			stageEl?.classList.remove("is-nav-animating");
+			for (let i = 0; i < imgLayers.length; i++) {
+				const img = imgLayers[i];
+				clearNavClasses(img);
+				if (i === 0) {
+					img.classList.remove("is-layer-idle");
+					img.removeAttribute("aria-hidden");
+				} else {
+					img.classList.add("is-layer-idle");
+					img.setAttribute("aria-hidden", "true");
+					img.removeAttribute("src");
+					img.alt = "";
+				}
+			}
+		}
+
+		function setCaption(photo) {
+			if (!captionEl) return;
+			if (photo.title) {
+				captionEl.textContent = photo.title;
+				captionEl.hidden = false;
+			} else {
+				captionEl.textContent = "";
+				captionEl.hidden = true;
+			}
+		}
 
 		function showAt(i) {
 			const total = photos.length;
 			if (total === 0) return;
 			index = (i + total) % total;
 			const photo = photos[index];
-			if (!imgEl) return;
-			imgEl.src = photo.src;
-			imgEl.alt = photo.alt;
-			if (captionEl) {
-				if (photo.title) {
-					captionEl.textContent = photo.title;
-					captionEl.hidden = false;
-				} else {
-					captionEl.textContent = "";
-					captionEl.hidden = true;
+			const img = activeImg();
+			if (!img) return;
+			img.src = photo.src;
+			img.alt = photo.alt;
+			setCaption(photo);
+		}
+
+		function preloadOnImg(img, photo) {
+			return new Promise((resolve) => {
+				if (!img || !photo) {
+					resolve();
+					return;
 				}
+				const done = () => whenImageReady(img).then(resolve);
+				if (img.getAttribute("src") === photo.src) {
+					done();
+					return;
+				}
+				img.src = photo.src;
+				img.alt = photo.alt;
+				done();
+			});
+		}
+
+		function finishNavTransition(nextIndex) {
+			const incoming = inactiveImg();
+			const outgoing = activeImg();
+			activeLayer ^= 1;
+			isNavigating = false;
+			stageEl?.classList.remove("is-nav-animating");
+			clearNavClasses(outgoing);
+			clearNavClasses(incoming);
+			if (outgoing) {
+				outgoing.classList.add("is-layer-idle");
+				outgoing.setAttribute("aria-hidden", "true");
+				outgoing.removeAttribute("src");
+				outgoing.alt = "";
 			}
+			if (incoming) {
+				incoming.classList.remove("is-layer-idle");
+				incoming.removeAttribute("aria-hidden");
+			}
+			index = nextIndex;
+			setCaption(photos[index]);
+		}
+
+		function navigateBy(delta) {
+			if (isClosing || isNavigating) return;
+			const total = photos.length;
+			if (total === 0) return;
+			const nextIndex = (index + delta + total) % total;
+			if (nextIndex === index) return;
+
+			if (reducedMotion || lightbox.hidden) {
+				showAt(nextIndex);
+				return;
+			}
+
+			const direction = delta > 0 ? "next" : "prev";
+			const photo = photos[nextIndex];
+			const outgoing = activeImg();
+			const incoming = inactiveImg();
+			if (!outgoing || !incoming || !stageEl) {
+				showAt(nextIndex);
+				return;
+			}
+
+			isNavigating = true;
+			preloadOnImg(incoming, photo).then(() => {
+				if (!isNavigating || lightbox.hidden) {
+					isNavigating = false;
+					return;
+				}
+
+				incoming.classList.remove("is-layer-idle");
+				incoming.setAttribute("aria-hidden", "false");
+				clearNavClasses(outgoing);
+				clearNavClasses(incoming);
+
+				const enterFrom = direction === "next" ? "nav-enter-from-next" : "nav-enter-from-prev";
+				const exitTo = direction === "next" ? "nav-exit-to-next" : "nav-exit-to-prev";
+
+				incoming.classList.add(enterFrom, "is-nav-animating-layer");
+				stageEl.classList.add("is-nav-animating");
+				setCaption(photo);
+
+				requestAnimationFrame(() => {
+					requestAnimationFrame(() => {
+						outgoing.classList.add(exitTo, "is-nav-animating-layer");
+						incoming.classList.remove(enterFrom);
+						incoming.classList.add("nav-enter-to");
+					});
+				});
+
+				let finished = false;
+				const complete = () => {
+					if (finished) return;
+					finished = true;
+					incoming.removeEventListener("transitionend", onTransitionEnd);
+					window.clearTimeout(fallbackTimer);
+					finishNavTransition(nextIndex);
+				};
+				const onTransitionEnd = (event) => {
+					if (event.target !== incoming || event.propertyName !== "transform") return;
+					complete();
+				};
+
+				incoming.addEventListener("transitionend", onTransitionEnd);
+				const fallbackTimer = window.setTimeout(complete, LIGHTBOX_NAV_MS);
+			});
 		}
 
 		function finishClose() {
 			isClosing = false;
+			isNavigating = false;
 			lightbox.hidden = true;
 			lightbox.classList.remove("is-open");
 			document.body.style.overflow = "";
-			if (imgEl) {
-				imgEl.removeAttribute("src");
-				imgEl.alt = "";
+			resetImgLayers();
+			for (const img of imgLayers) {
+				img.removeAttribute("src");
+				img.alt = "";
 			}
 			if (captionEl) {
 				captionEl.textContent = "";
@@ -509,8 +724,9 @@ import { galleryPhotos } from "../../data/gallery.ts";
 		}
 
 		function openAt(i, trigger) {
-			if (isClosing) return;
+			if (isClosing || isNavigating) return;
 			lastFocus = trigger;
+			resetImgLayers();
 			showAt(i);
 			lightbox.classList.remove("is-open");
 			lightbox.hidden = false;
@@ -573,14 +789,8 @@ import { galleryPhotos } from "../../data/gallery.ts";
 
 		closeBtn?.addEventListener("click", close);
 		backdrop?.addEventListener("click", close);
-		prevBtn?.addEventListener("click", () => {
-			if (isClosing) return;
-			showAt(index - 1);
-		});
-		nextBtn?.addEventListener("click", () => {
-			if (isClosing) return;
-			showAt(index + 1);
-		});
+		prevBtn?.addEventListener("click", () => navigateBy(-1));
+		nextBtn?.addEventListener("click", () => navigateBy(1));
 
 		lightbox.addEventListener("keydown", (event) => {
 			if (lightbox.hidden || isClosing) return;
@@ -589,10 +799,10 @@ import { galleryPhotos } from "../../data/gallery.ts";
 				close();
 			} else if (event.key === "ArrowLeft") {
 				event.preventDefault();
-				showAt(index - 1);
+				navigateBy(-1);
 			} else if (event.key === "ArrowRight") {
 				event.preventDefault();
-				showAt(index + 1);
+				navigateBy(1);
 			}
 		});
 	}
