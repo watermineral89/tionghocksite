@@ -1,5 +1,6 @@
 ---
 import { FACEBOOK_PAGE_URL } from "../data/social-links";
+import ResponsiveRaster from "./ResponsiveRaster.astro";
 
 const year = new Date().getFullYear();
 const facebookUrl = FACEBOOK_PAGE_URL;
@@ -22,14 +23,16 @@ const quickLinks = [
 					href="/"
 					class="th-footer__brand-link outline-offset-4 focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand"
 				>
-					<img
-						src="/logo-mark.png"
-						width="96"
-						height="96"
+					<ResponsiveRaster
+						base="/logo-mark"
+						widths={[96, 192, 288]}
+						fallbackSrc="/logo-mark-192w.webp"
 						alt="Tiong Hock Auto Parts"
+						width={96}
+						height={97}
+						sizes="6rem"
 						class="th-footer__logo"
 						loading="lazy"
-						decoding="async"
 					/>
 					<p class="th-footer__company">TIONG HOCK AUTO PARTS (KCH) SDN BHD</p>
 				</a>
@@ -153,7 +156,7 @@ const quickLinks = [
 
 	.th-footer__location {
 		margin: 0.55rem 0 0;
-		color: rgb(100 116 139);
+		color: rgb(71 85 105);
 		font-size: 0.75rem;
 		font-weight: 500;
 		letter-spacing: 0.12em;
@@ -188,7 +191,7 @@ const quickLinks = [
 
 	.th-footer__heading {
 		margin: 0;
-		color: rgb(100 116 139);
+		color: rgb(71 85 105);
 		font-size: 0.75rem;
 		font-weight: 600;
 		letter-spacing: 0.2em;
@@ -209,7 +212,7 @@ const quickLinks = [
 	}
 
 	.th-footer__contact-label {
-		color: rgb(100 116 139);
+		color: rgb(71 85 105);
 		font-size: 0.7rem;
 		font-weight: 600;
 		letter-spacing: 0.08em;
@@ -259,7 +262,7 @@ const quickLinks = [
 		border-top: 1px solid rgb(226 232 240);
 		padding-top: 1.15rem;
 		text-align: center;
-		color: rgb(100 116 139);
+		color: rgb(71 85 105);
 		font-size: 0.6875rem;
 		line-height: 1.55;
 	}

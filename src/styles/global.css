@@ -1,3 +1,12 @@
+@import "@fontsource/ibm-plex-sans/latin-400.css";
+@import "@fontsource/ibm-plex-sans/latin-500.css";
+@import "@fontsource/ibm-plex-sans/latin-600.css";
+@import "@fontsource/ibm-plex-sans/latin-700.css";
+@import "@fontsource/ibm-plex-mono/latin-500.css";
+@import "@fontsource/ibm-plex-mono/latin-600.css";
+@import "@fontsource/archivo/latin-600.css";
+@import "@fontsource/archivo/latin-700.css";
+@import "@fontsource/archivo/latin-800.css";
 @import "tailwindcss";
 
 @theme {
@@ -122,7 +131,7 @@
  .th-section-alt { background-color: #f4f5ef; border-color: #e2e6dc; }
  .text-justify { text-align: left; hyphens: manual; }
 }
-.editorial-label { display: flex; align-items: center; gap: 9px; font-family: var(--font-mono); font-size: 10px; font-weight: 500; letter-spacing: .13em; color: #4c6748; line-height: 1.7; }
+.editorial-label { display: flex; align-items: center; gap: 9px; font-family: var(--font-mono); font-size: 10px; font-weight: 500; letter-spacing: .13em; color: #3d5639; line-height: 1.7; }
 .editorial-label > span:empty { width: 7px; height: 7px; border-radius: 50%; background: #739d36; }
 .solid-link { display: inline-flex; align-items: center; justify-content: center; gap: 22px; min-height: 48px; padding: 13px 21px; background: #003820; color: white; border-radius: 4px; font-size: 13px; font-weight: 600; transition: background .2s; }
 .solid-link:hover { background: #245337; }

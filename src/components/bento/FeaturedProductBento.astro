@@ -1,6 +1,7 @@
 ---
 import BentoCard from "../ui/BentoCard.astro";
 import SectionHeader from "../ui/SectionHeader.astro";
+import ResponsiveRaster from "../ResponsiveRaster.astro";
 
 const waHref = `https://wa.me/60168860864?text=${encodeURIComponent(
 	"Hello Tiong Hock — I would like to enquire about *APM R134a Premium Refrigerant* stock and pricing.\n\nQuantity needed: \nBranch preference (Matang Jaya / Kota Samarahan): ",
@@ -45,14 +46,16 @@ const highlights = [
 				>
 				</div>
 				<div class="relative flex flex-1 items-center justify-center p-4 sm:p-6 lg:p-8">
-					<img
-						src="/images/products/apm-r134a.jpg"
+					<ResponsiveRaster
+						base="/images/products/apm-r134a"
+						widths={[400, 600, 800]}
+						fallbackSrc="/images/products/apm-r134a-800w.webp"
 						alt="APM R134a refrigerant cartons — product preview"
-						width="800"
-						height="1000"
+						width={800}
+						height={922}
+						sizes="(min-width: 1024px) 50vw, 92vw"
 						class="max-h-[min(520px,70vh)] w-full object-contain object-center transition-transform duration-700 ease-out group-hover/visual:scale-[1.03]"
 						loading="lazy"
-						decoding="async"
 					/>
 				</div>
 			</article>

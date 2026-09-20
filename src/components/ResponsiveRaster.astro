@@ -1,0 +1,50 @@
+---
+interface Props {
+	/** Base path without size suffix, e.g. /images/products/apm-r134a */
+	base: string;
+	widths: number[];
+	fallbackSrc: string;
+	alt: string;
+	width: number;
+	height: number;
+	sizes: string;
+	loading?: "eager" | "lazy";
+	fetchpriority?: "high" | "low" | "auto";
+	decoding?: "async" | "sync" | "auto";
+	class?: string;
+}
+
+const {
+	base,
+	widths,
+	fallbackSrc,
+	alt,
+	width,
+	height,
+	sizes,
+	loading = "lazy",
+	fetchpriority,
+	decoding = "async",
+	class: className,
+} = Astro.props;
+
+const sorted = [...widths].sort((a, b) => a - b);
+const avifSrcset = sorted.map((w) => `${base}-${w}w.avif ${w}w`).join(", ");
+const webpSrcset = sorted.map((w) => `${base}-${w}w.webp ${w}w`).join(", ");
+---
+
+<picture>
+	<source type="image/avif" srcset={avifSrcset} sizes={sizes} />
+	<source type="image/webp" srcset={webpSrcset} sizes={sizes} />
+	<img
+		src={fallbackSrc}
+		alt={alt}
+		width={width}
+		height={height}
+		sizes={sizes}
+		loading={loading}
+		decoding={decoding}
+		fetchpriority={fetchpriority}
+		class={className}
+	/>
+</picture>

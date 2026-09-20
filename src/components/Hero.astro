@@ -1,4 +1,6 @@
 ---
+import ResponsiveRaster from "./ResponsiveRaster.astro";
+
 interface Props {
  eyebrow?: string; title?: string; location?: string; description?: string;
  primaryHref?: string; primaryLabel?: string; whatsappHref?: string; whatsappLabel?: string;
@@ -19,7 +21,19 @@ const { eyebrow = "Your local parts partner", title = "The right parts. Ready fo
   </div>
   <a href="/parts#featured-product" class="hero-feature" aria-label="Explore APM R134a premium refrigerant">
    <div class="feature-top"><span>THE WORKSHOP ESSENTIAL</span><span>01 / APM</span></div>
-   <div class="feature-image"><img src="/images/products/apm-r134a.jpg" alt="APM R134a refrigerant cartons" width="800" height="1000" fetchpriority="high" /></div>
+   <div class="feature-image">
+    <ResponsiveRaster
+     base="/images/products/apm-r134a"
+     widths={[400, 600, 800]}
+     fallbackSrc="/images/products/apm-r134a-800w.webp"
+     alt="APM R134a refrigerant cartons"
+     width={800}
+     height={922}
+     sizes="(min-width: 1000px) 42vw, 88vw"
+     loading="eager"
+     fetchpriority="high"
+    />
+   </div>
    <div class="feature-bottom"><div><p>AUTHORISED DISTRIBUTOR</p><h2>APM R134a</h2><span>Premium automotive refrigerant</span></div><span class="feature-arrow" aria-hidden="true">↗</span></div>
   </a>
  </div>

@@ -1,0 +1,125 @@
+{
+  "apm-r134a": {
+    "widths": [
+      400,
+      600,
+      800
+    ],
+    "webp": [
+      {
+        "width": 400,
+        "path": "/images/products/apm-r134a-400w.webp",
+        "bytes": 30666
+      },
+      {
+        "width": 600,
+        "path": "/images/products/apm-r134a-600w.webp",
+        "bytes": 51264
+      },
+      {
+        "width": 800,
+        "path": "/images/products/apm-r134a-800w.webp",
+        "bytes": 71256
+      }
+    ],
+    "avif": [
+      {
+        "width": 400,
+        "path": "/images/products/apm-r134a-400w.avif",
+        "bytes": 18931
+      },
+      {
+        "width": 600,
+        "path": "/images/products/apm-r134a-600w.avif",
+        "bytes": 31979
+      },
+      {
+        "width": 800,
+        "path": "/images/products/apm-r134a-800w.avif",
+        "bytes": 45441
+      }
+    ]
+  },
+  "logo-horizontal": {
+    "widths": [
+      280,
+      420,
+      840
+    ],
+    "webp": [
+      {
+        "width": 280,
+        "path": "/logo-horizontal-280w.webp",
+        "bytes": 7990
+      },
+      {
+        "width": 420,
+        "path": "/logo-horizontal-420w.webp",
+        "bytes": 12766
+      },
+      {
+        "width": 840,
+        "path": "/logo-horizontal-840w.webp",
+        "bytes": 27768
+      }
+    ],
+    "avif": [
+      {
+        "width": 280,
+        "path": "/logo-horizontal-280w.avif",
+        "bytes": 3696
+      },
+      {
+        "width": 420,
+        "path": "/logo-horizontal-420w.avif",
+        "bytes": 5962
+      },
+      {
+        "width": 840,
+        "path": "/logo-horizontal-840w.avif",
+        "bytes": 11055
+      }
+    ]
+  },
+  "logo-mark": {
+    "widths": [
+      96,
+      192,
+      288
+    ],
+    "webp": [
+      {
+        "width": 96,
+        "path": "/logo-mark-96w.webp",
+        "bytes": 1568
+      },
+      {
+        "width": 192,
+        "path": "/logo-mark-192w.webp",
+        "bytes": 2966
+      },
+      {
+        "width": 288,
+        "path": "/logo-mark-288w.webp",
+        "bytes": 4954
+      }
+    ],
+    "avif": [
+      {
+        "width": 96,
+        "path": "/logo-mark-96w.avif",
+        "bytes": 1064
+      },
+      {
+        "width": 192,
+        "path": "/logo-mark-192w.avif",
+        "bytes": 1282
+      },
+      {
+        "width": 288,
+        "path": "/logo-mark-288w.avif",
+        "bytes": 2367
+      }
+    ]
+  }
+}

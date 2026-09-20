@@ -25,7 +25,10 @@ const { title, description, includeCanonical, robots } = Astro.props;
 </BaseLayout>
 
 <script>
-	import { initScrollAnimations } from "../scripts/gsap-init";
-	initScrollAnimations();
+	const motionSelector =
+		"[data-animate='fade-up'], [data-animate='stagger-parent'], [data-parallax]";
+	if (document.querySelector(motionSelector)) {
+		void import("../scripts/gsap-init").then(({ initScrollAnimations }) => initScrollAnimations());
+	}
 </script>
 

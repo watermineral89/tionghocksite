@@ -10,7 +10,17 @@ const whatsappHref = `https://wa.me/60168860864?text=${encodeURIComponent("Hello
 	title="Tiong Hock | Automotive Spare Parts Kuching"
 	description="Tiong Hock supplies genuine and OEM automotive spare parts for workshops, fleets and drivers in Kuching. 50,000+ active line items from Matang Jaya and Kota Samarahan."
 >
-	<OrganizationStructuredData slot="head" />
+	<Fragment slot="head">
+		<link
+			rel="preload"
+			as="image"
+			type="image/avif"
+			href="/images/products/apm-r134a-600w.avif"
+			imagesrcset="/images/products/apm-r134a-400w.avif 400w, /images/products/apm-r134a-600w.avif 600w, /images/products/apm-r134a-800w.avif 800w"
+			imagesizes="(min-width: 1000px) 42vw, 88vw"
+		/>
+		<OrganizationStructuredData />
+	</Fragment>
  <Hero eyebrow="KUCHING’S AUTOMOTIVE PARTS PARTNER" title="The right parts. Ready for the road." location="Matang Jaya · Kota Samarahan" whatsappHref={whatsappHref} />
  <HomeQuickLinks />
 </PageLayout>

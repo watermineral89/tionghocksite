@@ -1,4 +1,6 @@
 ---
+import ResponsiveRaster from "./ResponsiveRaster.astro";
+
 const currentPath = Astro.url.pathname.replace(/\/$/, "") || "/";
 
 const links = [
@@ -39,14 +41,16 @@ const mobileLinkClass = (href: string) =>
 			href="/"
 			class="group flex min-w-0 shrink-0 items-center outline-offset-4 transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand"
 		>
-			<img
-				src="/logo-horizontal.png"
-				width="420"
-				height="96"
+			<ResponsiveRaster
+				base="/logo-horizontal"
+				widths={[280, 420, 840]}
+				fallbackSrc="/logo-horizontal-420w.webp"
 				alt="Tiong Hock Auto Parts"
-				class="h-14 w-auto max-h-14 object-contain object-left transition duration-300 ease-out group-hover:opacity-90 sm:h-16 sm:max-h-16 lg:h-[4.5rem] lg:max-h-[4.5rem]"
+				width={420}
+				height={129}
+				sizes="(min-width: 1024px) 18rem, (min-width: 640px) 16rem, 14rem"
 				loading="eager"
-				decoding="async"
+				class="h-14 w-auto max-h-14 object-contain object-left transition duration-300 ease-out group-hover:opacity-90 sm:h-16 sm:max-h-16 lg:h-[4.5rem] lg:max-h-[4.5rem]"
 			/>
 		</a>
 
