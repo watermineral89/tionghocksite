@@ -21,7 +21,7 @@ import { galleryPhotos } from "../../data/gallery.ts";
 					<li
 						class="gallery-grid__item gallery-grid__item--reveal"
 						data-gallery-reveal
-						style={`--reveal-index: ${index}`}
+						style={`--reveal-index: ${index % 3}`}
 					>
 						<button
 							type="button"
@@ -37,7 +37,7 @@ import { galleryPhotos } from "../../data/gallery.ts";
 									class="gallery-card__img gallery-card__img--decode"
 									width={800}
 									height={600}
-									loading={index === 0 ? "eager" : "lazy"}
+									loading={index < 3 ? "eager" : "lazy"}
 									decoding="async"
 									fetchpriority={index === 0 ? "high" : undefined}
 								/>
@@ -176,7 +176,7 @@ import { galleryPhotos } from "../../data/gallery.ts";
 	.gallery-card__img--decode {
 		opacity: 0;
 		transition:
-			opacity 400ms cubic-bezier(0.22, 1, 0.36, 1),
+			opacity 280ms cubic-bezier(0.22, 1, 0.36, 1),
 			transform 0.35s ease;
 	}
 
@@ -506,10 +506,14 @@ import { galleryPhotos } from "../../data/gallery.ts";
 					if (!entry.isIntersecting) continue;
 					const item = entry.target;
 					observer.unobserve(item);
+					const img = item.querySelector(".gallery-card__img--decode");
+					if (img && img.complete && img.naturalWidth > 0) {
+						img.classList.add("is-ready");
+					}
 					requestAnimationFrame(() => item.classList.add("is-revealed"));
 				}
 			},
-			{ root: null, rootMargin: "0px 0px -5% 0px", threshold: 0 },
+			{ root: null, rootMargin: "0px 0px 14% 0px", threshold: 0 },
 		);
 
 		items.forEach((item) => observer.observe(item));
