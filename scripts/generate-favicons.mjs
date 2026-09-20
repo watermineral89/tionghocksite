@@ -1,5 +1,6 @@
 /**
- * Rasterize public/favicon.svg into PNG + ICO assets (TH monogram tile).
+ * Resize public/favicon-source.png (TH tile artwork) into PNG + ICO assets.
+ * Does not rasterize favicon.svg — source PNG is the visual reference.
  * Run: node scripts/generate-favicons.mjs
  */
 import fs from "node:fs";
@@ -8,33 +9,49 @@ import sharp from "sharp";
 import pngToIco from "png-to-ico";
 
 const root = path.resolve("public");
-const svgPath = path.join(root, "favicon.svg");
-const svg = fs.readFileSync(svgPath);
+const sourcePath = path.join(root, "favicon-source.png");
 
-async function pngAt(size, outName) {
-	const out = path.join(root, outName);
-	await sharp(svg).resize(size, size).png().toFile(out);
-	const meta = await sharp(out).metadata();
-	if (meta.width !== size || meta.height !== size) {
-		throw new Error(`${outName}: expected ${size}x${size}, got ${meta.width}x${meta.height}`);
-	}
-	return out;
+if (!fs.existsSync(sourcePath)) {
+	console.error("Missing public/favicon-source.png");
+	process.exit(1);
 }
 
-await pngAt(96, "favicon-96.png");
-await pngAt(180, "apple-touch-icon.png");
+async function squareTileBuffer() {
+	const trimmedBuf = await sharp(sourcePath).trim({ threshold: 15 }).png().toBuffer();
+	const meta = await sharp(trimmedBuf).metadata();
+	const side = Math.min(meta.width, meta.height);
+	const left = Math.round((meta.width - side) / 2);
+	const top = Math.round((meta.height - side) / 2);
+	return sharp(trimmedBuf)
+		.extract({ left, top, width: side, height: side })
+		.png()
+		.toBuffer();
+}
+
+const tile = await squareTileBuffer();
+
+async function writePng(size, outName) {
+	const out = path.join(root, outName);
+	await sharp(tile).resize(size, size).png().toFile(out);
+	const meta = await sharp(out).metadata();
+	if (meta.width !== size || meta.height !== size) {
+		throw new Error(`${outName}: expected ${size}x${size}`);
+	}
+}
+
+await writePng(96, "favicon-96.png");
+await writePng(180, "apple-touch-icon.png");
 
 const icoLayers = [16, 32, 48, 96];
 const tmpIcoPngs = [];
 for (const size of icoLayers) {
 	const name = `.favicon-${size}.png`;
-	await pngAt(size, name);
+	await writePng(size, name);
 	tmpIcoPngs.push(path.join(root, name));
 }
 
-// png-to-ico: pass an array of paths (16–96). Avoid a lone 256px entry (library bloat).
 const ico = await pngToIco(tmpIcoPngs);
 fs.writeFileSync(path.join(root, "favicon.ico"), ico);
 for (const p of tmpIcoPngs) fs.unlinkSync(p);
 
-console.log("[generate-favicons] Wrote favicon-96.png, apple-touch-icon.png, favicon.ico");
+console.log("[generate-favicons] Wrote from favicon-source.png (trim + square crop + resize)");
