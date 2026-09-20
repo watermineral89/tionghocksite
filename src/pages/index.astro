@@ -28,8 +28,10 @@ const heroLcpAvifSrcset = heroFeatureAvifSrcset(
 			imagesizes={HERO_FEATURE_IMAGE.sizes}
 			fetchpriority="high"
 		/>
-		<OrganizationStructuredData />
 	</Fragment>
  <Hero eyebrow="KUCHING’S AUTOMOTIVE PARTS PARTNER" title="The right parts. Ready for the road." location="Matang Jaya · Kota Samarahan" whatsappHref={whatsappHref} />
  <HomeQuickLinks />
+ <Fragment slot="body-end">
+	<OrganizationStructuredData />
+ </Fragment>
 </PageLayout>

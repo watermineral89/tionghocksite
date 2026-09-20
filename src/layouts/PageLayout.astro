@@ -16,6 +16,7 @@ const { title, description, includeCanonical, robots } = Astro.props;
 
 <BaseLayout title={title} description={description} includeCanonical={includeCanonical} robots={robots}>
 	<slot name="head" slot="head" />
+	<slot name="body-end" slot="body-end" />
 	<a class="skip-link" href="#main-content">Skip to content</a><Navbar />
 	<main id="main-content" class="overflow-x-clip" tabindex="-1">
 		<slot />
