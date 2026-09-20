@@ -1,5 +1,6 @@
 ---
 import ResponsiveRaster from "./ResponsiveRaster.astro";
+import { HERO_FEATURE_IMAGE } from "../constants/hero-lcp";
 
 interface Props {
  eyebrow?: string; title?: string; location?: string; description?: string;
@@ -23,15 +24,16 @@ const { eyebrow = "Your local parts partner", title = "The right parts. Ready fo
    <div class="feature-top"><span>THE WORKSHOP ESSENTIAL</span><span>01 / APM</span></div>
    <div class="feature-image">
     <ResponsiveRaster
-     base="/images/products/apm-r134a"
-     widths={[400, 600, 800]}
-     fallbackSrc="/images/products/apm-r134a-800w.webp"
+     base={HERO_FEATURE_IMAGE.base}
+     widths={[...HERO_FEATURE_IMAGE.widths]}
+     fallbackSrc={HERO_FEATURE_IMAGE.fallbackSrc}
      alt="APM R134a refrigerant cartons"
      width={800}
      height={922}
-     sizes="(min-width: 1000px) 42vw, 88vw"
+     sizes={HERO_FEATURE_IMAGE.sizes}
      loading="eager"
      fetchpriority="high"
+     decoding="auto"
     />
    </div>
    <div class="feature-bottom"><div><p>AUTHORISED DISTRIBUTOR</p><h2>APM R134a</h2><span>Premium automotive refrigerant</span></div><span class="feature-arrow" aria-hidden="true">↗</span></div>

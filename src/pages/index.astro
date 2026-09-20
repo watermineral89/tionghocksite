@@ -3,8 +3,16 @@ import PageLayout from "../layouts/PageLayout.astro";
 import Hero from "../components/Hero.astro";
 import HomeQuickLinks from "../components/HomeQuickLinks.astro";
 import OrganizationStructuredData from "../components/OrganizationStructuredData.astro";
+import {
+	HERO_FEATURE_IMAGE,
+	heroFeatureAvifSrcset,
+} from "../constants/hero-lcp";
 
 const whatsappHref = `https://wa.me/60168860864?text=${encodeURIComponent("Hello Tiong Hock — I have a parts inquiry.\n\nVehicle / chassis no.: \nParts needed: ")}`;
+const heroLcpAvifSrcset = heroFeatureAvifSrcset(
+	HERO_FEATURE_IMAGE.base,
+	HERO_FEATURE_IMAGE.widths,
+);
 ---
 <PageLayout
 	title="Tiong Hock | Automotive Spare Parts Kuching"
@@ -15,9 +23,10 @@ const whatsappHref = `https://wa.me/60168860864?text=${encodeURIComponent("Hello
 			rel="preload"
 			as="image"
 			type="image/avif"
-			href="/images/products/apm-r134a-600w.avif"
-			imagesrcset="/images/products/apm-r134a-400w.avif 400w, /images/products/apm-r134a-600w.avif 600w, /images/products/apm-r134a-800w.avif 800w"
-			imagesizes="(min-width: 1000px) 42vw, 88vw"
+			href={HERO_FEATURE_IMAGE.preloadHref}
+			imagesrcset={heroLcpAvifSrcset}
+			imagesizes={HERO_FEATURE_IMAGE.sizes}
+			fetchpriority="high"
 		/>
 		<OrganizationStructuredData />
 	</Fragment>
