@@ -5,6 +5,8 @@ import { HERO_CAR_IMAGE } from "../constants/hero-lcp";
 interface Props {
 	eyebrow?: string;
 	title?: string;
+	titleLead?: string;
+	titleAccent?: string;
 	location?: string;
 	description?: string;
 	primaryHref?: string;
@@ -15,6 +17,8 @@ interface Props {
 const {
 	eyebrow = "Your local parts partner",
 	title = "The right parts. Ready for the road.",
+	titleLead,
+	titleAccent,
 	location = "Matang Jaya · Kota Samarahan",
 	description = "Genuine and OEM automotive parts for the workshops, fleets and drivers who keep Sarawak moving.",
 	primaryHref = "/parts",
@@ -22,10 +26,31 @@ const {
 	whatsappHref = "https://wa.me/60168860864",
 	whatsappLabel = "Talk to our parts team",
 } = Astro.props;
+
+const headlineLead = titleLead ?? title.replace(/\s+Ready for the road\.?$/i, "").trim();
+const headlineAccent = titleAccent ?? (title.match(/ready for the road\.?$/i) ? "Ready for the road." : "");
 ---
 <section class="home-hero">
 	<div class="hero-stage">
-		<div class="hero-stage__visual" aria-hidden="true">
+		<div class="hero-copy">
+			<p class="editorial-label"><span></span> {eyebrow}</p>
+			<h1>
+				<span class="hero-title__lead">{headlineLead}</span>
+				{headlineAccent ? <span class="hero-title__accent">{headlineAccent}</span> : null}
+			</h1>
+			<p class="hero-description">{description}</p>
+			<ul class="hero-highlights" aria-label="Highlights">
+				<li>Genuine &amp; OEM</li>
+				<li>Ready stock</li>
+				<li>Trusted since 2013</li>
+			</ul>
+			<div class="hero-actions">
+				<a class="solid-link" href={primaryHref}>{primaryLabel}<span aria-hidden="true">↗</span></a>
+				<a class="quiet-link" href={whatsappHref} target="_blank" rel="noopener noreferrer">{whatsappLabel} <span aria-hidden="true">↗</span></a>
+			</div>
+			<p class="hero-location"><span aria-hidden="true">⌖</span> {location}</p>
+		</div>
+		<div class="hero-visual" aria-hidden="true">
 			<ResponsiveRaster
 				base={HERO_CAR_IMAGE.base}
 				widths={[...HERO_CAR_IMAGE.widths]}
@@ -37,22 +62,10 @@ const {
 				loading="eager"
 				fetchpriority="high"
 				decoding="auto"
-				class="hero-stage__img"
+				class="hero-visual__img"
 			/>
-			<div class="hero-stage__gradient"></div>
-			<div class="hero-stage__accent"></div>
-		</div>
-		<div class="hero-stage__content th-container">
-			<div class="hero-copy">
-				<p class="editorial-label"><span></span> {eyebrow}</p>
-				<h1>{title}</h1>
-				<p class="hero-description">{description}</p>
-				<div class="hero-actions">
-					<a class="solid-link" href={primaryHref}>{primaryLabel}<span aria-hidden="true">↗</span></a>
-					<a class="quiet-link" href={whatsappHref} target="_blank" rel="noopener noreferrer">{whatsappLabel} <span aria-hidden="true">↗</span></a>
-				</div>
-				<p class="hero-location"><span aria-hidden="true">⌖</span> {location}</p>
-			</div>
+			<p class="hero-visual__script">More miles together</p>
+			<p class="hero-visual__ribbon">Quality parts for a smoother journey</p>
 		</div>
 	</div>
 	<div class="th-container">
@@ -76,82 +89,73 @@ const {
 	}
 
 	.hero-stage {
-		position: relative;
-		display: flex;
-		align-items: center;
-		min-height: clamp(620px, 72vh, 720px);
-	}
-
-	.hero-stage__visual {
-		position: absolute;
-		inset: 0;
-		z-index: 0;
-		overflow: hidden;
-	}
-
-	.hero-stage__visual :global(.hero-stage__img) {
-		width: 100%;
-		height: 100%;
-		object-fit: cover;
-		object-position: 72% center;
-		display: block;
-	}
-
-	.hero-stage__gradient {
-		position: absolute;
-		inset: 0;
-		z-index: 1;
-		pointer-events: none;
-		background: linear-gradient(
-			90deg,
-			#f7f7f2 0%,
-			#f7f7f2 26%,
-			rgb(247 247 242 / 0.92) 34%,
-			rgb(247 247 242 / 0.55) 48%,
-			rgb(247 247 242 / 0.15) 62%,
-			transparent 72%
-		);
-	}
-
-	.hero-stage__accent {
-		position: absolute;
-		right: 0;
-		bottom: 0;
-		z-index: 2;
-		width: min(32%, 220px);
-		height: 64px;
-		background: #003820;
-		clip-path: polygon(18% 0, 100% 0, 100% 100%, 0 100%);
-		opacity: 0.88;
-		pointer-events: none;
-	}
-
-	.hero-stage__content {
-		position: relative;
-		z-index: 2;
-		width: 100%;
-		padding-block: clamp(3rem, 6vw, 4.5rem);
+		display: grid;
+		grid-template-columns: minmax(0, 0.9fr) minmax(340px, 1.1fr);
+		align-items: stretch;
+		min-height: clamp(368px, 42vh, 448px);
+		background: #f7f7f2;
 	}
 
 	.hero-copy {
-		max-width: min(600px, 100%);
+		padding: clamp(2.25rem, 4vw, 3.5rem) clamp(1.5rem, 4vw, 4.5rem);
+		max-width: 40rem;
+		align-self: center;
 	}
 
 	.hero-copy h1 {
-		font-size: clamp(2.75rem, 4.8vw, 4.65rem);
+		display: flex;
+		flex-direction: column;
+		gap: 0.08em;
+		font-size: clamp(2.6rem, 4.2vw, 4.1rem);
 		font-weight: 800;
-		line-height: 1.03;
+		line-height: 1.02;
 		letter-spacing: -0.055em;
-		max-width: 14ch;
-		margin: 26px 0 0;
+		margin: 18px 0 0;
+	}
+
+	.hero-title__lead {
+		color: #13382a;
+	}
+
+	.hero-title__accent {
+		color: #6d8f30;
 	}
 
 	.hero-description {
 		max-width: 28rem;
 		color: #617067;
-		font-size: 17px;
-		line-height: 1.8;
-		margin-top: 0;
+		font-size: 16px;
+		line-height: 1.75;
+		margin-top: 16px;
+	}
+
+	.hero-highlights {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.55rem 1.15rem;
+		margin: 20px 0 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	.hero-highlights li {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.45rem;
+		font-size: 11px;
+		font-weight: 600;
+		letter-spacing: 0.06em;
+		text-transform: uppercase;
+		color: #3d5639;
+	}
+
+	.hero-highlights li::before {
+		content: "";
+		width: 7px;
+		height: 7px;
+		border-radius: 999px;
+		background: #6d8f30;
+		flex-shrink: 0;
 	}
 
 	.hero-actions {
@@ -159,11 +163,11 @@ const {
 		flex-wrap: wrap;
 		align-items: center;
 		gap: 22px;
-		margin-top: 30px;
+		margin-top: 24px;
 	}
 
 	.hero-location {
-		margin-top: 32px;
+		margin-top: 24px;
 		font-size: 12px;
 		color: #617067;
 		letter-spacing: 0.035em;
@@ -172,6 +176,64 @@ const {
 	.hero-location span {
 		font-size: 19px;
 		margin-right: 6px;
+	}
+
+	.hero-visual {
+		position: relative;
+		min-height: 100%;
+		overflow: hidden;
+		clip-path: polygon(28% 0, 100% 0, 100% 100%, 0 100%);
+		background: #dfe6d4;
+	}
+
+	.hero-visual :global(picture) {
+		display: block;
+		width: 100%;
+		height: 100%;
+		min-height: clamp(368px, 42vh, 448px);
+	}
+
+	.hero-visual :global(.hero-visual__img) {
+		width: 100%;
+		height: 100%;
+		min-height: clamp(368px, 42vh, 448px);
+		object-fit: cover;
+		object-position: 86% 36%;
+		display: block;
+	}
+
+	.hero-visual__script {
+		position: absolute;
+		top: 8%;
+		left: 34%;
+		z-index: 2;
+		margin: 0;
+		max-width: 7.2rem;
+		font-family: "Segoe Script", "Brush Script MT", cursive;
+		font-size: clamp(1.55rem, 2.1vw, 2rem);
+		line-height: 0.95;
+		color: #2d5a28;
+		text-shadow: 0 1px 0 rgb(255 255 255 / 0.4);
+		transform: rotate(-8deg);
+		transform-origin: left center;
+	}
+
+	.hero-visual__ribbon {
+		position: absolute;
+		right: 0;
+		bottom: 0;
+		z-index: 2;
+		margin: 0;
+		padding: 0.75rem 1.15rem 0.75rem 1.6rem;
+		max-width: 13.5rem;
+		background: #003820;
+		color: #e8f0dc;
+		font-family: var(--font-mono);
+		font-size: 9px;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		line-height: 1.45;
+		clip-path: polygon(12% 0, 100% 0, 100% 100%, 0 100%);
 	}
 
 	.hero-proof {
@@ -220,12 +282,10 @@ const {
 			animation: hero-copy-in 460ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
 		}
 
-	.hero-stage__visual :global(picture) {
-		display: block;
-		width: 100%;
-		height: 100%;
-		animation: hero-img-in 520ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
-	}
+		.hero-visual :global(picture) {
+			opacity: 0;
+			animation: hero-img-in 480ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+		}
 	}
 
 	@keyframes hero-copy-in {
@@ -236,68 +296,51 @@ const {
 	}
 
 	@keyframes hero-img-in {
-		from {
-			opacity: 0.94;
-			transform: scale(1.015);
-		}
 		to {
 			opacity: 1;
-			transform: scale(1);
 		}
 	}
 
-	@media (max-width: 767px) {
+	@media (max-width: 900px) {
 		.hero-stage {
-			flex-direction: column;
-			align-items: stretch;
+			grid-template-columns: 1fr;
 			min-height: 0;
 		}
 
-		.hero-stage__visual {
-			position: relative;
-			order: 2;
-			width: 100%;
-			height: clamp(260px, 42vw, 340px);
-		}
-
-		.hero-stage__visual :global(.hero-stage__img) {
-			object-position: 68% center;
-		}
-
-		.hero-stage__gradient {
-			background: linear-gradient(
-				180deg,
-				#f7f7f2 0%,
-				rgb(247 247 242 / 0.75) 22%,
-				transparent 55%
-			);
-		}
-
-		.hero-stage__accent {
-			height: 48px;
-			width: min(42%, 160px);
-		}
-
-		.hero-stage__content {
-			order: 1;
-			padding-block: 2.25rem 1.75rem;
+		.hero-copy {
+			padding: 2rem 1.25rem 1.5rem;
+			max-width: none;
 		}
 
 		.hero-copy h1 {
-			font-size: clamp(2.35rem, 9vw, 3.4rem);
-			max-width: 16ch;
+			font-size: clamp(2.15rem, 8.5vw, 3.1rem);
 		}
 
-		.hero-description {
-			font-size: 16px;
+		.hero-visual {
+			order: 2;
+			clip-path: none;
+			height: clamp(176px, 34vw, 256px);
+			min-height: 0;
+		}
+
+		.hero-visual :global(picture),
+		.hero-visual :global(.hero-visual__img) {
+			min-height: 0;
+			height: 100%;
+		}
+
+		.hero-visual :global(.hero-visual__img) {
+			object-position: 80% 40%;
+		}
+
+		.hero-visual__script {
+			top: 10%;
+			left: 8%;
+			font-size: 1.35rem;
 		}
 
 		.hero-actions {
 			gap: 16px;
-		}
-
-		.hero-location {
-			margin-top: 24px;
 		}
 	}
 
