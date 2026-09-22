@@ -3,7 +3,7 @@ export const HERO_CAR_IMAGE = {
 	base: "/images/hero-car",
 	widths: [768, 1200, 1600] as const,
 	/** Match the right-column image width in Hero.astro (not full-bleed). */
-	sizes: "(min-width: 1024px) 840px, 100vw",
+	sizes: "(min-width: 1024px) 56vw, 100vw",
 	fallbackSrc: "/images/hero-car.webp",
 	/** Required preload `href` fallback; not used when `imagesrcset` selects another width. */
 	preloadHref: "/images/hero-car-1600w.avif",
