@@ -1,53 +1,319 @@
 ---
 import ResponsiveRaster from "./ResponsiveRaster.astro";
-import { HERO_FEATURE_IMAGE } from "../constants/hero-lcp";
+import { HERO_CAR_IMAGE } from "../constants/hero-lcp";
 
 interface Props {
- eyebrow?: string; title?: string; location?: string; description?: string;
- primaryHref?: string; primaryLabel?: string; whatsappHref?: string; whatsappLabel?: string;
+	eyebrow?: string;
+	title?: string;
+	location?: string;
+	description?: string;
+	primaryHref?: string;
+	primaryLabel?: string;
+	whatsappHref?: string;
+	whatsappLabel?: string;
 }
-const { eyebrow = "Your local parts partner", title = "The right parts. Ready for the road.", location = "Matang Jaya · Kota Samarahan", description = "Genuine and OEM automotive parts for the workshops, fleets and drivers who keep Sarawak moving.", primaryHref = "/parts", primaryLabel = "Explore our parts", whatsappHref = "https://wa.me/60168860864", whatsappLabel = "Talk to our parts team" } = Astro.props;
+const {
+	eyebrow = "Your local parts partner",
+	title = "The right parts. Ready for the road.",
+	location = "Matang Jaya · Kota Samarahan",
+	description = "Genuine and OEM automotive parts for the workshops, fleets and drivers who keep Sarawak moving.",
+	primaryHref = "/parts",
+	primaryLabel = "Explore our parts",
+	whatsappHref = "https://wa.me/60168860864",
+	whatsappLabel = "Talk to our parts team",
+} = Astro.props;
 ---
 <section class="home-hero">
- <div class="th-container hero-layout">
-  <div class="hero-copy">
-   <p class="editorial-label"><span></span> {eyebrow}</p>
-   <h1>{title}</h1>
-   <p class="hero-description">{description}</p>
-   <div class="hero-actions">
-    <a class="solid-link" href={primaryHref}>{primaryLabel}<span aria-hidden="true">↗</span></a>
-    <a class="quiet-link" href={whatsappHref} target="_blank" rel="noopener noreferrer">{whatsappLabel} <span aria-hidden="true">↗</span></a>
-   </div>
-   <p class="hero-location"><span aria-hidden="true">⌖</span> {location}</p>
-  </div>
-  <a href="/parts#featured-product" class="hero-feature" aria-label="Explore APM R134a premium refrigerant">
-   <div class="feature-top"><span>THE WORKSHOP ESSENTIAL</span><span>01 / APM</span></div>
-   <div class="feature-image">
-    <ResponsiveRaster
-     base={HERO_FEATURE_IMAGE.base}
-     widths={[...HERO_FEATURE_IMAGE.widths]}
-     fallbackSrc={HERO_FEATURE_IMAGE.fallbackSrc}
-     alt="APM R134a refrigerant cartons"
-     width={800}
-     height={922}
-     sizes={HERO_FEATURE_IMAGE.sizes}
-     loading="eager"
-     fetchpriority="high"
-     decoding="auto"
-    />
-   </div>
-   <div class="feature-bottom"><div><p>AUTHORISED DISTRIBUTOR</p><h2>APM R134a</h2><span>Premium automotive refrigerant</span></div><span class="feature-arrow" aria-hidden="true">↗</span></div>
-  </a>
- </div>
- <div class="th-container"><div class="hero-proof">
-  <div><strong>50,000<span>+</span></strong><p>Active line items</p></div>
-  <div><strong>40</strong><p>Dedicated team members</p></div>
-  <div><strong>2</strong><p>Branches, closer to you</p></div>
-  <div class="proof-note"><span class="editorial-label">ROOTED IN SARAWAK</span><p>Supporting local workshops<br />since 2013.</p></div>
- </div></div>
+	<div class="hero-stage">
+		<div class="hero-stage__visual" aria-hidden="true">
+			<ResponsiveRaster
+				base={HERO_CAR_IMAGE.base}
+				widths={[...HERO_CAR_IMAGE.widths]}
+				fallbackSrc={HERO_CAR_IMAGE.fallbackSrc}
+				alt=""
+				width={1672}
+				height={941}
+				sizes={HERO_CAR_IMAGE.sizes}
+				loading="eager"
+				fetchpriority="high"
+				decoding="auto"
+				class="hero-stage__img"
+			/>
+			<div class="hero-stage__gradient"></div>
+			<div class="hero-stage__accent"></div>
+		</div>
+		<div class="hero-stage__content th-container">
+			<div class="hero-copy">
+				<p class="editorial-label"><span></span> {eyebrow}</p>
+				<h1>{title}</h1>
+				<p class="hero-description">{description}</p>
+				<div class="hero-actions">
+					<a class="solid-link" href={primaryHref}>{primaryLabel}<span aria-hidden="true">↗</span></a>
+					<a class="quiet-link" href={whatsappHref} target="_blank" rel="noopener noreferrer">{whatsappLabel} <span aria-hidden="true">↗</span></a>
+				</div>
+				<p class="hero-location"><span aria-hidden="true">⌖</span> {location}</p>
+			</div>
+		</div>
+	</div>
+	<div class="th-container">
+		<div class="hero-proof">
+			<div><strong>50,000<span>+</span></strong><p>Active line items</p></div>
+			<div><strong>40</strong><p>Dedicated team members</p></div>
+			<div><strong>2</strong><p>Branches, closer to you</p></div>
+			<div class="proof-note">
+				<span class="editorial-label">ROOTED IN SARAWAK</span>
+				<p>Supporting local workshops<br />since 2013.</p>
+			</div>
+		</div>
+	</div>
 </section>
 <style>
-.home-hero{background:#f4f5ef;padding:64px 0 0;color:#13382a}.hero-layout{display:grid;grid-template-columns:1.15fr 1fr;gap:64px;align-items:center;padding-bottom:64px}.hero-copy h1{font-size:clamp(3rem,5.1vw,4.65rem);font-weight:800;line-height:1.03;letter-spacing:-.055em;max-width:640px;margin:26px 0}.hero-description{max-width:450px;color:#617067;font-size:17px;line-height:1.8}.hero-actions{display:flex;flex-wrap:wrap;align-items:center;gap:22px;margin-top:30px}.hero-location{margin-top:32px;font-size:12px;color:#617067;letter-spacing:.035em}.hero-location span{font-size:19px;margin-right:6px}.hero-feature{display:flex;flex-direction:column;min-width:0;border:1px solid #dce1d3;border-radius:8px;background:#e6ebdc;overflow:hidden;position:relative;text-decoration:none;transition:box-shadow .2s}.hero-feature:hover{box-shadow:0 16px 40px #00382012}.feature-top{display:flex;justify-content:space-between;gap:12px;padding:22px 24px;font-family:var(--font-mono);font-size:9px;letter-spacing:.11em}.feature-image{height:300px;padding:0 32px;display:flex;justify-content:center}.feature-image img{width:100%;height:100%;object-fit:contain;mix-blend-mode:multiply}.feature-bottom{display:flex;justify-content:space-between;align-items:center;padding:24px;background:#dce5cd;margin-top:18px;gap:10px}.feature-bottom p{font-size:9px;letter-spacing:.14em;font-family:var(--font-mono)}.feature-bottom h2{font-size:29px;font-weight:800;letter-spacing:-.04em;margin:5px 0 0}.feature-bottom div>span{font-size:12px;color:#56654e}.feature-arrow{width:44px;height:44px;border-radius:50%;background:#003820;color:#c6e999;display:grid;place-items:center;font-size:24px;flex-shrink:0}.hero-proof{display:grid;grid-template-columns:1fr 1fr 1fr 1.1fr;border-top:1px solid #d8ded2;padding:28px 0 30px;gap:30px}.hero-proof strong{font-size:34px;font-family:var(--font-display);font-weight:600;letter-spacing:-.04em}.hero-proof strong span{color:#6d8f30}.hero-proof p{font-size:12px;color:#657267;margin-top:5px}.proof-note{border-left:1px solid #d8ded2;padding-left:32px}.proof-note p{font-size:14px;line-height:1.6}.proof-note .editorial-label{font-size:9px}
-@media(max-width:1000px){.hero-layout{gap:30px}.hero-copy h1{font-size:3.4rem}.hero-actions{gap:16px}.feature-image{height:260px}}
-@media(max-width:700px){.home-hero{padding-top:38px}.hero-layout{grid-template-columns:1fr;gap:34px;padding-bottom:34px}.hero-copy h1{font-size:clamp(2.8rem,12vw,4rem);max-width:500px}.hero-description{font-size:16px}.feature-image{height:255px}.feature-top{padding:18px}.feature-bottom{padding:20px}.hero-proof{grid-template-columns:repeat(2,minmax(0,1fr));gap:24px}.hero-proof strong{font-size:30px}.proof-note{padding-left:0;border:0}.hero-location{margin-top:24px}}
+	.home-hero {
+		background: #f7f7f2;
+		padding: 0;
+		color: #13382a;
+		overflow-x: clip;
+	}
+
+	.hero-stage {
+		position: relative;
+		display: flex;
+		align-items: center;
+		min-height: clamp(620px, 72vh, 720px);
+	}
+
+	.hero-stage__visual {
+		position: absolute;
+		inset: 0;
+		z-index: 0;
+		overflow: hidden;
+	}
+
+	.hero-stage__visual :global(.hero-stage__img) {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		object-position: 72% center;
+		display: block;
+	}
+
+	.hero-stage__gradient {
+		position: absolute;
+		inset: 0;
+		z-index: 1;
+		pointer-events: none;
+		background: linear-gradient(
+			90deg,
+			#f7f7f2 0%,
+			#f7f7f2 26%,
+			rgb(247 247 242 / 0.92) 34%,
+			rgb(247 247 242 / 0.55) 48%,
+			rgb(247 247 242 / 0.15) 62%,
+			transparent 72%
+		);
+	}
+
+	.hero-stage__accent {
+		position: absolute;
+		right: 0;
+		bottom: 0;
+		z-index: 2;
+		width: min(32%, 220px);
+		height: 64px;
+		background: #003820;
+		clip-path: polygon(18% 0, 100% 0, 100% 100%, 0 100%);
+		opacity: 0.88;
+		pointer-events: none;
+	}
+
+	.hero-stage__content {
+		position: relative;
+		z-index: 2;
+		width: 100%;
+		padding-block: clamp(3rem, 6vw, 4.5rem);
+	}
+
+	.hero-copy {
+		max-width: min(600px, 100%);
+	}
+
+	.hero-copy h1 {
+		font-size: clamp(2.75rem, 4.8vw, 4.65rem);
+		font-weight: 800;
+		line-height: 1.03;
+		letter-spacing: -0.055em;
+		max-width: 14ch;
+		margin: 26px 0 0;
+	}
+
+	.hero-description {
+		max-width: 28rem;
+		color: #617067;
+		font-size: 17px;
+		line-height: 1.8;
+		margin-top: 0;
+	}
+
+	.hero-actions {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 22px;
+		margin-top: 30px;
+	}
+
+	.hero-location {
+		margin-top: 32px;
+		font-size: 12px;
+		color: #617067;
+		letter-spacing: 0.035em;
+	}
+
+	.hero-location span {
+		font-size: 19px;
+		margin-right: 6px;
+	}
+
+	.hero-proof {
+		display: grid;
+		grid-template-columns: 1fr 1fr 1fr 1.1fr;
+		border-top: 1px solid #d8ded2;
+		padding: 28px 0 30px;
+		gap: 30px;
+	}
+
+	.hero-proof strong {
+		font-size: 34px;
+		font-family: var(--font-display);
+		font-weight: 600;
+		letter-spacing: -0.04em;
+	}
+
+	.hero-proof strong span {
+		color: #6d8f30;
+	}
+
+	.hero-proof p {
+		font-size: 12px;
+		color: #657267;
+		margin-top: 5px;
+	}
+
+	.proof-note {
+		border-left: 1px solid #d8ded2;
+		padding-left: 32px;
+	}
+
+	.proof-note p {
+		font-size: 14px;
+		line-height: 1.6;
+	}
+
+	.proof-note .editorial-label {
+		font-size: 9px;
+	}
+
+	@media (prefers-reduced-motion: no-preference) {
+		.hero-copy {
+			opacity: 0;
+			transform: translateY(12px);
+			animation: hero-copy-in 460ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+		}
+
+	.hero-stage__visual :global(picture) {
+		display: block;
+		width: 100%;
+		height: 100%;
+		animation: hero-img-in 520ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+	}
+	}
+
+	@keyframes hero-copy-in {
+		to {
+			opacity: 1;
+			transform: translateY(0);
+		}
+	}
+
+	@keyframes hero-img-in {
+		from {
+			opacity: 0.94;
+			transform: scale(1.015);
+		}
+		to {
+			opacity: 1;
+			transform: scale(1);
+		}
+	}
+
+	@media (max-width: 767px) {
+		.hero-stage {
+			flex-direction: column;
+			align-items: stretch;
+			min-height: 0;
+		}
+
+		.hero-stage__visual {
+			position: relative;
+			order: 2;
+			width: 100%;
+			height: clamp(260px, 42vw, 340px);
+		}
+
+		.hero-stage__visual :global(.hero-stage__img) {
+			object-position: 68% center;
+		}
+
+		.hero-stage__gradient {
+			background: linear-gradient(
+				180deg,
+				#f7f7f2 0%,
+				rgb(247 247 242 / 0.75) 22%,
+				transparent 55%
+			);
+		}
+
+		.hero-stage__accent {
+			height: 48px;
+			width: min(42%, 160px);
+		}
+
+		.hero-stage__content {
+			order: 1;
+			padding-block: 2.25rem 1.75rem;
+		}
+
+		.hero-copy h1 {
+			font-size: clamp(2.35rem, 9vw, 3.4rem);
+			max-width: 16ch;
+		}
+
+		.hero-description {
+			font-size: 16px;
+		}
+
+		.hero-actions {
+			gap: 16px;
+		}
+
+		.hero-location {
+			margin-top: 24px;
+		}
+	}
+
+	@media (max-width: 700px) {
+		.hero-proof {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+			gap: 24px;
+		}
+
+		.hero-proof strong {
+			font-size: 30px;
+		}
+
+		.proof-note {
+			padding-left: 0;
+			border: 0;
+		}
+	}
 </style>

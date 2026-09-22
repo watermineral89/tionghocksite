@@ -3,16 +3,10 @@ import PageLayout from "../layouts/PageLayout.astro";
 import Hero from "../components/Hero.astro";
 import HomeQuickLinks from "../components/HomeQuickLinks.astro";
 import OrganizationStructuredData from "../components/OrganizationStructuredData.astro";
-import {
-	HERO_FEATURE_IMAGE,
-	heroFeatureAvifSrcset,
-} from "../constants/hero-lcp";
+import { HERO_CAR_IMAGE, heroFeatureAvifSrcset } from "../constants/hero-lcp";
 
 const whatsappHref = `https://wa.me/60168860864?text=${encodeURIComponent("Hello Tiong Hock — I have a parts inquiry.\n\nVehicle / chassis no.: \nParts needed: ")}`;
-const heroLcpAvifSrcset = heroFeatureAvifSrcset(
-	HERO_FEATURE_IMAGE.base,
-	HERO_FEATURE_IMAGE.widths,
-);
+const heroLcpAvifSrcset = heroFeatureAvifSrcset(HERO_CAR_IMAGE.base, HERO_CAR_IMAGE.widths);
 ---
 <PageLayout
 	title="Tiong Hock | Automotive Spare Parts Kuching"
@@ -23,9 +17,9 @@ const heroLcpAvifSrcset = heroFeatureAvifSrcset(
 			rel="preload"
 			as="image"
 			type="image/avif"
-			href={HERO_FEATURE_IMAGE.preloadHref}
+			href={HERO_CAR_IMAGE.preloadHref}
 			imagesrcset={heroLcpAvifSrcset}
-			imagesizes={HERO_FEATURE_IMAGE.sizes}
+			imagesizes={HERO_CAR_IMAGE.sizes}
 			fetchpriority="high"
 		/>
 	</Fragment>

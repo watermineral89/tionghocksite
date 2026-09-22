@@ -11,6 +11,13 @@ const publicDir = path.join(root, "public");
 
 const jobs = [
 	{
+		id: "hero-car",
+		source: "images/hero-car.webp",
+		widths: [768, 1200, 1600],
+		webpQuality: 86,
+		avifQuality: 58,
+	},
+	{
 		id: "apm-r134a",
 		source: "images/products/apm-r134a.jpg",
 		widths: [400, 600, 800],

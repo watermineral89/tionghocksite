@@ -1,4 +1,45 @@
 {
+  "hero-car": {
+    "widths": [
+      768,
+      1200,
+      1600
+    ],
+    "webp": [
+      {
+        "width": 768,
+        "path": "/images/hero-car-768w.webp",
+        "bytes": 50056
+      },
+      {
+        "width": 1200,
+        "path": "/images/hero-car-1200w.webp",
+        "bytes": 92922
+      },
+      {
+        "width": 1600,
+        "path": "/images/hero-car-1600w.webp",
+        "bytes": 133066
+      }
+    ],
+    "avif": [
+      {
+        "width": 768,
+        "path": "/images/hero-car-768w.avif",
+        "bytes": 25524
+      },
+      {
+        "width": 1200,
+        "path": "/images/hero-car-1200w.avif",
+        "bytes": 48751
+      },
+      {
+        "width": 1600,
+        "path": "/images/hero-car-1600w.avif",
+        "bytes": 69669
+      }
+    ]
+  },
   "apm-r134a": {
     "widths": [
       400,
